@@ -1,0 +1,814 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* Collapsible Navigation & Drawer Styles */
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--paper-2); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: .26rem .55rem; cursor: pointer;
+  font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
+  transition: all .15s ease; flex-shrink: 0;
+}
+.nav-toggle:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.nt-bars { display: flex; flex-direction: column; gap: 2.5px; width: 13px; }
+.nt-bar { height: 1.5px; background: currentColor; width: 100%; }
+.nt-label { font-size: .7rem; letter-spacing: .04em; }
+
+.side-nav {
+  position: fixed; top: 0; bottom: 0; left: 0;
+  width: 320px; max-width: 88vw; z-index: 100;
+  background: var(--paper); color: var(--ink);
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none; overflow: hidden;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+}
+.sn-backdrop {
+  position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
+  backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.sn-header {
+  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+  border-bottom: 2px solid var(--paper-2);
+}
+.sn-brand { display: flex; flex-direction: column; gap: .2rem; }
+.sn-course {
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em;
+  color: var(--band-mute); text-transform: uppercase;
+}
+.sn-title {
+  margin: 0; font: 800 1.25rem/1.05 var(--f-display);
+  font-stretch: 75%; text-transform: uppercase; letter-spacing: -.01em;
+}
+.sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
+.sn-close {
+  background: transparent; border: none; color: var(--paper);
+  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
+  line-height: .9; opacity: .8; transition: opacity .15s ease;
+}
+.sn-close:hover { opacity: 1; color: var(--hl); }
+
+.sn-body {
+  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sn-portal-link {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
+  text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--cobalt); color: #fff; border-color: var(--cobalt);
+}
+.sn-section-label {
+  font: 600 .65rem/1 var(--f-mono); letter-spacing: .1em;
+  color: var(--ink-2); text-transform: uppercase;
+  margin-top: .5rem; margin-bottom: -.2rem; padding-inline: .2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
+.sn-week-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .5rem .65rem; border: 1px solid var(--rule);
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  border-radius: 3px; transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--paper-2); border-color: var(--ink);
+  transform: translateX(2px);
+}
+.sn-week-item.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.sn-week-badge {
+  font: 800 .9rem/1 var(--f-display); font-stretch: 70%;
+  background: var(--paper-2); color: var(--cobalt);
+  padding: .3rem .45rem; border-radius: 2px; min-width: 2rem; text-align: center;
+}
+.sn-week-item.active .sn-week-badge {
+  background: var(--cobalt); color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.sn-week-title {
+  font: 700 .86rem/1.15 var(--f-display); font-stretch: 82%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-sub {
+  font: 400 .65rem/1.2 var(--f-mono); color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-item.active .sn-week-sub { color: var(--band-mute); }
+
+.sn-parts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+}
+.sn-part-btn {
+  display: block; text-align: center; text-decoration: none;
+  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  transition: all .12s ease;
+}
+.sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+
+.sn-res-links { display: flex; gap: .5rem; }
+.sn-res-item {
+  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
+  text-decoration: none; color: var(--ink); border-radius: 2px;
+}
+.sn-res-item:hover { border-color: var(--ink); color: var(--cobalt); }
+
+.sn-footer {
+  padding: .75rem .9rem; border-top: 1px solid var(--rule);
+  background: var(--paper-2); display: flex; justify-content: space-between; align-items: center;
+}
+.sn-theme-toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--rule);
+  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
+}
+.sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
+
+@media (max-width: 480px) {
+  .nav-toggle .nt-label { display: none; }
+  .nav-toggle { padding: .28rem .45rem; }
+}
+
+</style></head><body>
+<title>Week 6 Ethics Log</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap">
+<style>
+/* Layout concept: the lecture as a tape. Sticky playhead bar on top, eight chapter bands,
+   each entry hung off a ruler rail with its recording timecode in the margin. */
+:root{
+  --paper:#ECEEF4; --paper-2:#DFE2EC; --ink:#12141C; --ink-2:#474D61; --rule:#B7BCCF;
+  --cobalt:#2A3BFF; --hl:#FFE14D;
+  --band-bg:#12141C; --band-fg:#ECEEF4; --band-mute:#8E98F5;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1119; --paper-2:#181B28; --ink:#E9ECF5; --ink-2:#A3AAC2; --rule:#2C3144;
+  --cobalt:#8F99FF; --hl:#6A5A00; --band-bg:#1B2145; --band-fg:#E9ECF5; --band-mute:#8F99FF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1119; --paper-2:#181B28; --ink:#E9ECF5; --ink-2:#A3AAC2; --rule:#2C3144;
+  --cobalt:#8F99FF; --hl:#6A5A00; --band-bg:#1B2145; --band-fg:#E9ECF5; --band-mute:#8F99FF; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.62 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+.wrap{width:100%;max-width:72rem;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+mark{background:linear-gradient(transparent 50%,var(--hl) 50% 94%,transparent 94%);color:inherit;padding:0 .1em}
+.tm{font:500 .78rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--cobalt);white-space:nowrap}
+
+/* sticky playhead */
+.deck{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--paper);border-bottom:2px solid var(--ink)}
+.deck .wrap{display:flex;align-items:center;gap:.9rem;padding-block:.6rem}
+.clock{font:500 1.05rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--cobalt);min-width:5.4rem}
+.total{font:400 .78rem/1 var(--f-mono);color:var(--ink-2)}
+.tape{position:relative;display:flex;gap:2px;min-width:0}
+.deck .tape{flex:1;height:14px}
+.seg{flex:var(--d) 1 0%;min-width:0;background:var(--ink);color:var(--paper);text-decoration:none;text-align:center;overflow:hidden;font:800 .7rem/14px var(--f-display)}
+.seg.on,.seg:hover{background:var(--cobalt);color:#fff}
+.deck .seg{font-size:0}
+.play{position:absolute;top:-5px;bottom:-5px;left:0;width:3px;background:var(--hl);box-shadow:0 0 0 1.5px var(--ink);pointer-events:none}
+
+/* hero */
+.hero{padding-block:2.4rem 1rem}
+.eyebrow{font:500 .78rem/1.5 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+h1{margin:.6rem 0 0;font:800 clamp(2.9rem,10.2vw,8rem)/.86 var(--f-display);font-stretch:66%;text-transform:uppercase;letter-spacing:-.004em;text-wrap:balance}
+h1 .c{color:var(--cobalt)}
+.lead{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:1.6rem 3rem;margin-top:1.8rem;align-items:start}
+.lead p{margin:0;font-size:1.3rem;line-height:1.42;max-width:34rem}
+.lead p small{display:block;margin-top:.7rem;font:400 .95rem/1.5 var(--f-body);color:var(--ink-2)}
+dl.glance{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.4rem 1rem;font:400 .82rem/1.5 var(--f-mono)}
+dl.glance dt{color:var(--ink-2)} dl.glance dd{margin:0}
+.tapewrap{margin-top:2.2rem}
+.tapewrap .tape{height:48px}
+.tapewrap .seg{font-size:1.15rem;line-height:48px;font-stretch:70%}
+.legend{list-style:none;margin:1.2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15.5rem,1fr));gap:.9rem 1.6rem}
+.legend a{display:grid;grid-template-columns:1.9rem minmax(0,1fr);gap:.55rem;text-decoration:none}
+.legend .l{font:800 1.6rem/.9 var(--f-display);font-stretch:66%;color:var(--cobalt)}
+.legend b{display:block;font:600 .95rem/1.25 var(--f-display)}
+.legend small{display:block;margin-top:.2rem;font:400 .74rem/1.4 var(--f-mono);color:var(--ink-2)}
+.legend a:hover b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+
+/* chapter bands */
+.band{background:var(--band-bg);color:var(--band-fg);margin-top:3.6rem}
+.band-in{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.6rem;align-items:end;padding-block:1.8rem 1.7rem}
+.pl{font:900 7.2rem/.74 var(--f-display);font-stretch:62%;color:var(--band-mute)}
+.pr{font:500 .78rem/1.4 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--band-mute)}
+.band h2{margin:.35rem 0 .5rem;font:800 clamp(1.9rem,4.8vw,3.3rem)/.98 var(--f-display);font-stretch:72%;text-transform:uppercase;text-wrap:balance}
+.band p{margin:0;max-width:46rem;opacity:.88;font-size:1.02rem}
+
+/* entries on the ruler rail */
+.entries{--pt:1.7rem}
+.e{display:grid;grid-template-columns:6.9rem 14px minmax(0,1fr);column-gap:1.1rem}
+.ts{text-align:right;font:500 .95rem/1.2 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--cobalt);padding-top:calc(var(--pt) + .22rem)}
+.ts span{display:block;margin-top:.3rem;font-size:.7rem;font-weight:400;color:var(--ink-2)}
+.rail{position:relative;
+  background:linear-gradient(var(--ink-2),var(--ink-2)) right top/1px 100% no-repeat,
+             repeating-linear-gradient(to bottom,var(--ink-2) 0 1px,transparent 1px 9px) right top/7px 100% no-repeat}
+.rail::before{content:"";position:absolute;top:calc(var(--pt) + .32rem);right:-5px;width:11px;height:11px;background:var(--cobalt);outline:3px solid var(--paper)}
+.b{padding-top:var(--pt);padding-bottom:.2rem}
+.e:last-child .b{padding-bottom:1.8rem}
+.b h3{margin:0 0 .6rem;font:700 1.6rem/1.06 var(--f-display);font-stretch:80%;text-wrap:balance}
+.b p{margin:0 0 .75rem;max-width:62ch}
+.pts{margin:.4rem 0 .9rem;padding:0;list-style:none;max-width:62ch;display:grid;gap:.45rem}
+.pts li{position:relative;padding-left:1.15rem}
+.pts li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;background:var(--cobalt)}
+.x{margin:1rem 0 .5rem}
+
+/* components */
+.dims{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:.6rem}
+.dim{border:1.5px solid var(--ink);background:var(--paper-2);padding:.7rem .8rem .85rem;display:grid;gap:.35rem;align-content:start}
+.dim b{font:700 1.15rem/1.05 var(--f-display);font-stretch:78%;text-transform:uppercase}
+.dim span:last-child{font-size:.92rem;line-height:1.35;color:var(--ink-2)}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.6rem}
+.cmp .col{border-top:4px solid var(--ink);padding-top:.5rem}
+.cmp h4{margin:0 0 .5rem;font:700 1.15rem/1 var(--f-display);font-stretch:78%;text-transform:uppercase}
+.opt .col p{margin:.5rem 0 0}
+.cbrow{display:flex;align-items:center;gap:.7rem}
+.cbrow h4{margin:0}
+.cb{position:relative;flex:none;width:1.5rem;height:1.5rem;border:2.5px solid var(--ink);background:var(--paper)}
+.cb.on{background:var(--cobalt);border-color:var(--cobalt)}
+.cb.on::after{content:"";position:absolute;left:.4rem;top:.04rem;width:.42rem;height:.82rem;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(40deg)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;font:500 .7rem/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:.4rem .8rem .4rem 0;border-bottom:2px solid var(--ink)}
+td{padding:.55rem .8rem .55rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.defs{display:grid;gap:.5rem}
+.defs>div{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:1rem;align-items:baseline;border-top:1px solid var(--rule);padding-top:.5rem}
+.defs b{font:800 1.5rem/1 var(--f-display);font-stretch:70%;text-transform:uppercase}
+.defs p{margin:0}
+.stair{list-style:none;padding:0;display:grid;gap:.45rem}
+.stair li{margin-left:calc(var(--i)*1.7rem);border-left:5px solid var(--cobalt);background:var(--paper-2);padding:.55rem .85rem;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.15rem .9rem;align-items:baseline}
+.stair b{font:700 1.1rem/1.2 var(--f-display);font-stretch:82%;text-transform:uppercase}
+.stair span:last-child{grid-column:2}
+.six{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.7rem}
+.pc{background:var(--paper-2);border-top:4px solid var(--ink);padding:.7rem .85rem .9rem;display:grid;gap:.4rem;align-content:start}
+.pc b{font:700 1.2rem/1.05 var(--f-display);font-stretch:78%;text-transform:uppercase}
+.pc i{font-size:1rem;line-height:1.35}
+.pc small{font-size:.86rem;line-height:1.4;color:var(--ink-2)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(11.5rem,1fr));gap:.6rem}
+.st{border:1.5px solid var(--ink);padding:.7rem .8rem;display:grid;gap:.4rem;align-content:start}
+.st em{font:500 .78rem/1.2 var(--f-mono);font-style:normal;text-transform:uppercase;letter-spacing:.05em}
+.st span:last-child{font-size:.95rem;line-height:1.4}
+.tl{list-style:none;padding:0;display:grid;gap:0}
+.tl li{display:grid;grid-template-columns:5.6rem minmax(0,1fr);gap:.8rem;padding:.6rem 0;border-top:1px solid var(--rule)}
+.tl li:first-child{border-top:2px solid var(--ink)}
+
+/* reference */
+.plain{margin:0 0 1.2rem;padding-bottom:.5rem;border-bottom:4px solid var(--ink);font:800 clamp(1.9rem,4.8vw,3.1rem)/1 var(--f-display);font-stretch:72%;text-transform:uppercase}
+.ref{margin-top:4rem}
+.lede{margin:0 0 1.2rem;max-width:46rem;color:var(--ink-2)}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:0 2.4rem}
+.term{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.15rem .8rem;padding:.65rem 0;border-top:1px solid var(--rule)}
+.term b{font:700 1.05rem/1.2 var(--f-display);font-stretch:85%}
+.term span:last-child{grid-column:1/-1;font-size:.93rem;line-height:1.4;color:var(--ink-2)}
+.end{margin-top:3.2rem;padding-block:1.4rem 2.6rem;border-top:2px solid var(--ink);font:500 .78rem/1.5 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+
+@media (max-width:760px){
+  .lead{grid-template-columns:minmax(0,1fr)}
+  .band-in{grid-template-columns:minmax(0,1fr);gap:.3rem}
+  .pl{font-size:4.2rem}
+  .cmp{grid-template-columns:minmax(0,1fr)}
+  .defs>div{grid-template-columns:minmax(0,1fr);gap:.2rem}
+  .e{grid-template-columns:14px minmax(0,1fr);grid-template-areas:"rail ts" "rail b";column-gap:.8rem}
+  .rail{grid-area:rail}
+  .ts{grid-area:ts;text-align:left;display:flex;gap:.6rem;align-items:baseline;padding-top:var(--pt)}
+  .ts span{display:inline;margin:0}
+  .b{grid-area:b;padding-top:.35rem}
+  .rail::before{top:calc(var(--pt) + .1rem)}
+  .b h3{font-size:1.4rem}
+  .stair li{margin-left:calc(var(--i)*.55rem)}
+  .tl li{grid-template-columns:minmax(0,1fr);gap:.2rem}
+}
+@media (max-width:480px){.total{display:none}.clock{min-width:4.9rem;font-size:.95rem}}
+
+@media print{
+  @page{size:A4;margin:13mm 0}
+  html{font-size:13.5px}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body::before,.deck{display:none}
+  .wrap{padding-left:14mm;padding-right:14mm;max-width:none}
+  .band{margin-top:2rem;break-after:avoid;break-inside:avoid}
+  .e{break-inside:avoid}
+  .b h3{break-after:avoid}
+  .entries .e:first-child{break-before:avoid}
+  .x,.dim,.pc,.st,.stair li,.tl li,.term,tr{break-inside:avoid}
+  .hero{padding-top:0}
+  .ref{break-before:page}
+}
+</style>
+<!-- Collapsible Left Navigation Drawer -->
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Lecture Tape Hub</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction & Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides &middot; 00:51:13</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Midterm Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Midterm Topic 2 &middot; Ch. 1 &middot; 01:34:41</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Midterm Topic 3 &middot; Ch. 2 &middot; 01:33:17</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Competitive Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Midterm Topic 4 &middot; Ch. 3 &middot; 01:35:39</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item active" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Midterm Topic 5 &middot; Ch. 4 &middot; 01:34:34</span>
+          </div>
+        </a>
+    </nav>
+
+    <div class="sn-section-label">CURRENT TAPE CHAPTERS</div>
+    <div class="sn-parts" id="sn-current-parts">
+        <a href="#part-a" class="sn-part-btn" title="Opening and roadmap">A</a>
+        <a href="#part-b" class="sn-part-btn" title="Opening case: smart homes for older people">B</a>
+        <a href="#part-c" class="sn-part-btn" title="Problems that information systems create">C</a>
+        <a href="#part-d" class="sn-part-btn" title="A method for ethical decisions">D</a>
+        <a href="#part-e" class="sn-part-btn" title="Privacy and online tracking">E</a>
+        <a href="#part-f" class="sn-part-btn" title="Intellectual property">F</a>
+        <a href="#part-g" class="sn-part-btn" title="When systems fail, and what quality means">G</a>
+        <a href="#part-h" class="sn-part-btn" title="Practice, pitfalls and recap">H</a>
+    </div>
+
+    <div class="sn-section-label">QUICK RESOURCES</div>
+    <div class="sn-res-links">
+      <a href="#glossary" class="sn-res-item">&sect; Glossary</a>
+      <a href="#errata" class="sn-res-item">&sect; Errata</a>
+    </div>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Light / Dark Mode">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+
+
+<header class="deck"><div class="wrap"><button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open Navigation Menu" title="Open Navigation Menu (M)"><span class="nt-bars" aria-hidden="true"><span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span></span><span class="nt-label">MENU</span></button>
+<span class="clock" id="clock">00:00:00</span><div class="tape" aria-hidden="true"><a class="seg" href="#part-a" style="--d:388" data-s="0" data-e="388" title="Opening and roadmap">A</a><a class="seg" href="#part-b" style="--d:206" data-s="388" data-e="594" title="Opening case: smart homes for older people">B</a><a class="seg" href="#part-c" style="--d:1658" data-s="594" data-e="2252" title="Problems that information systems create">C</a><a class="seg" href="#part-d" style="--d:1274" data-s="2252" data-e="3526" title="A method for ethical decisions">D</a><a class="seg" href="#part-e" style="--d:930" data-s="3526" data-e="4456" title="Privacy and online tracking">E</a><a class="seg" href="#part-f" style="--d:486" data-s="4456" data-e="4942" title="Intellectual property">F</a><a class="seg" href="#part-g" style="--d:450" data-s="4942" data-e="5392" title="When systems fail, and what quality means">G</a><a class="seg" href="#part-h" style="--d:282" data-s="5392" data-e="5674" title="Practice, pitfalls and recap">H</a><span class="play" id="play"></span></div><span class="total">/ 01:34:34</span></div></header>
+<main><section class="hero"><div class="wrap">
+<div class="eyebrow">Management Information Systems &middot; Week 6 &middot; Recording 24.10.26 &middot; 01:34:34</div>
+<h1>Ethical &amp; social issues <span class="c">in information systems</span></h1>
+<div class="lead"><p><span class="tm">00:02:53</span> The professor spends ninety minutes on one skill: weighing a technology’s benefits against who it could harm, then making a decision you can explain.<small>Every entry below carries the point in the recording where it begins. The bar at the top follows you through the lecture as you scroll.</small></p>
+<dl class="glance"><dt>Recording</dt><dd>24.10.26, 01:34:34</dd><dt>Course</dt><dd>Management information systems, week 6</dd><dt>Slides</dt><dd>66, opening slide at reference book p. 154 (give or take a page)</dd><dt>Frameworks</dt><dd>5 moral dimensions, 5-step method, 6 principles</dd><dt>Practice</dt><dd>Labs A and B, guided practice, homework mini project</dd></dl></div>
+<div class="tapewrap"><div class="tape"><a class="seg" href="#part-a" style="--d:388" data-s="0" data-e="388" title="Opening and roadmap">A</a><a class="seg" href="#part-b" style="--d:206" data-s="388" data-e="594" title="Opening case: smart homes for older people">B</a><a class="seg" href="#part-c" style="--d:1658" data-s="594" data-e="2252" title="Problems that information systems create">C</a><a class="seg" href="#part-d" style="--d:1274" data-s="2252" data-e="3526" title="A method for ethical decisions">D</a><a class="seg" href="#part-e" style="--d:930" data-s="3526" data-e="4456" title="Privacy and online tracking">E</a><a class="seg" href="#part-f" style="--d:486" data-s="4456" data-e="4942" title="Intellectual property">F</a><a class="seg" href="#part-g" style="--d:450" data-s="4942" data-e="5392" title="When systems fail, and what quality means">G</a><a class="seg" href="#part-h" style="--d:282" data-s="5392" data-e="5674" title="Practice, pitfalls and recap">H</a></div><ol class="legend">
+<li><a href="#part-a"><span class="l">A</span><span><b>Opening and roadmap</b><small>00:00:00 &ndash; 00:06:28 &middot; 6 min 28 s</small></span></a></li>
+<li><a href="#part-b"><span class="l">B</span><span><b>Opening case: smart homes for older people</b><small>00:06:28 &ndash; 00:09:54 &middot; 3 min 26 s</small></span></a></li>
+<li><a href="#part-c"><span class="l">C</span><span><b>Problems that information systems create</b><small>00:09:54 &ndash; 00:37:32 &middot; 27 min 38 s</small></span></a></li>
+<li><a href="#part-d"><span class="l">D</span><span><b>A method for ethical decisions</b><small>00:37:32 &ndash; 00:58:46 &middot; 21 min 14 s</small></span></a></li>
+<li><a href="#part-e"><span class="l">E</span><span><b>Privacy and online tracking</b><small>00:58:46 &ndash; 01:14:16 &middot; 15 min 30 s</small></span></a></li>
+<li><a href="#part-f"><span class="l">F</span><span><b>Intellectual property</b><small>01:14:16 &ndash; 01:22:22 &middot; 8 min 06 s</small></span></a></li>
+<li><a href="#part-g"><span class="l">G</span><span><b>When systems fail, and what quality means</b><small>01:22:22 &ndash; 01:29:52 &middot; 7 min 30 s</small></span></a></li>
+<li><a href="#part-h"><span class="l">H</span><span><b>Practice, pitfalls and recap</b><small>01:29:52 &ndash; 01:34:34 &middot; 4 min 42 s</small></span></a></li>
+</ol></div></div></section>
+<section class="part" id="part-a"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">A</div><div><div class="pr">Part 1 of 8 &middot; 00:00:00 &ndash; 00:06:28 &middot; 6 min 28 s</div><h2>Opening and roadmap</h2><p>Housekeeping, the lecture’s aim and a map of what is coming.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="0" data-e="92"><div class="ts">00:00:00<span>to 00:01:32</span></div><div class="rail"></div><div class="b"><h3>Getting set up</h3>
+<p>The professor checks the slides, fills in the attendance documents and confirms the numbering: counting from week zero, this is <mark>week six</mark>. The topic is ethical and social issues in information systems.</p>
+</div></article>
+<article class="e" data-t="92" data-e="173"><div class="ts">00:01:32<span>to 00:02:53</span></div><div class="rail"></div><div class="b"><h3>Information systems in an ordinary day</h3>
+<p>We use them to communicate, shop, study, manage money and receive services, yet we rarely notice what happens to our information or how a system affects other people.</p>
+<p>This week covers the ethical and social side of management information systems. A company could collect a customer’s location all day, but is that always a good idea? The week also covers ownership of digital work, mistakes in computer systems and the effects of technology on daily life.</p>
+</div></article>
+<article class="e" data-t="173" data-e="188"><div class="ts">00:02:53<span>to 00:03:08</span></div><div class="rail"></div><div class="b"><h3>The aim: careful decisions</h3>
+<p>The main goal is to learn <mark>how to make careful decisions</mark>, not simply how to use new technology.</p>
+</div></article>
+<article class="e" data-t="188" data-e="299"><div class="ts">00:03:08<span>to 00:04:59</span></div><div class="rail"></div><div class="b"><h3>Roadmap: three topics, then practice</h3>
+<p>The lesson runs through three main topics followed by practical work.</p>
+<ul class="pts"><li>Problems that appear when information systems become part of society: questions about privacy, power and individual rights.</li><li>A method for ethical decisions, useful when two important values conflict and there is no perfect answer.</li><li>Five areas in more detail: personal information, intellectual property, responsibility, system quality and quality of life.</li></ul>
+</div></article>
+<article class="e" data-t="299" data-e="388"><div class="ts">00:04:59<span>to 00:06:28</span></div><div class="rail"></div><div class="b"><h3>What you should be able to do</h3>
+<p>Imagine you are a manager and your company wants to introduce a new application. You should be able to explain what ethical questions it creates, who might benefit and who might be harmed.</p>
+<p>Privacy and intellectual property carry weight because digital information is easy to collect and copy. When you describe a system, do not stop at fast, modern or profitable. Ask whether people are treated fairly and whether the system is used responsibly.</p>
+</div></article>
+</div></section>
+<section class="part" id="part-b"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">B</div><div><div class="pr">Part 2 of 8 &middot; 00:06:28 &ndash; 00:09:54 &middot; 3 min 26 s</div><h2>Opening case: smart homes for older people</h2><p>One service that delivers safety and surveillance together.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="388" data-e="482"><div class="ts">00:06:28<span>to 00:08:02</span></div><div class="rail"></div><div class="b"><h3>Living safely at home</h3>
+<p>Smart-home technology can help older people stay independent. A sensor detects movement, an emergency button calls for help and a remote door system eases daily tasks.</p>
+<p>Now imagine living in a home where your movements are recorded all day. Who receives this information? Do you really agree to the monitoring? Could someone else see your private health details? A useful service can create problems. A responsible design respects the older person’s wishes as well as their safety, and keeps the value of <mark>human care</mark>.</p>
+</div></article>
+<article class="e" data-t="482" data-e="568"><div class="ts">00:08:02<span>to 00:09:28</span></div><div class="rail"></div><div class="b"><h3>Benefits set against concerns</h3>
+<div class="x cmp"><div class="col"><h4>Benefits</h4><ul class="pts"><li>Help arrives quickly after a fall.</li><li>A carer can notice a problem earlier.</li><li>Family members communicate more easily.</li></ul></div><div class="col"><h4>Concerns</h4><ul class="pts"><li>Constant monitoring feels uncomfortable.</li><li>Some people do not want cameras or sensors in private space.</li><li>Health data is sensitive and weak security could expose it.</li><li>Technology should support personal contact, not replace it.</li><li>Families and cultures disagree about acceptable care.</li></ul></div></div>
+</div></article>
+<article class="e" data-t="568" data-e="594"><div class="ts">00:09:28<span>to 00:09:54</span></div><div class="rail"></div><div class="b"><h3>Questions to ask before buying for a relative</h3>
+<p>If you were choosing such a system for a relative, what would you ask before buying? The professor points to <mark>consent</mark> and to who can access the data, according to the person’s own preferences.</p>
+</div></article>
+</div></section>
+<section class="part" id="part-c"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">C</div><div><div class="pr">Part 3 of 8 &middot; 00:09:54 &ndash; 00:37:32 &middot; 27 min 38 s</div><h2>Problems that information systems create</h2><p>How new systems shift rights and power, the five moral dimensions, and the data practices behind profiling.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="594" data-e="686"><div class="ts">00:09:54<span>to 00:11:26</span></div><div class="rail"></div><div class="b"><h3>Software changes rights and relationships</h3>
+<p>The first main topic is understanding the problems information systems create. An organization introduces software to improve a business process, but the change often touches personal rights and relationships. An online platform can give workers flexibility while watching every task they complete, and it can shift the balance of power between managers and employees.</p>
+<p>So look past technical performance. What changes for the people who use the system? What new information becomes available? Which rules are needed to prevent unfair treatment?</p>
+</div></article>
+<article class="e" data-t="686" data-e="772"><div class="ts">00:11:26<span>to 00:12:52</span></div><div class="rail"></div><div class="b"><h3>Why ethics matters</h3>
+<p>Technology gives people new abilities, and those abilities can be used in different ways. Customer information can improve a service, or be sold and shared unexpectedly. Managers decide what data to collect, how long to keep it and which employees can see it. <mark>These are human decisions</mark>, even when software carries them out.</p>
+<p>Laws and social expectations take time to catch up, so an action can be technically possible without being clearly accepted. Consider a company that tracks staff locations after working hours. It gains useful information and workers lose privacy. Who gets the benefit and who carries the risk?</p>
+</div></article>
+<article class="e" data-t="772" data-e="861"><div class="ts">00:12:52<span>to 00:14:21</span></div><div class="rail"></div><div class="b"><h3>Housekeeping: slides and the reference book</h3>
+<p>The week has 66 slides, and the professor will explain each. Every topic also appears in the reference book, with its page number at the bottom of each slide. The first slide points to page 154, give or take a page. The slides are short summaries, so go to the book for more.</p>
+</div></article>
+<article class="e" data-t="861" data-e="963"><div class="ts">00:14:21<span>to 00:16:03</span></div><div class="rail"></div><div class="b"><h3>Slide 8: information made dishonest</h3>
+<p>The table on this slide lists cases that are not ordinary computer errors. One concerns a bank manipulating information about interest rates. The others involve unsafe business practices, problems in waste-related reporting and corruption.</p>
+<p>The point is shared: information can be hidden, changed or presented dishonestly. <mark>A system cannot create ethical behavior by itself</mark>, and even an accurate reporting system becomes dangerous when people enter false data or ignore warnings. Managers must build a culture where information is reliable and problems can be reported, because employees pressured to hide bad results will not correct them.</p>
+</div></article>
+<article class="e" data-t="963" data-e="1088"><div class="ts">00:16:03<span>to 00:18:08</span></div><div class="rail"></div><div class="b"><h3>Three connected levels: person, society, rules</h3>
+<p>New technology raises questions long before society agrees on answers. A school introduces software that watches students during online exams. First, individual students ask whether that monitoring is fair. As more schools adopt similar tools, parents and teachers start a wider discussion. Eventually lawmakers or education authorities decide formal rules are needed.</p>
+<p>That is three levels: ethical questions for individuals, social debate among groups, and political decisions about rules and rights. They affect each other. It also explains why <mark>following current law is not always enough</mark>: organizations should weigh the effects of their decisions before new regulation forces a change.</p>
+</div></article>
+<article class="e" data-t="1088" data-e="1232"><div class="ts">00:18:08<span>to 00:20:32</span></div><div class="rail"></div><div class="b"><h3>Reading the figure: technology at the center</h3>
+<p>Information technology sits at the center because it starts many new questions. Moving outward come individuals, society and public policy. A problem can begin with one person’s experience and become important to a whole community.</p>
+<p>People lose control over their data, creators have work copied, and organizations disagree about who is responsible for harm. A digital health service that makes a wrong decision touches privacy, safety, responsibility and public trust all at once.</p>
+</div></article>
+<article class="e" data-t="1232" data-e="1319"><div class="ts">00:20:32<span>to 00:21:59</span></div><div class="rail"></div><div class="b"><h3>The five moral dimensions</h3>
+<p>Five dimensions serve as a checklist for the rest of the chapter. The professor runs one example through all five: a delivery app collects customers’ addresses, uses software owned by developers, makes automatic decisions, depends on reliable data and changes working conditions for drivers.</p>
+<div class="x dims"><div class="dim"><span class="tm">00:20:41</span><b>Information rights</b><span>Who can collect and use personal data?</span></div><div class="dim"><span class="tm">00:20:48</span><b>Property rights</b><span>Who owns software, music, designs and other digital creations?</span></div><div class="dim"><span class="tm">00:20:59</span><b>Accountability</b><span>Who explains a decision and takes responsibility when something goes wrong?</span></div><div class="dim"><span class="tm">00:21:09</span><b>System quality</b><span>Is the system accurate, reliable and safe?</span></div><div class="dim"><span class="tm">00:21:15</span><b>Quality of life</b><span>What are the wider effects on jobs, family, health and society?</span></div></div>
+</div></article>
+<article class="e" data-t="1319" data-e="1405"><div class="ts">00:21:59<span>to 00:23:25</span></div><div class="rail"></div><div class="b"><h3>Information rights</h3>
+<p>Information rights are about a person’s control over information about themselves. A shopping app that asks for your name and delivery address is one thing. Asking for your microphone and contact list is another: would that be necessary?</p>
+<p>A company should explain why it collects each item and how it will be used. People need understandable choices, safe storage and a way to correct wrong details. Another key question is whether data collected for one purpose can later be used for something completely different. Good information management means <mark>respecting people</mark> instead of treating their data as an unlimited resource.</p>
+</div></article>
+<article class="e" data-t="1405" data-e="1498"><div class="ts">00:23:25<span>to 00:24:58</span></div><div class="rail"></div><div class="b"><h3>Property rights</h3>
+<p>A digital file can be copied in seconds. Taking someone’s printed book without permission is clearly wrong, but copying a digital book, program or photograph can feel less serious because the original stays in place. The creator still spent time and effort making it. Someone who downloads a paid design and uploads it for everyone harms the creator, even though copying is easy.</p>
+<p>Organizations need licenses and clear policies so employees know what they may share, change and reuse.</p>
+</div></article>
+<article class="e" data-t="1498" data-e="1592"><div class="ts">00:24:58<span>to 00:26:32</span></div><div class="rail"></div><div class="b"><h3>Accountability</h3>
+<p>A bank’s system rejects a customer’s payment although the account has enough money. Who should explain? The programmer may have made an error, but other people designed the tests and run the system. A company cannot simply say <mark>“the computer decided.”</mark></p>
+<p>Accountability means being able to identify decisions and who was responsible for them. That takes records, clear rules and a process for investigating problems. People who are harmed need a way to report the issue and get an answer. Automatic decision-making is useful but must not become an excuse for avoiding responsibility.</p>
+</div></article>
+<article class="e" data-t="1592" data-e="1665"><div class="ts">00:26:32<span>to 00:27:45</span></div><div class="rail"></div><div class="b"><h3>System quality</h3>
+<p>No large system works perfectly all the time. Developers make mistakes, equipment fails and users enter wrong information. Managers must decide how much testing is needed before people depend on the system, and the answer should be based on <mark>risk</mark>.</p>
+<p>A small mistake in a music app is annoying. A similar mistake in a hospital system could endanger a patient, which makes it an ethical responsibility too. Teams should test important functions, check data quality and prepare for failures. The question is not whether every error can be removed, but whether reasonable steps were taken to protect the people affected.</p>
+</div></article>
+<article class="e" data-t="1665" data-e="1770"><div class="ts">00:27:45<span>to 00:29:30</span></div><div class="rail"></div><div class="b"><h3>Quality of life</h3>
+<p>Technology makes life more convenient: we attend online classes, talk to relatives abroad and pay without visiting a bank. It can also make people feel they must always be connected and available. Some jobs disappear or change as tasks are automated, and people without good internet access are left behind. The effects are not equal for everyone.</p>
+<p>A new platform may save a company money and pressure its workers. Studying quality of life means looking at the full picture: work, health, family, access and fairness. A successful system should improve life for people, not only produce good business numbers.</p>
+</div></article>
+<article class="e" data-t="1770" data-e="1865"><div class="ts">00:29:30<span>to 00:31:05</span></div><div class="rail"></div><div class="b"><h3>Why the stakes keep rising</h3>
+<p>Several technology changes make ethical decisions more urgent. Computers process more information and storage is cheaper, so organizations can keep customer records for long periods. Better analysis finds patterns in data. Networks move information quickly between companies and countries. Mobile phones collect location and activity during the day.</p>
+<p>A hospital can use data to improve care, and the same abilities can support unnecessary surveillance. The main change is the <mark>scale of what organizations can know</mark>. As their power grows, so does their duty to use information carefully.</p>
+</div></article>
+<article class="e" data-t="1865" data-e="1971"><div class="ts">00:31:05<span>to 00:32:51</span></div><div class="rail"></div><div class="b"><h3>Table 4.2: trend and ethical effect</h3>
+<p>The table connects each technology trend to a possible ethical effect. A transport app needs location data to guide a driver, but does not necessarily need to store every journey forever. When reading a table like this, ask what ability the technology creates and what safeguards should come with it.</p>
+<div class="x tw"><table><thead><tr><th>At</th><th>Technology trend</th><th>Possible ethical effect</th></tr></thead><tbody><tr><td><span class="tm">00:31:19</span></td><td><b>Greater computing power</b></td><td>Important business activities depend heavily on computer systems.</td></tr><tr><td><span class="tm">00:31:33</span></td><td><b>Cheaper data storage</b></td><td>Large personal databases keep growing.</td></tr><tr><td><span class="tm">00:31:33</span></td><td><b>Better data analysis</b></td><td>Detailed pictures of people’s behavior become possible.</td></tr><tr><td><span class="tm">00:31:46</span></td><td><b>Networks</b></td><td>Records are easier to copy, or to reach from another location.</td></tr><tr><td><span class="tm">00:31:56</span></td><td><b>Mobile devices</b></td><td>They can reveal where someone goes during the day.</td></tr></tbody></table></div>
+</div></article>
+<article class="e" data-t="1971" data-e="2068"><div class="ts">00:32:51<span>to 00:34:28</span></div><div class="rail"></div><div class="b"><h3>Profiling</h3>
+<p>Profiling builds a detailed picture of a person from several sources. A supermarket knows what you buy, a website records what you search and a mobile app may hold your location. Each record looks limited, but combined they can reveal habits, interests and sensitive details.</p>
+<p>Companies use profiles to recommend products or detect suspicious activity. A profile may also be wrong, and the person may never learn how the conclusion was reached. Imagine getting a different price or service because software placed you in a category: you would want to know why. Profiling raises questions of fairness, data quality, consent and the right to challenge incorrect assumptions.</p>
+</div></article>
+<article class="e" data-t="2068" data-e="2164"><div class="ts">00:34:28<span>to 00:36:04</span></div><div class="rail"></div><div class="b"><h3>NORA: non-obvious relationship awareness</h3>
+<p>NORA is a method for finding connections that are hard to see when information sits in separate databases. A security team may compare names, phone numbers, transactions and other records to find a possible link between people.</p>
+<p><mark>Matching data is not proof of wrongdoing.</mark> Two people may share an address or phone number for an innocent reason, and a weak match creates unfair suspicion. Results need human review, good-quality records and clear limits on who can use them. Security benefits do not remove privacy concerns.</p>
+</div></article>
+<article class="e" data-t="2164" data-e="2252"><div class="ts">00:36:04<span>to 00:37:32</span></div><div class="rail"></div><div class="b"><h3>Reading the NORA diagram</h3>
+<p>Follow the arrows left to right. Separate systems hold watch lists, incident records, customer transactions, telephone information and human resources data. A central process standardizes names and tries to match related records, then raises an alert about a possible connection.</p>
+<p>If a person’s name is entered differently in two systems, the process may find the link, or it may confuse two people with similar names. That is why the accuracy of source data matters so much. Understand both the usefulness of the connection and the danger of reaching conclusions too quickly.</p>
+</div></article>
+</div></section>
+<section class="part" id="part-d"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">D</div><div><div class="pr">Part 4 of 8 &middot; 00:37:32 &ndash; 00:58:46 &middot; 21 min 14 s</div><h2>A method for ethical decisions</h2><p>A step-by-step method for decisions where two good values collide, plus six principles to test the answer.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="2252" data-e="2342"><div class="ts">00:37:32<span>to 00:39:02</span></div><div class="rail"></div><div class="b"><h3>From problems to decisions</h3>
+<p>Having seen the kinds of problems, the next question is how to decide well. “I think this is right” is not enough when a decision affects customers, workers and the public. We need clear ideas about responsibility and a step-by-step way to study the situation: separate facts from opinions, identify who is affected, compare actions, think through consequences, and test the choice against ethical principles.</p>
+<p>The purpose is not a simple rule for every situation. It is to make decisions we can <mark>explain and defend</mark>.</p>
+</div></article>
+<article class="e" data-t="2342" data-e="2449"><div class="ts">00:39:02<span>to 00:40:49</span></div><div class="rail"></div><div class="b"><h3>Responsibility, accountability, liability</h3>
+<p>Two words matter here, and the professor adds a third. An online store shows how they fit: a manager chooses a payment system, the company keeps records of decisions, and the customer may have a legal right if a preventable failure causes a loss. A responsible organization needs all three. “Everyone worked on the project” is not an acceptable explanation of what went wrong.</p>
+<div class="x defs"><div><b>Responsibility</b><p><span class="tm">00:39:16</span> Accepting that your choices carry duties and possible consequences.</p></div><div><b>Accountability</b><p><span class="tm">00:39:32</span> A clear way to find out who made the decision.</p></div><div><b>Liability</b><p><span class="tm">00:39:43</span> Legal responsibility when harm has occurred and someone may seek compensation.</p></div></div>
+</div></article>
+<article class="e" data-t="2449" data-e="2536"><div class="ts">00:40:49<span>to 00:42:16</span></div><div class="rail"></div><div class="b"><h3>Due process</h3>
+<p>Fairness also depends on the process used to decide. People should know the rules that affect them and have a fair way to question a decision. If a university system automatically blocks a student from registering and the student cannot see the reason or reach anyone to fix an error, the process is unfair. The university should explain the rule and offer a clear appeal.</p>
+<p>Technology decides quickly, but <mark>speed does not guarantee fairness</mark>. When a decision has serious effects, people need understandable information and a chance to challenge mistakes.</p>
+</div></article>
+<article class="e" data-t="2536" data-e="2631"><div class="ts">00:42:16<span>to 00:43:51</span></div><div class="rail"></div><div class="b"><h3>The five-step method</h3>
+<p>A practical method for when ethical problems feel complicated. The running example: a company wants to collect employee location data. First find out why it wants the data and set privacy against safety, then identify workers and managers, consider alternatives and think through what each could cause.</p>
+<ol class="x stair"><li style="--i:0"><span class="tm">00:42:26</span><b>Facts</b><span>What actually happened, and what do we know for sure?</span></li><li style="--i:1"><span class="tm">00:42:38</span><b>Dilemma</b><span>Name the dilemma and the values in conflict.</span></li><li style="--i:2"><span class="tm">00:42:46</span><b>Stakeholders</b><span>List the people or groups the result will affect.</span></li><li style="--i:3"><span class="tm">00:42:57</span><b>Options</b><span>Think of several realistic options, not the first idea that comes to mind.</span></li><li style="--i:4"><span class="tm">00:43:07</span><b>Consequences</b><span>Compare what each option leads to, now and later.</span></li></ol>
+</div></article>
+<article class="e" data-t="2631" data-e="2727"><div class="ts">00:43:51<span>to 00:45:27</span></div><div class="rail"></div><div class="b"><h3>Steps 1 and 2 in practice</h3>
+<p>Employees say a new app records their location even when they are not working. Before judging the company, check the facts: is the app really active all day, what does the policy say, who can view the information?</p>
+<p>Then name the conflict. The company may want to protect equipment or improve delivery planning, while employees want privacy outside working hours. Both concerns can be reasonable, so calling one group good and the other bad solves nothing. Describe the real disagreement in simple terms, and the solutions become easier to compare.</p>
+</div></article>
+<article class="e" data-t="2727" data-e="2821"><div class="ts">00:45:27<span>to 00:47:01</span></div><div class="rail"></div><div class="b"><h3>Steps 3 to 5 in practice</h3>
+<p>The stakeholders are employees, managers, customers and perhaps the company that supplies the app, each with different needs. The options: turn tracking off completely, collect location only during working hours, or track company vehicles instead of personal phones.</p>
+<p>Then weigh consequences. A choice that saves money today might damage trust over several years, while an approach fair to workers may improve cooperation and reduce complaints. Good ethical analysis looks at <mark>immediate effects and longer-term relationships</mark>.</p>
+</div></article>
+<article class="e" data-t="2821" data-e="2929"><div class="ts">00:47:01<span>to 00:48:49</span></div><div class="rail"></div><div class="b"><h3>Six principles for testing a decision</h3>
+<p>Ethical principles give different ways to test a choice. The professor lists six questions that can reveal problems. Sometimes two principles point in different directions, so honest judgment is still needed.</p>
+<div class="x six"><div class="pc"><span class="tm">00:47:12</span><b>Golden rule</b><i>How would I feel if I were the person affected?</i><small>Worked example at 00:48:59. A hidden fee at checkout: would you want to find it only after choosing your products?</small></div><div class="pc"><span class="tm">00:47:24</span><b>Kant’s principle</b><i>Would this still be acceptable if everyone did it?</i><small>Worked example at 00:49:26. If every shop hid important charges until the last moment, nobody could trust prices.</small></div><div class="pc"><span class="tm">00:47:35</span><b>Descartes’ rule of change</b><i>What happens if this action is repeated again and again?</i><small>Worked example at 00:50:28. Reading one private message “just this once” becomes a weekly habit, and privacy disappears.</small></div><div class="pc"><span class="tm">00:47:44</span><b>Utilitarian principle</b><i>Which choice gives the best overall balance of benefits and harms?</i><small>Worked example at 00:50:57. An automated service saves many customers time but makes access hard for a small group.</small></div><div class="pc"><span class="tm">00:47:53</span><b>Risk aversion</b><i>Which option avoids the most serious possible damage?</i><small>Worked example at 00:52:12. Cheaper storage for medical records, with a much higher chance of exposing them.</small></div><div class="pc"><span class="tm">00:48:00</span><b>No free lunch</b><i>Does someone else own the work or data I want to use?</i><small>Worked example at 00:52:39. A useful image or program found online is not free to copy into a commercial product.</small></div></div>
+</div></article>
+<article class="e" data-t="2929" data-e="3022"><div class="ts">00:48:49<span>to 00:50:22</span></div><div class="rail"></div><div class="b"><h3>Golden rule and Kant: the hidden checkout fee</h3>
+<p>You manage an online store and consider a hidden fee at checkout. The golden rule asks whether you would want to find that fee only after spending time choosing products. Probably not, which shows the customer’s position. Kant’s principle asks what happens if every business hid important charges until the last moment: customers could not trust prices and markets would work less fairly.</p>
+<p>The golden rule is about how we treat one person. Kant’s principle is about whether our rule could be followed by everyone. Try applying both to a company that quietly changes its privacy settings.</p>
+</div></article>
+<article class="e" data-t="3022" data-e="3114"><div class="ts">00:50:22<span>to 00:51:54</span></div><div class="rail"></div><div class="b"><h3>Descartes’ rule of change and the utilitarian principle</h3>
+<p>The rule of change is about repetition. A company reads one employee’s private message without permission because it believes there is an urgent problem. One exception looks harmless, but if the same exception happens every week, employees lose their privacy completely.</p>
+<p>The utilitarian principle compares total benefits and costs. An automated service may save many customers time and make access hard for a small group. Consider both results, not just the money saved. Both principles push us past one immediate advantage toward how a decision affects people over time.</p>
+</div></article>
+<article class="e" data-t="3114" data-e="3200"><div class="ts">00:51:54<span>to 00:53:20</span></div><div class="rail"></div><div class="b"><h3>Risk aversion and no free lunch</h3>
+<p>Risk aversion matters when a decision could cause serious harm. Of two ways to store sensitive medical records, one is cheaper but far more likely to expose information. Even if the problem never happens, the harm would be hard to repair, so the safer option is more responsible.</p>
+<p>No free lunch concerns ownership. A useful image, program or document found online may not be copied into a commercial product without permission, because someone created it and may hold rights over its use. Together these two principles encourage caution, protect people from serious risk and respect the value of other people’s work.</p>
+</div></article>
+<article class="e" data-t="3200" data-e="3302"><div class="ts">00:53:20<span>to 00:55:02</span></div><div class="rail"></div><div class="b"><h3>Professional codes of conduct</h3>
+<p>Doctors, engineers, accountants and computing professionals are trusted because they hold special knowledge, which can help or harm. Codes of conduct set general standards: protect private information, avoid unnecessary damage, respect ownership.</p>
+<p>Picture a software engineer who finds a serious security weakness shortly before launch. Pressure to stay silent is real, but professional responsibility means taking the danger seriously. A code cannot answer every hard question and does not replace the law, yet it gives a shared starting point for what a competent, responsible professional should do.</p>
+</div></article>
+<article class="e" data-t="3302" data-e="3412"><div class="ts">00:55:02<span>to 00:56:52</span></div><div class="rail"></div><div class="b"><h3>Critical dilemmas</h3>
+<p>Real business decisions rarely give a perfect result for everyone. A factory automates and some employees lose jobs. A company monitors its network for security and workers feel watched. Customer data enables useful services and unwanted tracking. Security software spots suspicious behavior and also makes mistakes about innocent people.</p>
+<p>These are <mark>ethical dilemmas</mark> because important values sit on both sides. The job is to recognize the conflict instead of pretending it is absent. A good decision explains which benefits matter, which risks remain and what the organization will do to reduce harm.</p>
+</div></article>
+<article class="e" data-t="3412" data-e="3526"><div class="ts">00:56:52<span>to 00:58:46</span></div><div class="rail"></div><div class="b"><h3>Guided practice: employee internet monitoring</h3>
+<p>A company wants to reduce security risks and lost working time. Employees say watching their browsing is too personal. Work through the five steps.</p>
+<ul class="pts"><li>Write down the facts you would need, such as which websites are recorded and whether workers were told.</li><li>Identify the values in play: security, productivity, privacy and trust, and the people affected.</li><li>Suggest at least three options, for example block dangerous sites, monitor only security alerts, or collect wider records under strict limits.</li><li>Choose one and test it with two ethical principles. Explain who benefits, what risks remain and how the policy should be communicated.</li><li>Different answers are fine if the reasoning is clear.</li></ul>
+</div></article>
+</div></section>
+<section class="part" id="part-e"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">E</div><div><div class="pr">Part 5 of 8 &middot; 00:58:46 &ndash; 01:14:16 &middot; 15 min 30 s</div><h2>Privacy and online tracking</h2><p>What privacy means, fair information practices, and how cookies, beacons and consent boxes work.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="3526" data-e="3661"><div class="ts">00:58:46<span>to 01:01:01</span></div><div class="rail"></div><div class="b"><h3>From the general method to specific areas</h3>
+<p>The five moral dimensions now become concrete. Next: privacy and how organizations collect personal information online; intellectual property and the ways to protect creative and technical work; responsibility when systems fail and how much system quality is enough; and the wider effects on working life, equal access and health. A manager may not write the code, but still chooses policies, resources and acceptable risks.</p>
+</div></article>
+<article class="e" data-t="3661" data-e="3745"><div class="ts">01:01:01<span>to 01:02:25</span></div><div class="rail"></div><div class="b"><h3>What privacy means</h3>
+<p>Privacy is more than keeping something secret. People should have a reasonable degree of control over their personal lives and the information about them. A university collects students’ addresses to send documents, then shares them with an advertiser without saying so. Students feel their information was used in a way they never expected.</p>
+<p>Organizations see personal data as valuable for decisions and business opportunities. The ethical challenge is deciding <mark>where the limits should be</mark>. People need to know what is collected, why, and whether they have a meaningful choice.</p>
+</div></article>
+<article class="e" data-t="3745" data-e="3843"><div class="ts">01:02:25<span>to 01:04:03</span></div><div class="rail"></div><div class="b"><h3>Fair information practices</h3>
+<p>These practices balance the relationship between people and organizations. A person should know when information is collected and what will happen to it, have reasonable choices, and be able to check and correct important records. The organization must protect the data and use it only for the purposes it explains.</p>
+<p>A customer who finds a wrong delivery address in an online account should have a simple way to fix it. If private records are exposed because the company ignored security warnings, someone should be responsible. Trust depends on more than a privacy notice. It depends on what the organization actually does.</p>
+</div></article>
+<article class="e" data-t="3843" data-e="3931"><div class="ts">01:04:03<span>to 01:05:31</span></div><div class="rail"></div><div class="b"><h3>Privacy law: United States and Europe</h3>
+<p>Countries protect privacy in different ways. The textbook compares the United States and Europe, where legal traditions and regulation differ: some approaches target specific industries, others set broad rules for personal information. Legislation changes, so the goal is to understand the management problem, not memorize an old law.</p>
+<p>A company offering the same service in several countries may need different procedures for collecting data, explaining concerns and handling complaints. A good manager checks the rules before launching. And the ethical responsibility <mark>remains even when an activity is legal</mark>.</p>
+</div></article>
+<article class="e" data-t="3931" data-e="4009"><div class="ts">01:05:31<span>to 01:06:49</span></div><div class="rail"></div><div class="b"><h3>What our internet activity reveals</h3>
+<p>Search terms show our interests, shopping records show habits and repeat visits help a site recognize preferences. Businesses use this for advertising and personalized services: an online store might recommend running shoes after you read several sports pages.</p>
+<p>The real issue is whether people understand the collection and have a genuine choice. A long, confusing privacy notice does not create meaningful consent. Imagine seeing the full list of organizations receiving your browsing information. Would you still accept the same tracking?</p>
+</div></article>
+<article class="e" data-t="4009" data-e="4107"><div class="ts">01:06:49<span>to 01:08:27</span></div><div class="rail"></div><div class="b"><h3>Cookies</h3>
+<p>A cookie is a small piece of information a website sends to a browser. On the next visit the browser can send it back, so the site remembers something about you, such as a shopping basket or a language preference. Cookies can also help companies recognize browsing over time, especially when combined with other data.</p>
+<p>The technology is neither kind nor unkind. <mark>The purpose matters.</mark> Ask whether the cookie is needed for the service or used for advertising and tracking. A responsible site explains important uses and gives people appropriate controls.</p>
+</div></article>
+<article class="e" data-t="4107" data-e="4223"><div class="ts">01:08:27<span>to 01:10:23</span></div><div class="rail"></div><div class="b"><h3>How cookies identify web visitors</h3>
+<p>The diagram reads as a short conversation between a browser and a web server. This is how a site remembers a user without asking them to re-enter every preference. Recognizing a browser is not always the same as knowing a person’s real identity, but combining the identifier with account or activity records can reveal more.</p>
+<div class="x flow"><div class="st"><span class="tm">01:08:45</span><em>browser → server</em><span>A person visits a website.</span></div><div class="st"><span class="tm">01:08:51</span><em>server → browser</em><span>The server sends a small identification value. The browser stores it as a cookie.</span></div><div class="st"><span class="tm">01:09:08</span><em>browser → server</em><span>On a later visit, the browser sends that value back.</span></div><div class="st"><span class="tm">01:09:15</span><em>server</em><span>It recognizes the identifier and links it to what it stored on the earlier visit.</span></div></div>
+</div></article>
+<article class="e" data-t="4223" data-e="4344"><div class="ts">01:10:23<span>to 01:12:24</span></div><div class="rail"></div><div class="b"><h3>Web beacons and less visible tracking</h3>
+<p>Cookies are not the only method. The chapter also describes web beacons, which can record whether a page or an email was opened. Some tracking is less visible to ordinary users and harder to remove. Opening a promotional email, you may not realize the sender learns about that action.</p>
+<p>The problem begins when users do not understand that tracking happens or how the information will be used. The less visible the technology, the greater the need for clear explanations and strong internal rules. Convenience for the company does not make a practice fair.</p>
+</div></article>
+<article class="e" data-t="4344" data-e="4456"><div class="ts">01:12:24<span>to 01:14:16</span></div><div class="rail"></div><div class="b"><h3>Opt-in and opt-out</h3>
+<p>These are two ways of asking permission. With opt-in, a person actively agrees before information is collected or used. With opt-out, collection may happen unless the person acts to stop it. Signing up for a news site shows the difference, and the way a choice is presented strongly influences what people do.</p>
+<p>For consent to be meaningful, the language must be understandable and the alternatives realistic. <mark>A confusing button is not proof of informed consent.</mark></p>
+<div class="x cmp opt"><div class="col"><div class="cbrow"><span class="cb"></span><h4>Opt-in</h4></div><p><span class="tm">01:13:09</span> The box for marketing email starts empty. You tick it to agree.</p></div><div class="col"><div class="cbrow"><span class="cb on"></span><h4>Opt-out</h4></div><p><span class="tm">01:13:21</span> The box starts ticked. You must remove the tick to refuse.</p></div></div>
+</div></article>
+</div></section>
+<section class="part" id="part-f"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">F</div><div><div class="pr">Part 6 of 8 &middot; 01:14:16 &ndash; 01:22:22 &middot; 8 min 06 s</div><h2>Intellectual property</h2><p>Trade secrets, copyright and patents, and why easy copying does not mean free use.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="4456" data-e="4555"><div class="ts">01:14:16<span>to 01:15:55</span></div><div class="rail"></div><div class="b"><h3>From privacy to ownership</h3>
+<p>Intellectual property means valuable creations that are not physical objects: software, writing, music, design and inventions. They may be easy to copy, yet creating them can take years of work and a great deal of money. Organizations need to protect that investment while letting useful ideas spread.</p>
+<p>The chapter introduces three main forms of protection. The central challenge is balancing the interests of creators, businesses and the public.</p>
+<div class="x six ip"><div class="pc"><span class="tm">01:15:55</span><b>Trade secret</b><i>Business information that gives an advantage because others do not know it.</i><small>Recipe, production method, customer list. Needs business value and real confidentiality, and is hard to defend once public.</small></div><div class="pc"><span class="tm">01:17:26</span><b>Copyright</b><i>Original expression: writing, music, pictures, computer code.</i><small>It does not give anyone every use of a general idea. Check the licence, ask permission, give credit.</small></div><div class="pc"><span class="tm">01:18:44</span><b>Patent</b><i>An invention or process, protected for a limited time.</i><small>The owner describes the invention and receives exclusive rights. Applications and disputes can be expensive.</small></div></div>
+</div></article>
+<article class="e" data-t="4555" data-e="4646"><div class="ts">01:15:55<span>to 01:17:26</span></div><div class="rail"></div><div class="b"><h3>Trade secrets</h3>
+<p>A trade secret is information that gives a business an advantage because others do not know it: a production method, a customer list, an internal process. The key condition is secrecy. A food company keeps a recipe that only a few authorized employees can access, protected by passwords, confidentiality agreements and limits on who sees the details. If the information becomes public, protection becomes much harder.</p>
+<p>It must have business value and be treated as confidential, not just be any private file. Managers decide which information needs protection and how employees handle it.</p>
+</div></article>
+<article class="e" data-t="4646" data-e="4724"><div class="ts">01:17:26<span>to 01:18:44</span></div><div class="rail"></div><div class="b"><h3>Copyright</h3>
+<p>Copyright protects original expression such as writing, music, pictures and computer code. It does not give one person every possible use of a general idea. Two students may build different apps for booking study rooms with the same basic idea, and each student’s actual code and design remains their own work.</p>
+<p>Digital files can be copied perfectly and shared with thousands of people at almost no cost. Check the license or ask permission. <mark>Easy access is not the same as free use.</mark> Respecting copyright also means crediting creators where required.</p>
+</div></article>
+<article class="e" data-t="4724" data-e="4813"><div class="ts">01:18:44<span>to 01:20:13</span></div><div class="rail"></div><div class="b"><h3>Patents</h3>
+<p>A patent protects certain inventions or processes for a limited time, under the rules of the relevant patent system. In return for describing the invention, the owner may receive exclusive rights that protect the investment. A company that spent years testing a new technical process benefits, while other companies learn the invention exists.</p>
+<p>Patents also bring problems. Applications and disputes can be expensive, and technology often changes faster than legal cases are resolved. Firms must decide when protection is worth the cost. A patent differs from copyright and from a trade secret, so the choice depends on what the company is trying to protect.</p>
+</div></article>
+<article class="e" data-t="4813" data-e="4942"><div class="ts">01:20:13<span>to 01:22:22</span></div><div class="rail"></div><div class="b"><h3>Digital media and the ownership problem</h3>
+<p>Think of a song, a film or a software program. In digital form one copy can be shared very quickly, often with no loss of quality. People sometimes feel that anything found on the internet belongs to everyone. But access to a file does not give permission to copy, sell or change it, and creators may depend on payment for their work. Businesses use licenses and other controls to say what customers may do.</p>
+<p>The professor returns to <mark>no free lunch</mark>: if somebody creates something valuable, do not assume you can use it without considering their rights.</p>
+</div></article>
+</div></section>
+<section class="part" id="part-g"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">G</div><div><div class="pr">Part 7 of 8 &middot; 01:22:22 &ndash; 01:29:52 &middot; 7 min 30 s</div><h2>When systems fail, and what quality means</h2><p>Who answers for a failure, how much quality is enough, and what systems cost society.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="4942" data-e="5017"><div class="ts">01:22:22<span>to 01:23:37</span></div><div class="rail"></div><div class="b"><h3>Who is responsible when a service harms someone</h3>
+<p>A company’s ordering system sends the wrong medicine to a customer. Perhaps the software had a bug, the database held wrong information or an employee picked the wrong option. More than one organization may have built and run the service. Investigate the actual cause before deciding who carries the cost.</p>
+<p>Responsibility concerns duties, accountability helps trace actions and liability concerns legal consequences. Contracts and technical safeguards help, but managers should also give customers a clear way to report serious problems.</p>
+</div></article>
+<article class="e" data-t="5017" data-e="5142"><div class="ts">01:23:37<span>to 01:25:42</span></div><div class="rail"></div><div class="b"><h3>How good does a system need to be?</h3>
+<p>Complex programs cannot be tested in every situation, and every extra test costs time and money. Releasing too early can cost far more than it saves. A minor display error in a video game can be fixed in a later update. A similar error in a system that calculates medical doses has far more serious consequences.</p>
+<p>Managers should weigh the risk, the number of people affected and whether the harm can be corrected. <mark>Quality decisions should follow the importance of the system</mark>, not only a planned release date.</p>
+</div></article>
+<article class="e" data-t="5142" data-e="5223"><div class="ts">01:25:42<span>to 01:27:03</span></div><div class="rail"></div><div class="b"><h3>Three reasons systems perform badly</h3>
+<p>A software problem such as a programming mistake. A hardware or facility failure, such as a server stopping or a power problem interrupting service. And poor input data: a university database holds the wrong exam mark, and even flawless software calculates wrong final results.</p>
+<p>This last case is often called <mark>garbage in, garbage out</mark>. A useful system needs more than correct code. It needs accurate records, sensible checks, reliable equipment and procedures for correcting mistakes once someone finds them.</p>
+</div></article>
+<article class="e" data-t="5223" data-e="5305"><div class="ts">01:27:03<span>to 01:28:25</span></div><div class="rail"></div><div class="b"><h3>Wider social costs</h3>
+<p>Information systems save time, create jobs and connect people. They can also increase pressure at work, change who holds power and make life harder for people without digital skills. A service may get cheaper after moving online while older customers struggle if there is no other way to get help.</p>
+<p>When managers measure success they should look beyond efficiency and profit. What does the change mean for families, workers, communities and people who find it hard to access the service?</p>
+</div></article>
+<article class="e" data-t="5305" data-e="5392"><div class="ts">01:28:25<span>to 01:29:52</span></div><div class="rail"></div><div class="b"><h3>Power and speed</h3>
+<p>Systems can change who holds power in an organization. Sharing information across departments lets more employees make decisions, while a large platform that controls important customer data may gain strong influence over smaller businesses. Technology can spread power or concentrate it, depending on how it is managed.</p>
+<p>Speed is a second challenge. Businesses launch new processes quickly and competitors respond almost immediately, leaving workers little time to learn. Replacing a familiar process with a new platform in one week may create stress and mistakes even if the platform is better. Good <mark>change management</mark> gives people time, training and support.</p>
+</div></article>
+</div></section>
+<section class="part" id="part-h"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">H</div><div><div class="pr">Part 8 of 8 &middot; 01:29:52 &ndash; 01:34:34 &middot; 4 min 42 s</div><h2>Practice, pitfalls and recap</h2><p>Labs, common mistakes, the weekly recap and homework.</p></div></div></div><div class="wrap entries">
+<article class="e" data-t="5392" data-e="5463"><div class="ts">01:29:52<span>to 01:31:03</span></div><div class="rail"></div><div class="b"><h3>Practical labs and guided practice</h3>
+<p>Later slides (the professor reads out slide numbers in the 50s) hold two practical labs. Lab A covers privacy and online data brokers. Lab B covers an employee web use policy. A guided practice follows on privacy impact mini-assessments.</p>
+</div></article>
+<article class="e" data-t="5463" data-e="5538"><div class="ts">01:31:03<span>to 01:32:18</span></div><div class="rail"></div><div class="b"><h3>Common mistakes to avoid</h3>
+<ul class="x tl"><li><span class="tm">01:31:13</span><span>Do not assume something is ethical because it is legal.</span></li><li><span class="tm">01:31:20</span><span>Clicking “agree” does not prove a person understood the privacy choice.</span></li><li><span class="tm">01:31:31</span><span>Keep responsibility, accountability and liability separate when you analyze a problem.</span></li><li><span class="tm">01:31:42</span><span>A small piece of data can reveal much more once it is combined with other records.</span></li><li><span class="tm">01:31:51</span><span>A system can make harmful decisions even when its code is correct, because the input data may be wrong.</span></li><li><span class="tm">01:32:01</span><span>Do not judge a system only by speed or cost. Use all five moral dimensions.</span></li></ul>
+</div></article>
+<article class="e" data-t="5538" data-e="5618"><div class="ts">01:32:18<span>to 01:33:38</span></div><div class="rail"></div><div class="b"><h3>Weekly recap</h3>
+<p>New information systems create opportunities and can also change rights, responsibilities and everyday life. The week covered:</p>
+<ul class="pts"><li>Five moral dimensions: information rights, property rights, accountability, system quality and quality of life.</li><li>A five-step method for hard decisions, from facts to consequences.</li><li>Profiling, cookies, tracking and the challenge of protecting personal information.</li><li>Trade secrets, copyrights and patents as kinds of intellectual property.</li><li>System failures and the wider effects of technology on work, access and health.</li><li>When you evaluate a new system, ask <mark>who benefits, who faces risks, and how the organization can act more responsibly</mark>.</li></ul>
+</div></article>
+<article class="e" data-t="5618" data-e="5674"><div class="ts">01:33:38<span>to 01:34:34</span></div><div class="rail"></div><div class="b"><h3>Quiz, homework and goodbye</h3>
+<p>The slides end with a short self-test quiz, with answers on slide 65. There is also a homework mini project. The professor does not want the answers sent in: do the practical work yourself. Next week, see you again.</p>
+</div></article>
+</div></section>
+<section class="ref wrap"><h2 class="plain">Terms, in order of appearance</h2><p class="lede">Each term is stamped with the first moment the professor defines it.</p><div class="terms">
+<div class="term"><b>Profiling</b><span class="tm">00:32:51</span><span>Building a detailed picture of a person from several sources.</span></div>
+<div class="term"><b>NORA</b><span class="tm">00:34:28</span><span>Finding hidden links between people across separate databases.</span></div>
+<div class="term"><b>Responsibility</b><span class="tm">00:39:16</span><span>Accepting that your choices carry duties and possible consequences.</span></div>
+<div class="term"><b>Accountability</b><span class="tm">00:39:32</span><span>A clear way to find out who made a decision.</span></div>
+<div class="term"><b>Liability</b><span class="tm">00:39:43</span><span>Legal responsibility when harm has occurred.</span></div>
+<div class="term"><b>Due process</b><span class="tm">00:40:49</span><span>Known rules plus a fair way to question a decision.</span></div>
+<div class="term"><b>Stakeholders</b><span class="tm">00:42:46</span><span>The people or groups affected by the results.</span></div>
+<div class="term"><b>Ethical dilemma</b><span class="tm">00:56:05</span><span>A choice with important values on both sides.</span></div>
+<div class="term"><b>Fair information practices</b><span class="tm">01:02:25</span><span>Notice, choice, access, correction, security and purpose limits.</span></div>
+<div class="term"><b>Cookie</b><span class="tm">01:06:55</span><span>A small identifier a site stores in your browser.</span></div>
+<div class="term"><b>Web beacon</b><span class="tm">01:10:48</span><span>A tracker that records whether a page or email was opened.</span></div>
+<div class="term"><b>Opt-in</b><span class="tm">01:12:41</span><span>You agree actively before collection starts.</span></div>
+<div class="term"><b>Opt-out</b><span class="tm">01:12:52</span><span>Collection happens unless you act to stop it.</span></div>
+<div class="term"><b>Trade secret</b><span class="tm">01:15:55</span><span>Valuable business information protected by secrecy.</span></div>
+<div class="term"><b>Copyright</b><span class="tm">01:17:26</span><span>Protection for original expression, not for general ideas.</span></div>
+<div class="term"><b>Patent</b><span class="tm">01:18:44</span><span>Limited-time exclusive rights to an invention.</span></div>
+<div class="term"><b>Garbage in, garbage out</b><span class="tm">01:26:35</span><span>Wrong input data gives wrong results even from correct code.</span></div>
+<div class="term"><b>Change management</b><span class="tm">01:29:40</span><span>Giving people time, training and support through a rollout.</span></div>
+</div></section>
+<section class="ref wrap" style="margin-top:3rem"><h2 class="plain">Transcript clean-up</h2><p class="lede">The recording was auto-transcribed, and a few words came out wrong. This page reads them as follows.</p><ul class="tl">
+<li><span class="tm">00:34:28</span><span>The transcript says “MoRA.” The expansion given (non-obvious relationship awareness) matches NORA.</span></li>
+<li><span class="tm">00:41:12</span><span>“DIVA process” is almost certainly due process, going by the description.</span></li>
+<li><span class="tm">00:50:22</span><span>“This character’s rule of change” is read as Descartes’ rule of change.</span></li>
+<li><span class="tm">01:10:48</span><span>“Work beacons” is read as web beacons.</span></li>
+<li><span class="tm">00:09:37</span><span>“Constants” and “constants to be meaningful” (01:13:47) are read as consent.</span></li>
+<li><span class="tm">00:14:51</span><span>“Waste channel reporting” is unclear in the transcript, so it is paraphrased loosely.</span></li>
+<li><span class="tm">01:29:52</span><span>The slide numbers read out (“54, 55, 56, 7, 8”) are garbled in the transcript.</span></li>
+</ul><div class="end">End of recording &middot; 01:34:34</div></section></main>
+<script>
+(function(){
+  var TOTAL=5674;
+  var es=[].slice.call(document.querySelectorAll('.e'));
+  var deck=document.querySelector('.deck');
+  var segs=[].slice.call(deck.querySelectorAll('.seg'));
+  var clock=document.getElementById('clock'), play=document.getElementById('play');
+  var starts=segs.map(function(s){return +s.getAttribute('data-s')});
+  var ends=segs.map(function(s){return +s.getAttribute('data-e')});
+  function f(s){s=Math.round(s);var a=[Math.floor(s/3600),Math.floor(s%3600/60),s%60];return a.map(function(n){return (n<10?'0':'')+n}).join(':')}
+  var busy=false;
+  function upd(){
+    busy=false;
+    var line=deck.getBoundingClientRect().bottom+28, t=0;
+    for(var i=0;i<es.length;i++){
+      var r=es[i].getBoundingClientRect();
+      if(r.top<=line){
+        var a=+es[i].getAttribute('data-t'), b=+es[i].getAttribute('data-e');
+        var p=Math.max(0,Math.min(1,(line-r.top)/Math.max(1,r.height)));
+        t=a+p*(b-a);
+      } else break;
+    }
+    clock.textContent=f(t);
+    var k=0;for(var j=0;j<starts.length;j++){if(t>=starts[j])k=j}
+    segs.forEach(function(s,n){s.classList.toggle('on',n===k&&t>0)});
+    var sg=segs[k], fr=Math.max(0,Math.min(1,(t-starts[k])/Math.max(1,ends[k]-starts[k])));
+    play.style.left=(sg.offsetLeft+fr*sg.offsetWidth-1.5)+'px';
+  }
+  function req(){if(!busy){busy=true;requestAnimationFrame(upd)}}
+  window.addEventListener('scroll',req,{passive:true});
+  window.addEventListener('resize',req);
+  upd();
+})();
+</script>
+
+<script>
+
+// Navigation Drawer Controller & Theme Switcher
+(function() {
+  var sideNav = document.getElementById('side-nav');
+  var backdrop = document.getElementById('sn-backdrop');
+  var toggleBtn = document.getElementById('nav-toggle');
+  var closeBtn = document.getElementById('sn-close');
+  var themeBtn = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) {
+      closeNav();
+    }
+    if ((e.key === 'm' || e.key === 'M') && !e.target.matches('input, textarea')) {
+      if (sideNav.classList.contains('is-open')) closeNav();
+      else openNav();
+    }
+  });
+
+  var partLinks = document.querySelectorAll('.sn-parts a, .sn-res-links a');
+  partLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      closeNav();
+    });
+  });
+
+  function initTheme() {
+    var saved = localStorage.getItem('mis_theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('mis_theme', next);
+    });
+  }
+  initTheme();
+})();
+
+</script>
+</body></html>

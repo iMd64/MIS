@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 3 Global Business Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap">
+<style>
+/* Layout concept: the lecture as a tape. Sticky playhead bar on top, eight chapter bands,
+   each entry hung off a ruler rail with its recording timecode in the margin, accompanied
+   by note & slide cross-references. */
+:root {
+  --paper: #ECEEF4; --paper-2: #DFE2EC; --ink: #12141C; --ink-2: #474D61; --rule: #B7BCCF;
+  --cobalt: #2A3BFF; --hl: #FFE14D;
+  --band-bg: #12141C; --band-fg: #ECEEF4; --band-mute: #8E98F5;
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+    --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+  --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.62 var(--f-body); -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--paper);
+}
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.wrap {
+  width: 100%; max-width: 72rem; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+mark {
+  background: linear-gradient(transparent 50%, var(--hl) 50% 94%, transparent 94%);
+  color: inherit; padding: 0 .1em;
+}
+.tm {
+  font: 500 .78rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); white-space: nowrap;
+}
+
+/* sticky playhead */
+.deck {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: var(--paper); border-bottom: 2px solid var(--ink);
+}
+.deck .wrap { display: flex; align-items: center; gap: .9rem; padding-block: .6rem; }
+.clock {
+  font: 500 1.05rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); min-width: 5.4rem;
+}
+.total { font: 400 .78rem/1 var(--f-mono); color: var(--ink-2); }
+.tape { position: relative; display: flex; gap: 2px; min-width: 0; }
+.deck .tape { flex: 1; height: 14px; }
+.seg {
+  flex: var(--d) 1 0%; min-width: 0; background: var(--ink); color: var(--paper);
+  text-decoration: none; text-align: center; overflow: hidden;
+  font: 800 .7rem/14px var(--f-display);
+}
+.seg.on, .seg:hover { background: var(--cobalt); color: #fff; }
+.deck .seg { font-size: 0; }
+.play {
+  position: absolute; top: -5px; bottom: -5px; left: 0; width: 3px;
+  background: var(--hl); box-shadow: 0 0 0 1.5px var(--ink); pointer-events: none;
+}
+
+/* hero */
+.hero { padding-block: 2.4rem 1rem; }
+.eyebrow {
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 {
+  margin: .6rem 0 0; font: 800 clamp(2.9rem, 10.2vw, 8rem)/.86 var(--f-display);
+  font-stretch: 66%; text-transform: uppercase; letter-spacing: -.004em; text-wrap: balance;
+}
+h1 .c { color: var(--cobalt); }
+.lead {
+  display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.6rem 3rem; margin-top: 1.8rem; align-items: start;
+}
+.lead p { margin: 0; font-size: 1.3rem; line-height: 1.42; max-width: 34rem; }
+.lead p small {
+  display: block; margin-top: .7rem; font: 400 .95rem/1.5 var(--f-body);
+  color: var(--ink-2);
+}
+dl.glance {
+  margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: .4rem 1rem; font: 400 .82rem/1.5 var(--f-mono);
+}
+dl.glance dt { color: var(--ink-2); } dl.glance dd { margin: 0; }
+.tapewrap { margin-top: 2.2rem; }
+.tapewrap .tape { height: 48px; }
+.tapewrap .seg { font-size: 1.15rem; line-height: 48px; font-stretch: 70%; }
+.legend {
+  list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: .9rem 1.6rem;
+}
+.legend a {
+  display: grid; grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: .55rem; text-decoration: none;
+}
+.legend .l { font: 800 1.6rem/.9 var(--f-display); font-stretch: 66%; color: var(--cobalt); }
+.legend b { display: block; font: 600 .95rem/1.25 var(--f-display); }
+.legend small {
+  display: block; margin-top: .2rem; font: 400 .74rem/1.4 var(--f-mono);
+  color: var(--ink-2);
+}
+.legend a:hover b {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+
+/* chapter bands */
+.band { background: var(--band-bg); color: var(--band-fg); margin-top: 3.6rem; }
+.band-in {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6rem;
+  align-items: end; padding-block: 1.8rem 1.7rem;
+}
+.pl { font: 900 7.2rem/.74 var(--f-display); font-stretch: 62%; color: var(--band-mute); }
+.pr {
+  font: 500 .78rem/1.4 var(--f-mono); letter-spacing: .07em;
+  text-transform: uppercase; color: var(--band-mute);
+}
+.band h2 {
+  margin: .35rem 0 .5rem; font: 800 clamp(1.9rem, 4.8vw, 3.3rem)/.98 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase; text-wrap: balance;
+}
+.band p { margin: 0; max-width: 46rem; opacity: .88; font-size: 1.02rem; }
+
+/* entries on the ruler rail */
+.entries { --pt: 1.7rem; }
+.e { display: grid; grid-template-columns: 7.6rem 14px minmax(0, 1fr); column-gap: 1.1rem; }
+.ts {
+  text-align: right; font: 500 .95rem/1.2 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); padding-top: calc(var(--pt) + .22rem);
+}
+.ts span { display: block; margin-top: .25rem; font-size: .7rem; font-weight: 400; color: var(--ink-2); }
+
+/* Note & Slide reference badges */
+.ref-pill {
+  display: inline-block; margin-top: .45rem; padding: .15rem .45rem;
+  font: 600 .68rem/1.2 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 3px;
+  letter-spacing: .02em;
+}
+.ref-sub {
+  display: block; margin-top: .2rem; font: 400 .65rem/1.2 var(--f-mono);
+  color: var(--ink-2);
+}
+
+.rail {
+  position: relative;
+  background: linear-gradient(var(--ink-2), var(--ink-2)) right top/1px 100% no-repeat,
+             repeating-linear-gradient(to bottom, var(--ink-2) 0 1px, transparent 1px 9px) right top/7px 100% no-repeat;
+}
+.rail::before {
+  content: ""; position: absolute; top: calc(var(--pt) + .32rem); right: -5px;
+  width: 11px; height: 11px; background: var(--cobalt); outline: 3px solid var(--paper);
+}
+.b { padding-top: var(--pt); padding-bottom: .2rem; }
+.e:last-child .b { padding-bottom: 1.8rem; }
+.b h3 {
+  margin: 0 0 .6rem; font: 700 1.6rem/1.06 var(--f-display);
+  font-stretch: 80%; text-wrap: balance;
+}
+.b p { margin: 0 0 .75rem; max-width: 62ch; }
+.pts {
+  margin: .4rem 0 .9rem; padding: 0; list-style: none; max-width: 62ch;
+  display: grid; gap: .45rem;
+}
+.pts li { position: relative; padding-left: 1.15rem; }
+.pts li::before {
+  content: ""; position: absolute; left: 0; top: .6em;
+  width: 7px; height: 7px; background: var(--cobalt);
+}
+.x { margin: 1rem 0 .5rem; }
+
+/* components */
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .6rem; }
+.dim {
+  border: 1.5px solid var(--ink); background: var(--paper-2);
+  padding: .7rem .8rem .85rem; display: grid; gap: .35rem; align-content: start;
+}
+.dim b {
+  font: 700 1.15rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase;
+}
+.dim span:last-child { font-size: .92rem; line-height: 1.35; color: var(--ink-2); }
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.6rem; }
+.cmp .col { border-top: 4px solid var(--ink); padding-top: .5rem; }
+.cmp h4 {
+  margin: 0 0 .5rem; font: 700 1.15rem/1 var(--f-display);
+  font-stretch: 78%; text-transform: uppercase;
+}
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th {
+  text-align: left; font: 500 .7rem/1.2 var(--f-mono); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2); padding: .4rem .8rem .4rem 0;
+  border-bottom: 2px solid var(--ink);
+}
+td { padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.defs { display: grid; gap: .5rem; }
+.defs > div {
+  display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem;
+  align-items: baseline; border-top: 1px solid var(--rule); padding-top: .5rem;
+}
+.defs b { font: 800 1.5rem/1 var(--f-display); font-stretch: 70%; text-transform: uppercase; }
+.defs p { margin: 0; }
+.stair { list-style: none; padding: 0; display: grid; gap: .45rem; }
+.stair li {
+  margin-left: calc(var(--i) * 1.7rem); border-left: 5px solid var(--cobalt);
+  background: var(--paper-2); padding: .55rem .85rem; display: grid;
+  grid-template-columns: auto minmax(0, 1fr); gap: .15rem .9rem; align-items: baseline;
+}
+.stair b { font: 700 1.1rem/1.2 var(--f-display); font-stretch: 82%; text-transform: uppercase; }
+.stair span:last-child { grid-column: 2; }
+.six { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .7rem; }
+.pc {
+  background: var(--paper-2); border-top: 4px solid var(--ink);
+  padding: .7rem .85rem .9rem; display: grid; gap: .4rem; align-content: start;
+}
+.pc b { font: 700 1.2rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase; }
+.pc i { font-size: 1rem; line-height: 1.35; }
+.pc small { font-size: .86rem; line-height: 1.4; color: var(--ink-2); }
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: .6rem; }
+.st { border: 1.5px solid var(--ink); padding: .7rem .8rem; display: grid; gap: .4rem; align-content: start; }
+.st em {
+  font: 500 .78rem/1.2 var(--f-mono); font-style: normal;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.st span:last-child { font-size: .95rem; line-height: 1.4; }
+.tl { list-style: none; padding: 0; display: grid; gap: 0; }
+.tl li {
+  display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); gap: .8rem;
+  padding: .6rem 0; border-top: 1px solid var(--rule);
+}
+.tl li:first-child { border-top: 2px solid var(--ink); }
+
+/* reference */
+.plain {
+  margin: 0 0 1.2rem; padding-bottom: .5rem; border-bottom: 4px solid var(--ink);
+  font: 800 clamp(1.9rem, 4.8vw, 3.1rem)/1 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase;
+}
+.ref { margin-top: 4rem; }
+.lede { margin: 0 0 1.2rem; max-width: 46rem; color: var(--ink-2); }
+.terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 2.4rem; }
+.term {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .15rem .8rem;
+  padding: .65rem 0; border-top: 1px solid var(--rule);
+}
+.term b { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 85%; }
+.term span:last-child { grid-column: 1/-1; font-size: .93rem; line-height: 1.4; color: var(--ink-2); }
+.end {
+  margin-top: 3.2rem; padding-block: 1.4rem 2.6rem; border-top: 2px solid var(--ink);
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .lead { grid-template-columns: minmax(0, 1fr); }
+  .band-in { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
+  .pl { font-size: 4.2rem; }
+  .cmp { grid-template-columns: minmax(0, 1fr); }
+  .defs > div { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+  .e { grid-template-columns: 14px minmax(0, 1fr); grid-template-areas: "rail ts" "rail b"; column-gap: .8rem; }
+  .rail { grid-area: rail; }
+  .ts {
+    grid-area: ts; text-align: left; display: flex; flex-wrap: wrap; gap: .4rem .8rem;
+    align-items: baseline; padding-top: var(--pt);
+  }
+  .ts span { display: inline; margin: 0; }
+  .ref-pill, .ref-sub { display: inline-block; margin-top: 0; }
+  .b { grid-area: b; padding-top: .35rem; }
+  .rail::before { top: calc(var(--pt) + .1rem); }
+  .b h3 { font-size: 1.4rem; }
+  .stair li { margin-left: calc(var(--i) * .55rem); }
+  .tl li { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+}
+@media (max-width: 480px) { .total { display: none; } .clock { min-width: 4.9rem; font-size: .95rem; } }
+
+@media print {
+  @page { size: A4; margin: 13mm 0; }
+  html { font-size: 13.5px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body::before, .deck { display: none; }
+  .wrap { padding-left: 14mm; padding-right: 14mm; max-width: none; }
+  .band { margin-top: 2rem; break-after: avoid; break-inside: avoid; }
+  .e { break-inside: avoid; }
+  .b h3 { break-after: avoid; }
+  .entries .e:first-child { break-before: avoid; }
+  .x, .dim, .pc, .st, .stair li, .tl li, .term, tr { break-inside: avoid; }
+  .hero { padding-top: 0; }
+  .ref { break-before: page; }
+}
+
+/* Collapsible Navigation & Drawer Styles */
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--paper-2); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: .26rem .55rem; cursor: pointer;
+  font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
+  transition: all .15s ease; flex-shrink: 0;
+}
+.nav-toggle:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.nt-bars { display: flex; flex-direction: column; gap: 2.5px; width: 13px; }
+.nt-bar { height: 1.5px; background: currentColor; width: 100%; }
+.nt-label { font-size: .7rem; letter-spacing: .04em; }
+
+.side-nav {
+  position: fixed; top: 0; bottom: 0; left: 0;
+  width: 320px; max-width: 88vw; z-index: 100;
+  background: var(--paper); color: var(--ink);
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none; overflow: hidden;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+}
+.sn-backdrop {
+  position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
+  backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.sn-header {
+  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+  border-bottom: 2px solid var(--paper-2);
+}
+.sn-brand { display: flex; flex-direction: column; gap: .2rem; }
+.sn-course {
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em;
+  color: var(--band-mute); text-transform: uppercase;
+}
+.sn-title {
+  margin: 0; font: 800 1.25rem/1.05 var(--f-display);
+  font-stretch: 75%; text-transform: uppercase; letter-spacing: -.01em;
+}
+.sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
+.sn-close {
+  background: transparent; border: none; color: var(--paper);
+  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
+  line-height: .9; opacity: .8; transition: opacity .15s ease;
+}
+.sn-close:hover { opacity: 1; color: var(--hl); }
+
+.sn-body {
+  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sn-portal-link {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
+  text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--cobalt); color: #fff; border-color: var(--cobalt);
+}
+.sn-section-label {
+  font: 600 .65rem/1 var(--f-mono); letter-spacing: .1em;
+  color: var(--ink-2); text-transform: uppercase;
+  margin-top: .5rem; margin-bottom: -.2rem; padding-inline: .2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
+.sn-week-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .5rem .65rem; border: 1px solid var(--rule);
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  border-radius: 3px; transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--paper-2); border-color: var(--ink);
+  transform: translateX(2px);
+}
+.sn-week-item.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.sn-week-badge {
+  font: 800 .9rem/1 var(--f-display); font-stretch: 70%;
+  background: var(--paper-2); color: var(--cobalt);
+  padding: .3rem .45rem; border-radius: 2px; min-width: 2rem; text-align: center;
+}
+.sn-week-item.active .sn-week-badge {
+  background: var(--cobalt); color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.sn-week-title {
+  font: 700 .86rem/1.15 var(--f-display); font-stretch: 82%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-sub {
+  font: 400 .65rem/1.2 var(--f-mono); color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-item.active .sn-week-sub { color: var(--band-mute); }
+
+.sn-parts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+}
+.sn-part-btn {
+  display: block; text-align: center; text-decoration: none;
+  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  transition: all .12s ease;
+}
+.sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+
+.sn-res-links { display: flex; gap: .5rem; }
+.sn-res-item {
+  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
+  text-decoration: none; color: var(--ink); border-radius: 2px;
+}
+.sn-res-item:hover { border-color: var(--ink); color: var(--cobalt); }
+
+.sn-footer {
+  padding: .75rem .9rem; border-top: 1px solid var(--rule);
+  background: var(--paper-2); display: flex; justify-content: space-between; align-items: center;
+}
+.sn-theme-toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--rule);
+  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
+}
+.sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
+
+@media (max-width: 480px) {
+  .nav-toggle .nt-label { display: none; }
+  .nav-toggle { padding: .28rem .45rem; }
+}
+
+</style>
+</head>
+<body>
+<!-- Collapsible Left Navigation Drawer -->
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Lecture Tape Hub</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction & Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides &middot; 00:51:13</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Midterm Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item active" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Midterm Topic 2 &middot; Ch. 1 &middot; 01:34:41</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Midterm Topic 3 &middot; Ch. 2 &middot; 01:33:17</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Competitive Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Midterm Topic 4 &middot; Ch. 3 &middot; 01:35:39</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Midterm Topic 5 &middot; Ch. 4 &middot; 01:34:34</span>
+          </div>
+        </a>
+    </nav>
+
+    <div class="sn-section-label">CURRENT TAPE CHAPTERS</div>
+    <div class="sn-parts" id="sn-current-parts">
+        <a href="#part-a" class="sn-part-btn" title="Opening, textbook alignment (Ch. 1) & five core principles">A</a>
+        <a href="#part-b" class="sn-part-btn" title="The Ponsse case: digital harvesting & forest telematics">B</a>
+        <a href="#part-c" class="sn-part-btn" title="Capital shift & the flattened global digital firm">C</a>
+        <a href="#part-d" class="sn-part-btn" title="The six strategic business objectives of information systems">D</a>
+        <a href="#part-e" class="sn-part-btn" title="Interdependence model & guided business alignment">E</a>
+        <a href="#part-f" class="sn-part-btn" title="Information systems defined: input, process, output & feedback">F</a>
+        <a href="#part-g" class="sn-part-btn" title="The three dimensions: organizations, management & technology">G</a>
+        <a href="#part-h" class="sn-part-btn" title="Complementary assets & the socio-technical perspective">H</a>
+    </div>
+
+    <div class="sn-section-label">QUICK RESOURCES</div>
+    <div class="sn-res-links">
+      <a href="#glossary" class="sn-res-item">&sect; Glossary</a>
+      <a href="#errata" class="sn-res-item">&sect; Errata</a>
+    </div>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Light / Dark Mode">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+
+<header class="deck"><div class="wrap"><button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open Navigation Menu" title="Open Navigation Menu (M)"><span class="nt-bars" aria-hidden="true"><span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span></span><span class="nt-label">MENU</span></button>
+<span class="clock" id="clock">00:00:00</span><div class="tape" aria-hidden="true"><a class="seg" href="#part-a" style="--d:450" data-s="0" data-e="450" title="Opening, textbook alignment (Ch. 1) & five core principles">A</a><a class="seg" href="#part-b" style="--d:645" data-s="450" data-e="1095" title="The Ponsse case: digital harvesting & forest telematics">B</a><a class="seg" href="#part-c" style="--d:1065" data-s="1095" data-e="2160" title="Capital shift & the flattened global digital firm">C</a><a class="seg" href="#part-d" style="--d:765" data-s="2160" data-e="2925" title="The six strategic business objectives of information systems">D</a><a class="seg" href="#part-e" style="--d:585" data-s="2925" data-e="3510" title="Interdependence model & guided business alignment">E</a><a class="seg" href="#part-f" style="--d:765" data-s="3510" data-e="4275" title="Information systems defined: input, process, output & feedback">F</a><a class="seg" href="#part-g" style="--d:750" data-s="4275" data-e="5025" title="The three dimensions: organizations, management & technology">G</a><a class="seg" href="#part-h" style="--d:656" data-s="5025" data-e="5681" title="Complementary assets & the socio-technical perspective">H</a><span class="play" id="play"></span></div><span class="total">/ 01:34:41</span></div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Management Information Systems &middot; Week 3 &middot; Recording 03.10.26 &middot; 01:34:41</div>
+<h1>Information systems in <span class="c">global business today</span></h1>
+<div class="lead"><p><span class="tm">00:04:15</span> Dr. Kenan aligns the course directly with Laudon &amp; Laudon Chapter 1 (page 32). Over ninety-four minutes, he demonstrates why modern firms invest trillions of dollars in information systems: to achieve six strategic business objectives—from Walmart's inventory velocity to Apple's digital ecosystem—while proving that technology produces superior returns only when paired with complementary organizational assets.<small>Includes detailed references to Chapter 1, Figure 1.1 through 1.7, Table 1.1 through 1.3, and the Ponsse forestry telematics opening case. The sticky playhead bar tracks your position across the recording.</small></p>
+<dl class="glance"><dt>Recording</dt><dd>03.10.26, 01:34:41 (Lecture 4, Dr. Kenan)</dd><dt>Course</dt><dd>COM439 / MIS 301 &middot; Management Information Systems, Week 2</dd><dt>Slides &amp; Book</dt><dd>48 slides (Week_2.pptx), Reference Book Chapter 1, p. 32</dd><dt>Frameworks</dt><dd>Six Strategic Business Objectives, Complementary Assets, Interdependence Model, 3 Dimensions of IS</dd><dt>Key Case</dt><dd>Ponsse Oyj digital wood harvesting telematics &amp; forest logistics network</dd></dl></div>
+
+<div class="tapewrap"><div class="tape"><a class="seg" href="#part-a" style="--d:450" data-s="0" data-e="450" title="Opening, textbook alignment (Ch. 1) & five core principles">A</a><a class="seg" href="#part-b" style="--d:645" data-s="450" data-e="1095" title="The Ponsse case: digital harvesting & forest telematics">B</a><a class="seg" href="#part-c" style="--d:1065" data-s="1095" data-e="2160" title="Capital shift & the flattened global digital firm">C</a><a class="seg" href="#part-d" style="--d:765" data-s="2160" data-e="2925" title="The six strategic business objectives of information systems">D</a><a class="seg" href="#part-e" style="--d:585" data-s="2925" data-e="3510" title="Interdependence model & guided business alignment">E</a><a class="seg" href="#part-f" style="--d:765" data-s="3510" data-e="4275" title="Information systems defined: input, process, output & feedback">F</a><a class="seg" href="#part-g" style="--d:750" data-s="4275" data-e="5025" title="The three dimensions: organizations, management & technology">G</a><a class="seg" href="#part-h" style="--d:656" data-s="5025" data-e="5681" title="Complementary assets & the socio-technical perspective">H</a></div>
+<ol class="legend">
+<li><a href="#part-a"><span class="l">A</span><span><b>Opening, textbook alignment (Ch. 1) &amp; five core principles</b><small>00:00:00 &ndash; 00:07:30 &middot; 7 min 30 s</small></span></a></li>
+<li><a href="#part-b"><span class="l">B</span><span><b>The Ponsse case: digital harvesting &amp; forest telematics</b><small>00:07:30 &ndash; 00:18:15 &middot; 10 min 45 s</small></span></a></li>
+<li><a href="#part-c"><span class="l">C</span><span><b>Capital shift &amp; the flattened global digital firm</b><small>00:18:15 &ndash; 00:36:00 &middot; 17 min 45 s</small></span></a></li>
+<li><a href="#part-d"><span class="l">D</span><span><b>The six strategic business objectives of information systems</b><small>00:36:00 &ndash; 00:48:45 &middot; 12 min 45 s</small></span></a></li>
+<li><a href="#part-e"><span class="l">E</span><span><b>Interdependence model &amp; guided business alignment</b><small>00:48:45 &ndash; 00:58:30 &middot; 9 min 45 s</small></span></a></li>
+<li><a href="#part-f"><span class="l">F</span><span><b>Information systems defined: input, process, output &amp; feedback</b><small>00:58:30 &ndash; 01:11:15 &middot; 12 min 45 s</small></span></a></li>
+<li><a href="#part-g"><span class="l">G</span><span><b>The three dimensions: organizations, management &amp; technology</b><small>01:11:15 &ndash; 01:23:45 &middot; 12 min 30 s</small></span></a></li>
+<li><a href="#part-h"><span class="l">H</span><span><b>Complementary assets &amp; the socio-technical perspective</b><small>01:23:45 &ndash; 01:34:41 &middot; 10 min 56 s</small></span></a></li>
+</ol></div></div></section>
+
+<!-- PART A -->
+<section class="part" id="part-a"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">A</div><div><div class="pr">Part 1 of 8 &middot; 00:00:00 &ndash; 00:07:30 &middot; 7 min 30 s</div><h2>Opening, textbook alignment (Ch. 1) &amp; five core principles</h2><p>Audio/video check, textbook coordination (Chapter 1, p. 32), and the five conceptual anchors of the course.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="0" data-e="235"><div class="ts">00:00:00<span>to 00:03:55</span><span class="ref-pill">Slide 01–02</span><span class="ref-sub">Ch. 1 Intro &bull; p. 32</span></div><div class="rail"></div><div class="b"><h3>Textbook integration: anchoring slides to Laudon &amp; Laudon</h3>
+<p>Dr. Kenan greets the class and announces a deliberate pedagogical shift: from this week forward, every slide is explicitly anchored to specific pages and case studies in the official reference book (<i>Laudon &amp; Laudon, Management Information Systems</i>, Chapter 1, beginning at page 32).</p>
+<p>He warns students: <mark>&ldquo;Just looking at slides is almost impossible for deep mastery. Each slide connects directly to the textbook. Read the textbook pages together with the slides to understand real corporate cases and exam definitions.&rdquo;</mark></p>
+</div></article>
+
+<article class="e" data-t="235" data-e="450"><div class="ts">00:03:55<span>to 00:07:30</span><span class="ref-pill">Slide 03</span><span class="ref-sub">5 Core Principles</span></div><div class="rail"></div><div class="b"><h3>The five foundational principles of Chapter 1</h3>
+<p>The professor establishes five overarching ideas that will recur throughout every lecture in the semester:</p>
+<ul class="pts"><li><b>1. Business Goals First:</b> Information systems matter exclusively because they support measurable business objectives.</li><li><b>2. Raw Data Transformation:</b> Raw data cannot be consumed directly; it must be systematically captured, cleaned, and contextualized into information.</li><li><b>3. Broader Than Computers:</b> An information system is far more than software and servers—it encompasses organizational structure, governance, and people.</li><li><b>4. Triad of Value:</b> Value generation depends on management strategy and organizational adaptation as heavily as technology.</li><li><b>5. Socio-Technical Fit:</b> Sustainable success requires joint optimization of technical capabilities and social institutions.</li></ul>
+</div></article>
+
+</div></section>
+
+<!-- PART B -->
+<section class="part" id="part-b"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">B</div><div><div class="pr">Part 2 of 8 &middot; 00:07:30 &ndash; 00:18:15 &middot; 10 min 45 s</div><h2>The Ponsse case: digital harvesting &amp; forest telematics</h2><p>Finnish heavy forestry harvesters, real-time tree sensor telemetry, sawmill supply matching, and mobile field dispatch.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="450" data-e="780"><div class="ts">00:07:30<span>to 00:13:00</span><span class="ref-pill">Slide 04–05</span><span class="ref-sub">Opening Case &bull; p. 33</span></div><div class="rail"></div><div class="b"><h3>Case study: Ponsse Oyj and digital wood harvesting</h3>
+<p>Dr. Kenan examines the Chapter 1 opening case: Ponsse, a Finnish manufacturer of massive forest harvesting machines. Traditionally, forestry was an isolated, manual industry where operators felled trees blindly without knowing downstream sawmill demand, leading to timber rotting in forests and sawmills running out of lumber.</p>
+<p>Ponsse transformed forestry equipment into <mark>mobile data-processing powerhouses</mark>. Each harvester is equipped with onboard Linux computers, GPS geolocation, satellite/cellular uplinks, and laser calipers:</p>
+<div class="x flow"><div class="st"><em>Harvester Head</em><span><b>Sensory Telemetry</b><br>Measures tree diameter, curvature, and species in milliseconds.</span></div><div class="st"><em>Onboard Computer</em><span><b>Optimized Bucking</b><br>Algorithm cuts trunk into specific lengths based on active sawmill orders.</span></div><div class="st"><em>Wireless Uplink</em><span><b>Forest-to-Mill Sync</b><br>Transmits GPS timber coordinates and cubic meter counts to log trucks.</span></div><div class="st"><em>Fleet Management</em><span><b>Predictive Care</b><br>Monitors hydraulic pressure and engine heat to prevent field breakdowns.</span></div></div>
+</div></article>
+
+<article class="e" data-t="780" data-e="1095"><div class="ts">00:13:00<span>to 00:18:15</span><span class="ref-pill">Slide 05</span><span class="ref-sub">Case Analysis</span></div><div class="rail"></div><div class="b"><h3>Analyzing Ponsse through the MIS lens</h3>
+<p>The professor asks the class: <i>&ldquo;Was Ponsse's breakthrough purely a mechanical engineering feat?&rdquo;</i> Absolutely not. The mechanical harvester was useless without an integrated information system.</p>
+<div class="x dims"><div class="dim"><span class="tm">00:14:20</span><b>Management</b><span>Redesigned logging contracts; shifted from selling machines to selling wood-procurement uptime.</span></div><div class="dim"><span class="tm">00:15:10</span><b>Organization</b><span>Trained forest operators as data analysts; integrated private forest owners and paper mills into a single network.</span></div><div class="dim"><span class="tm">00:16:30</span><b>Technology</b><span>Opti4G software, telematics sensors, CAN bus vehicle integration, cellular data routers.</span></div></div>
+<p>Ponsse proves that even in heavy outdoor industries, digital coordination generates decisive competitive advantages.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART C -->
+<section class="part" id="part-c"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">C</div><div><div class="pr">Part 3 of 8 &middot; 00:18:15 &ndash; 00:36:00 &middot; 17 min 45 s</div><h2>Capital shift &amp; the flattened global digital firm</h2><p>IT capital expenditure trends (Figure 1.1), Table 1.1 transformations, globalization, and time/space shifting.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="1095" data-e="1515"><div class="ts">00:18:15<span>to 00:25:15</span><span class="ref-pill">Slide 06–08</span><span class="ref-sub">Section 1.1 &bull; p. 35</span></div><div class="rail"></div><div class="b"><h3>The capital investment shift: IT as primary infrastructure</h3>
+<p>Dr. Kenan introduces Section 1.1 on Slide 06 (<i>The Role of Information Systems in Business Today</i>, pp. 35–45) and points students to Figure 1.1 on Slide 08. In 1980, information technology accounted for under 15% of total corporate capital expenditure in private business. Today, <mark>IT investment exceeds 50% of all capital invested in corporate equipment</mark>, surpassing industrial machinery, trucks, and physical factories combined.</p>
+<p>Because IT represents the single largest capital outlay for corporate executives, managers can no longer delegate system decisions to technical staff. Every manager must know how to evaluate system returns, assess implementation risks, and drive business value.</p>
+</div></article>
+
+<article class="e" data-t="1515" data-e="1860"><div class="ts">00:25:15<span>to 00:31:00</span><span class="ref-pill">Slide 09–10</span><span class="ref-sub">Table 1.1 &bull; p. 38</span></div><div class="rail"></div><div class="b"><h3>What's new in MIS: technology, management &amp; organization</h3>
+<p>Dr. Kenan examines Table 1.1, showing that every technological innovation triggers a parallel disruption in management practice and organizational design:</p>
+<div class="x dims"><div class="dim"><span class="tm">00:26:40</span><b>Technology Changes</b><span>Cloud computing, Big Data telemetry, mobile digital platforms, and enterprise IoT sensors.</span></div><div class="dim"><span class="tm">00:28:10</span><b>Management Changes</b><span>Real-time executive dashboards, collaboration software (Teams, Slack), and predictive data-driven decisions.</span></div><div class="dim"><span class="tm">00:29:45</span><b>Organization Changes</b><span>Telecommuting, flatter hierarchy, agile sprint teams, and digital co-creation with customers.</span></div></div>
+</div></article>
+
+<article class="e" data-t="1860" data-e="2160"><div class="ts">00:31:00<span>to 00:36:00</span><span class="ref-pill">Slide 11–12</span><span class="ref-sub">Digital Firm &bull; p. 40</span></div><div class="rail"></div><div class="b"><h3>The emerging digital firm: time-shifting &amp; space-shifting</h3>
+<p>The professor defines Thomas Friedman's concept of a &ldquo;flattened world&rdquo; driven by the Internet. Global communications costs have dropped toward zero, allowing companies to collaborate, source, and sell across continents in real time.</p>
+<p>In a true <mark>digital firm</mark>, nearly all significant business relationships with customers, suppliers, and employees are digitally enabled. Digital firms master two core capabilities: <mark>time-shifting</mark> (conducting business 24/7/365 across global time zones rather than fixed 9-to-5 bank hours) and <mark>space-shifting</mark> (executing work globally across distributed virtual teams rather than in a single headquarters building).</p>
+</div></article>
+
+</div></section>
+
+<!-- PART D -->
+<section class="part" id="part-d"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">D</div><div><div class="pr">Part 4 of 8 &middot; 00:36:00 &ndash; 00:48:45 &middot; 12 min 45 s</div><h2>The six strategic business objectives of information systems</h2><p>Operational excellence, new business models, customer/supplier intimacy, better decisions, competitive advantage, and survival.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2160" data-e="2550"><div class="ts">00:36:00<span>to 00:42:30</span><span class="ref-pill">Slide 13–16</span><span class="ref-sub">Table 1.2 &bull; p. 41</span></div><div class="rail"></div><div class="b"><h3>The six strategic business objectives: definitions &amp; corporate models</h3>
+<p>Dr. Kenan introduces one of the most critical exam targets in Chapter 1: <mark>the six strategic business objectives of information systems</mark>. Businesses invest in IT to achieve one or more of these distinct outcomes:</p>
+<div class="x six"><div class="pc"><span class="tm">00:37:15</span><b>1. Operational Excellence</b><i>Maximizing internal efficiency and inventory velocity.</i><small>Walmart's Retail Link system connects store checkouts directly to supplier warehouses, replenishing items just-in-time and eliminating warehouse inventory storage costs.</small></div><div class="pc"><span class="tm">00:38:50</span><b>2. New Products &amp; Models</b><i>Reimagining how value is created and distributed.</i><small>Apple transformed the music and mobile industries with the iPod, iTunes, and iPhone; Spotify and Netflix replaced physical discs with streaming subscriptions.</small></div><div class="pc"><span class="tm">00:40:15</span><b>3. Customer/Supplier Intimacy</b><i>Digitally locking in buyers and supply partners.</i><small>Mandarin Oriental hotels record guest room preferences (pillows, temperature) across global properties; JCPenney links cash registers directly to fabric mills.</small></div><div class="pc"><span class="tm">00:41:35</span><b>4. Improved Decision Making</b><i>Replacing executive guesswork with real-time analytics.</i><small>Verizon uses web-based executive dashboards to track network performance, customer complaints, and line outages in real time, preventing massive service disruptions.</small></div><div class="pc"><span class="tm">00:43:00</span><b>5. Competitive Advantage</b><i>Delivering superior value competitors cannot duplicate.</i><small>Combining operational excellence, intimacy, and proprietary technology to outperform rivals on margin, customer loyalty, and speed to market.</small></div><div class="pc"><span class="tm">00:44:20</span><b>6. Survival &amp; Compliance</b><i>Investing in systems simply to remain viable in the industry.</i><small>Citibank introduced the first ATMs in 1977; every bank was forced to match ATMs to survive. Federal laws like Sarbanes-Oxley legally mandate 5-year digital audit trails.</small></div></div>
+</div></article>
+
+<article class="e" data-t="2550" data-e="2925"><div class="ts">00:42:30<span>to 00:48:45</span><span class="ref-pill">Exam Target</span><span class="ref-sub">Rubric Mastery</span></div><div class="rail"></div><div class="b"><h3>Exam preparation: applying the 4-part rubric to business objectives</h3>
+<p>Dr. Kenan warns the class on how exam questions will be graded: <mark>&ldquo;Do not give me a two-word definition. If the question asks about Customer Intimacy, you must explain the definition, the technological mechanism, contrast it with low-cost leadership, and provide a real business case.&rdquo;</mark></p>
+<p>He points out that survival investments are rarely glamorous: when airline regulations require digital flight recorder archiving or banking laws demand anti-money laundering (AML) monitoring, spending is mandatory for basic legal existence.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART E -->
+<section class="part" id="part-e"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">E</div><div><div class="pr">Part 5 of 8 &middot; 00:48:45 &ndash; 00:58:30 &middot; 9 min 45 s</div><h2>Interdependence model &amp; guided business alignment</h2><p>Figure 1.2 reciprocal relationship, guided scenario matching, and strategic enterprise constraints.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2925" data-e="3240"><div class="ts">00:48:45<span>to 00:54:00</span><span class="ref-pill">Slide 17</span><span class="ref-sub">Figure 1.2 &bull; p. 43</span></div><div class="rail"></div><div class="b"><h3>Reading Figure 1.2: the interdependence model</h3>
+<p>Dr. Kenan walks through Figure 1.2, illustrating the growing interdependence between an organization's business strategy, rules, and procedures on the left, and its hardware, software, databases, and telecommunications on the right.</p>
+<div class="x cmp"><div class="col"><h4>Left: Business Strategy &amp; Rules</h4><ul class="pts"><li>Corporate strategy (e.g. 2-day delivery promise).</li><li>Standard business procedures and credit policies.</li><li>Organizational culture and management governance.</li></ul></div><div class="col"><h4>Right: Information Systems &amp; IT</h4><ul class="pts"><li>Server hardware, mobile scanners, and cloud networks.</li><li>Relational databases and data warehousing.</li><li>Application software and enterprise API integrations.</li></ul></div></div>
+<p>In modern firms, <mark>the relationship is bidirectional</mark>: while corporate strategy dictates what software to buy, existing legacy software systems heavily constrain what future strategies the company can realistically pursue. A bank whose core mainframe cannot process real-time API transactions cannot launch a mobile fintech app.</p>
+</div></article>
+
+<article class="e" data-t="3240" data-e="3510"><div class="ts">00:54:00<span>to 00:58:30</span><span class="ref-pill">Slide 18</span><span class="ref-sub">Guided Practice</span></div><div class="rail"></div><div class="b"><h3>Guided practice: matching systems to strategic objectives</h3>
+<p>The professor conducts an interactive classroom exercise, challenging students to match scenarios to the six strategic business objectives:</p>
+<ul class="pts"><li><b>Scenario 1:</b> A supermarket automatically reorders fast-moving canned soup when shelf weight sensors trigger &rarr; <mark>Operational Excellence</mark>.</li><li><b>Scenario 2:</b> An automaker embeds 5G SIM cards to push over-the-air performance updates &rarr; <mark>New Products &amp; Services</mark>.</li><li><b>Scenario 3:</b> A retail bank invests $20M in automated transaction logging to comply with Sarbanes-Oxley audit mandates &rarr; <mark>Survival</mark>.</li><li><b>Scenario 4:</b> A luxury resort displays a guest's favorite room fragrance and anniversary date upon check-in &rarr; <mark>Customer Intimacy</mark>.</li></ul>
+</div></article>
+
+</div></section>
+
+<!-- PART F -->
+<section class="part" id="part-f"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">F</div><div><div class="pr">Part 6 of 8 &middot; 00:58:30 &ndash; 01:11:15 &middot; 12 min 45 s</div><h2>Information systems defined: input, process, output &amp; feedback</h2><p>IT vs IS, raw data vs meaningful information, Figures 1.3 &amp; 1.4, and the feedback loop mechanism.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="3510" data-e="3880"><div class="ts">00:58:30<span>to 01:04:40</span><span class="ref-pill">Slide 19–20</span><span class="ref-sub">IT vs IS &bull; p. 44</span></div><div class="rail"></div><div class="b"><h3>Information technology (IT) versus information systems (IS)</h3>
+<p>Dr. Kenan establishes the exact conceptual boundary between IT and IS. Conflating the two is a major exam error:</p>
+<div class="x cmp"><div class="col"><h4>Information Technology (IT)</h4><ul class="pts"><li>The technical equipment and software tools a firm uses.</li><li>Hardware, storage drives, laptops, smartphones, operating systems.</li><li>The physical tools in the toolkit (the raw technical components).</li></ul></div><div class="col"><h4>Information Systems (IS)</h4><ul class="pts"><li>The broader socio-technical solution to an organizational challenge.</li><li>Combines IT tools with trained people, workflows, and governance.</li><li>The working organizational solution that transforms raw data into value.</li></ul></div></div>
+<p>Buying computers is an IT investment; transforming warehouse logistics with barcode scanners and trained inventory clerks is an Information System.</p>
+</div></article>
+
+<article class="e" data-t="3880" data-e="4275"><div class="ts">01:04:40<span>to 01:11:15</span><span class="ref-pill">Slide 21–24</span><span class="ref-sub">Fig 1.3 &amp; 1.4 &bull; p. 45</span></div><div class="rail"></div><div class="b"><h3>Data versus information: the transformation engine</h3>
+<p>Dr. Kenan points students to Figure 1.3 and Figure 1.4: an information system is formally defined as a set of interrelated components that <mark>collect (input), manipulate and refine (process), store, and distribute (output) information</mark> to support decision making and control.</p>
+<ul class="stair"><li style="--i:0"><b>Input</b><span>Captures raw data streams from internal operations or external environments (e.g. cash register scans).</span></li><li style="--i:1"><b>Processing</b><span>Converts raw inputs into meaningful form via sorting, aggregating, filtering, and mathematical calculations.</span></li><li style="--i:2"><b>Output</b><span>Transfers processed information to the people who will use it or the activities where it will be applied.</span></li><li style="--i:3"><b>Feedback</b><span>Output returned to appropriate members of the organization to help them evaluate and correct input stages.</span></li></ul>
+<p>He highlights: <mark>&ldquo;Raw data is a stream of unformatted facts; information is data shaped into meaningful context for human beings.&rdquo;</mark></p>
+</div></article>
+
+</div></section>
+
+<!-- PART G -->
+<section class="part" id="part-g"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">G</div><div><div class="pr">Part 7 of 8 &middot; 01:11:15 &ndash; 01:23:45 &middot; 12 min 30 s</div><h2>The three dimensions: organizations, management &amp; technology</h2><p>Figure 1.5 deconstructed: organizational hierarchy, management strategy, and technology infrastructure.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="4275" data-e="4680"><div class="ts">01:11:15<span>to 01:18:00</span><span class="ref-pill">Slide 25–28</span><span class="ref-sub">Figure 1.5 &bull; p. 47</span></div><div class="rail"></div><div class="b"><h3>Figure 1.5: the three core dimensions of information systems</h3>
+<p>Dr. Kenan directs the class to Figure 1.5, emphasizing that to understand an information system, a manager must understand the broader organization, management, and information technology dimensions:</p>
+<div class="x dims"><div class="dim"><span class="tm">01:12:30</span><b>Organizations</b><span>Separation of labor, formal hierarchy, standard operating procedures, corporate culture, and business processes.</span></div><div class="dim"><span class="tm">01:14:15</span><b>Management</b><span>Leadership, business strategy, setting performance metrics, resource allocation, and creative problem solving.</span></div><div class="dim"><span class="tm">01:16:00</span><b>Technology</b><span>Computer hardware, software applications, relational data management, and networking/telecommunications (the Internet).</span></div></div>
+</div></article>
+
+<article class="e" data-t="4680" data-e="5025"><div class="ts">01:18:00<span>to 01:23:45</span><span class="ref-pill">Slide 29–33</span><span class="ref-sub">IT Infrastructure &bull; p. 50</span></div><div class="rail"></div><div class="b"><h3>The IT infrastructure platform</h3>
+<p>The professor examines the technical foundation of modern firms: <mark>Information Technology (IT) Infrastructure</mark>. It provides the shared technical foundation and platform on which the firm builds its specific business applications.</p>
+<p>IT infrastructure comprises four core pillars: computer hardware (servers, mainframes, mobile client terminals), software (system software and enterprise suites), data management technology (DBMS engines organizing customer and financial files), and networking technology (Ethernet, fiber optics, cellular 5G, and the global Internet). All four must integrate smoothly to support real-time enterprise operations.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART H -->
+<section class="part" id="part-h"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">H</div><div><div class="pr">Part 8 of 8 &middot; 01:23:45 &ndash; 01:34:41 &middot; 10 min 56 s</div><h2>Complementary assets &amp; the socio-technical perspective</h2><p>Why IT returns vary wildly (Figure 1.6), organizational capital (Table 1.3), and technical vs behavioral disciplines.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="5025" data-e="5380"><div class="ts">01:23:45<span>to 01:29:40</span><span class="ref-pill">Slide 34–38</span><span class="ref-sub">Table 1.3 &bull; p. 55</span></div><div class="rail"></div><div class="b"><h3>Complementary assets: why IT spending does not guarantee success</h3>
+<p>Dr. Kenan highlights Figure 1.6: firms investing identical amounts in information technology achieve wildly divergent productivity returns. Some companies achieve massive margin surges, while others suffer financial collapse. Why?</p>
+<p>The answer lies in <mark>Complementary Assets</mark>: additional assets required to derive value from a primary IT investment. Investing in technology without investing in <mark>organizational and management capital</mark> leads to wasted capital. Table 1.3 details these required assets:</p>
+<div class="x tw"><table><thead><tr><th>Asset Category</th><th>Required Complementary Investments</th><th>Business Rationale</th></tr></thead><tbody><tr><td><b>Organizational Assets</b></td><td>Supportive business culture, efficient business processes, decentralized decision rights.</td><td>Prevents employee sabotage; ensures workflows match software screen logic.</td></tr><tr><td><b>Managerial Assets</b></td><td>Strong senior executive sponsorship, incentives for innovation, teamwork environments.</td><td>Overcomes middle-management resistance and enforces user system adoption.</td></tr><tr><td><b>Social Assets</b></td><td>High-speed Internet infrastructure, legal standards, educational technology skills in the labor force.</td><td>External ecosystem enabling secure transactions, vendor APIs, and skilled hires.</td></tr></tbody></table></div>
+</div></article>
+
+<article class="e" data-t="5380" data-e="5681"><div class="ts">01:29:40<span>to 01:34:41</span><span class="ref-pill">Slide 39–48</span><span class="ref-sub">Fig 1.7 &bull; p. 60</span></div><div class="rail"></div><div class="b"><h3>Academic disciplines &amp; the socio-technical conclusion</h3>
+<p>Dr. Kenan concludes Chapter 1 by contrasting the academic disciplines contributing to MIS. Computer science, management science, and operations research contribute mathematically rigorous technical foundations; sociology, psychology, and economics contribute behavioural insights into organizational power, culture, and incentives.</p>
+<p>Figure 1.7 demonstrates that <mark>MIS reconciles both worlds through a Socio-Technical perspective</mark>: technology must be continuously redesigned to fit human organizational reality, while organizational routines must adapt to exploit digital capabilities. He thanks the students and confirms Week 3 will cover <b>Chapter 2: Global E-Business &amp; Collaboration</b>.</p>
+</div></article>
+
+</div></section>
+
+<!-- REFERENCE SECTION -->
+<section class="ref wrap"><h2 class="plain">Terms, in order of appearance</h2><p class="lede">Each term is stamped with the first moment the professor defines it in the recording.</p><div class="terms">
+<div class="term"><b>Raw Data</b><span class="tm">00:04:45</span><span>Streams of raw, unformatted facts and observations representing events occurring in organizations before being organized into human-understandable form.</span></div>
+<div class="term"><b>Information</b><span class="tm">00:05:15</span><span>Data that has been shaped into a meaningful, contextualized form that is useful and intelligible to human decision-makers.</span></div>
+<div class="term"><b>Forestry Telematics</b><span class="tm">00:08:45</span><span>The integrated telecommunications and informatics system installed on heavy forest harvesters transmitting real-time GPS coordinates, log dimensions, and mechanical health.</span></div>
+<div class="term"><b>IT Capital Expenditure</b><span class="tm">00:19:30</span><span>The proportion of total corporate capital investment allocated to computing hardware, software, telecommunications, and cloud services (now exceeding 50% in private firms).</span></div>
+<div class="term"><b>Digital Firm</b><span class="tm">00:32:15</span><span>An organization where nearly all significant business relationships with customers, suppliers, and employees are digitally mediated and core business processes are automated.</span></div>
+<div class="term"><b>Time-Shifting</b><span class="tm">00:34:20</span><span>The business capability of operating continuously 24/7 across global time zones rather than being restricted to domestic daily working hours.</span></div>
+<div class="term"><b>Space-Shifting</b><span class="tm">00:35:10</span><span>The organizational capability to execute corporate work globally across distributed virtual networks rather than within a single geographic facility.</span></div>
+<div class="term"><b>Operational Excellence</b><span class="tm">00:37:15</span><span>A strategic business objective focused on maximizing internal productivity, speed, and inventory turns through automated data feeds (e.g. Walmart Retail Link).</span></div>
+<div class="term"><b>Customer &amp; Supplier Intimacy</b><span class="tm">00:40:15</span><span>Using digital platforms to capture granular client preferences and share real-time inventory schedules with vendors, raising switching costs.</span></div>
+<div class="term"><b>Interdependence Model</b><span class="tm">00:49:30</span><span>The reciprocal two-way dynamic where business strategy requires specific IT infrastructure, while existing legacy systems constrain future strategic options.</span></div>
+<div class="term"><b>Information Technology (IT)</b><span class="tm">00:59:15</span><span>The physical hardware, storage media, network infrastructure, and operating software utilized to accomplish business computing tasks.</span></div>
+<div class="term"><b>Information System (IS)</b><span class="tm">01:01:20</span><span>A comprehensive socio-technical solution combining IT artifacts with organizational procedures, trained people, and management oversight to solve problems.</span></div>
+<div class="term"><b>Feedback Loop</b><span class="tm">01:08:30</span><span>Operational output metrics returned to managers to evaluate performance variance and dynamically calibrate future system inputs.</span></div>
+<div class="term"><b>Complementary Assets</b><span class="tm">01:24:15</span><span>The requisite organizational, managerial, and social investments (new business processes, training, supportive culture) required to harvest returns from technology.</span></div>
+<div class="term"><b>Organizational Capital</b><span class="tm">01:26:40</span><span>The institutional knowledge, business process models, and collaborative norms built into an enterprise that enable software systems to generate economic value.</span></div>
+</div></section>
+
+<!-- TRANSCRIPT CLEAN-UP SECTION -->
+<section class="ref wrap" style="margin-top:3rem"><h2 class="plain">Transcript clean-up</h2><p class="lede">The recording was auto-transcribed, and several academic terms came out phonetically garbled. This page reads them as follows based on Laudon &amp; Laudon Chapter 1.</p><ul class="tl">
+<li><span class="tm">00:01:45</span><span>The transcript says &ldquo;PPP slides&rdquo; (repeated multiple times). This is corrected to <b>PowerPoint (PPT) slides</b>.</span></li>
+<li><span class="tm">00:04:45</span><span>&ldquo;The second one, road data, road data must be transformed into information&rdquo; is corrected to <b>raw data</b>.</span></li>
+<li><span class="tm">00:07:35</span><span>&ldquo;The open case is about Ponce... bonus forest machines&rdquo; is corrected to <b>Ponsse Oyj</b>, the Finnish forest equipment manufacturer.</span></li>
+<li><span class="tm">00:19:30</span><span>&ldquo;Capital expenditure in ticker 1.1&rdquo; is corrected to <b>Figure 1.1</b> in the textbook.</span></li>
+<li><span class="tm">00:27:10</span><span>&ldquo;Clown computing&rdquo; is corrected to <b>cloud computing</b>.</span></li>
+<li><span class="tm">00:40:15</span><span>&ldquo;Men are in hotel&rdquo; is corrected to the <b>Mandarin Oriental</b> luxury hotel chain customer intimacy case.</span></li>
+<li><span class="tm">00:44:20</span><span>&ldquo;Severals regulations like Starburst Oxley&rdquo; is corrected to the <b>Sarbanes-Oxley Act (SOX)</b>.</span></li>
+<li><span class="tm">00:49:30</span><span>&ldquo;Ticker 1.2 interpendence&rdquo; is corrected to <b>Figure 1.2 Interdependence between Organizations and Information Systems</b>.</span></li>
+<li><span class="tm">01:24:15</span><span>&ldquo;Complementary ass&rdquo; is corrected to <b>complementary assets</b>.</span></li>
+</ul><div class="end">End of recording &middot; 01:34:41</div></section>
+</main>
+
+<script>
+(function(){
+  var TOTAL = 5681;
+  var es = [].slice.call(document.querySelectorAll('.e'));
+  var deck = document.querySelector('.deck');
+  var segs = [].slice.call(deck.querySelectorAll('.seg'));
+  var clock = document.getElementById('clock'), play = document.getElementById('play');
+  var starts = segs.map(function(s){ return +s.getAttribute('data-s'); });
+  var ends = segs.map(function(s){ return +s.getAttribute('data-e'); });
+  function f(s){
+    s = Math.round(s);
+    var a = [Math.floor(s/3600), Math.floor(s%3600/60), s%60];
+    return a.map(function(n){ return (n<10?'0':'')+n; }).join(':');
+  }
+  var busy = false;
+  function upd(){
+    busy = false;
+    var line = deck.getBoundingClientRect().bottom + 28, t = 0;
+    for (var i = 0; i < es.length; i++){
+      var r = es[i].getBoundingClientRect();
+      if (r.top <= line){
+        var a = +es[i].getAttribute('data-t'), b = +es[i].getAttribute('data-e');
+        var p = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+        t = a + p * (b - a);
+      } else break;
+    }
+    clock.textContent = f(t);
+    var k = 0; for (var j = 0; j < starts.length; j++){ if (t >= starts[j]) k = j; }
+    segs.forEach(function(s, n){ s.classList.toggle('on', n === k && t > 0); });
+    var sg = segs[k], fr = Math.max(0, Math.min(1, (t - starts[k]) / Math.max(1, ends[k] - starts[k])));
+    play.style.left = (sg.offsetLeft + fr * sg.offsetWidth - 1.5) + 'px';
+  }
+  function req(){ if (!busy){ busy = true; requestAnimationFrame(upd); } }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', req);
+  upd();
+})();
+</script>
+
+<script>
+
+// Navigation Drawer Controller & Theme Switcher
+(function() {
+  var sideNav = document.getElementById('side-nav');
+  var backdrop = document.getElementById('sn-backdrop');
+  var toggleBtn = document.getElementById('nav-toggle');
+  var closeBtn = document.getElementById('sn-close');
+  var themeBtn = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) {
+      closeNav();
+    }
+    if ((e.key === 'm' || e.key === 'M') && !e.target.matches('input, textarea')) {
+      if (sideNav.classList.contains('is-open')) closeNav();
+      else openNav();
+    }
+  });
+
+  var partLinks = document.querySelectorAll('.sn-parts a, .sn-res-links a');
+  partLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      closeNav();
+    });
+  });
+
+  function initTheme() {
+    var saved = localStorage.getItem('mis_theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('mis_theme', next);
+    });
+  }
+  initTheme();
+})();
+
+</script>
+</body>
+</html>

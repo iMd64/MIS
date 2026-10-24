@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 4 Collaboration Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap">
+<style>
+/* Layout concept: the lecture as a tape. Sticky playhead bar on top, eight chapter bands,
+   each entry hung off a ruler rail with its recording timecode in the margin, accompanied
+   by note & slide cross-references. */
+:root {
+  --paper: #ECEEF4; --paper-2: #DFE2EC; --ink: #12141C; --ink-2: #474D61; --rule: #B7BCCF;
+  --cobalt: #2A3BFF; --hl: #FFE14D;
+  --band-bg: #12141C; --band-fg: #ECEEF4; --band-mute: #8E98F5;
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+    --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+  --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.62 var(--f-body); -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--paper);
+}
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.wrap {
+  width: 100%; max-width: 72rem; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+mark {
+  background: linear-gradient(transparent 50%, var(--hl) 50% 94%, transparent 94%);
+  color: inherit; padding: 0 .1em;
+}
+.tm {
+  font: 500 .78rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); white-space: nowrap;
+}
+
+/* sticky playhead */
+.deck {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: var(--paper); border-bottom: 2px solid var(--ink);
+}
+.deck .wrap { display: flex; align-items: center; gap: .9rem; padding-block: .6rem; }
+.clock {
+  font: 500 1.05rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); min-width: 5.4rem;
+}
+.total { font: 400 .78rem/1 var(--f-mono); color: var(--ink-2); }
+.tape { position: relative; display: flex; gap: 2px; min-width: 0; }
+.deck .tape { flex: 1; height: 14px; }
+.seg {
+  flex: var(--d) 1 0%; min-width: 0; background: var(--ink); color: var(--paper);
+  text-decoration: none; text-align: center; overflow: hidden;
+  font: 800 .7rem/14px var(--f-display);
+}
+.seg.on, .seg:hover { background: var(--cobalt); color: #fff; }
+.deck .seg { font-size: 0; }
+.play {
+  position: absolute; top: -5px; bottom: -5px; left: 0; width: 3px;
+  background: var(--hl); box-shadow: 0 0 0 1.5px var(--ink); pointer-events: none;
+}
+
+/* hero */
+.hero { padding-block: 2.4rem 1rem; }
+.eyebrow {
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 {
+  margin: .6rem 0 0; font: 800 clamp(2.9rem, 10.2vw, 8rem)/.86 var(--f-display);
+  font-stretch: 66%; text-transform: uppercase; letter-spacing: -.004em; text-wrap: balance;
+}
+h1 .c { color: var(--cobalt); }
+.lead {
+  display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.6rem 3rem; margin-top: 1.8rem; align-items: start;
+}
+.lead p { margin: 0; font-size: 1.3rem; line-height: 1.42; max-width: 34rem; }
+.lead p small {
+  display: block; margin-top: .7rem; font: 400 .95rem/1.5 var(--f-body);
+  color: var(--ink-2);
+}
+dl.glance {
+  margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: .4rem 1rem; font: 400 .82rem/1.5 var(--f-mono);
+}
+dl.glance dt { color: var(--ink-2); } dl.glance dd { margin: 0; }
+.tapewrap { margin-top: 2.2rem; }
+.tapewrap .tape { height: 48px; }
+.tapewrap .seg { font-size: 1.15rem; line-height: 48px; font-stretch: 70%; }
+.legend {
+  list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: .9rem 1.6rem;
+}
+.legend a {
+  display: grid; grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: .55rem; text-decoration: none;
+}
+.legend .l { font: 800 1.6rem/.9 var(--f-display); font-stretch: 66%; color: var(--cobalt); }
+.legend b { display: block; font: 600 .95rem/1.25 var(--f-display); }
+.legend small {
+  display: block; margin-top: .2rem; font: 400 .74rem/1.4 var(--f-mono);
+  color: var(--ink-2);
+}
+.legend a:hover b {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+
+/* chapter bands */
+.band { background: var(--band-bg); color: var(--band-fg); margin-top: 3.6rem; }
+.band-in {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6rem;
+  align-items: end; padding-block: 1.8rem 1.7rem;
+}
+.pl { font: 900 7.2rem/.74 var(--f-display); font-stretch: 62%; color: var(--band-mute); }
+.pr {
+  font: 500 .78rem/1.4 var(--f-mono); letter-spacing: .07em;
+  text-transform: uppercase; color: var(--band-mute);
+}
+.band h2 {
+  margin: .35rem 0 .5rem; font: 800 clamp(1.9rem, 4.8vw, 3.3rem)/.98 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase; text-wrap: balance;
+}
+.band p { margin: 0; max-width: 46rem; opacity: .88; font-size: 1.02rem; }
+
+/* entries on the ruler rail */
+.entries { --pt: 1.7rem; }
+.e { display: grid; grid-template-columns: 7.6rem 14px minmax(0, 1fr); column-gap: 1.1rem; }
+.ts {
+  text-align: right; font: 500 .95rem/1.2 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); padding-top: calc(var(--pt) + .22rem);
+}
+.ts span { display: block; margin-top: .25rem; font-size: .7rem; font-weight: 400; color: var(--ink-2); }
+
+/* Note & Slide reference badges */
+.ref-pill {
+  display: inline-block; margin-top: .45rem; padding: .15rem .45rem;
+  font: 600 .68rem/1.2 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 3px;
+  letter-spacing: .02em;
+}
+.ref-sub {
+  display: block; margin-top: .2rem; font: 400 .65rem/1.2 var(--f-mono);
+  color: var(--ink-2);
+}
+
+.rail {
+  position: relative;
+  background: linear-gradient(var(--ink-2), var(--ink-2)) right top/1px 100% no-repeat,
+             repeating-linear-gradient(to bottom, var(--ink-2) 0 1px, transparent 1px 9px) right top/7px 100% no-repeat;
+}
+.rail::before {
+  content: ""; position: absolute; top: calc(var(--pt) + .32rem); right: -5px;
+  width: 11px; height: 11px; background: var(--cobalt); outline: 3px solid var(--paper);
+}
+.b { padding-top: var(--pt); padding-bottom: .2rem; }
+.e:last-child .b { padding-bottom: 1.8rem; }
+.b h3 {
+  margin: 0 0 .6rem; font: 700 1.6rem/1.06 var(--f-display);
+  font-stretch: 80%; text-wrap: balance;
+}
+.b p { margin: 0 0 .75rem; max-width: 62ch; }
+.pts {
+  margin: .4rem 0 .9rem; padding: 0; list-style: none; max-width: 62ch;
+  display: grid; gap: .45rem;
+}
+.pts li { position: relative; padding-left: 1.15rem; }
+.pts li::before {
+  content: ""; position: absolute; left: 0; top: .6em;
+  width: 7px; height: 7px; background: var(--cobalt);
+}
+.x { margin: 1rem 0 .5rem; }
+
+/* components */
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .6rem; }
+.dim {
+  border: 1.5px solid var(--ink); background: var(--paper-2);
+  padding: .7rem .8rem .85rem; display: grid; gap: .35rem; align-content: start;
+}
+.dim b {
+  font: 700 1.15rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase;
+}
+.dim span:last-child { font-size: .92rem; line-height: 1.35; color: var(--ink-2); }
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.6rem; }
+.cmp .col { border-top: 4px solid var(--ink); padding-top: .5rem; }
+.cmp h4 {
+  margin: 0 0 .5rem; font: 700 1.15rem/1 var(--f-display);
+  font-stretch: 78%; text-transform: uppercase;
+}
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th {
+  text-align: left; font: 500 .7rem/1.2 var(--f-mono); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2); padding: .4rem .8rem .4rem 0;
+  border-bottom: 2px solid var(--ink);
+}
+td { padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.defs { display: grid; gap: .5rem; }
+.defs > div {
+  display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem;
+  align-items: baseline; border-top: 1px solid var(--rule); padding-top: .5rem;
+}
+.defs b { font: 800 1.5rem/1 var(--f-display); font-stretch: 70%; text-transform: uppercase; }
+.defs p { margin: 0; }
+.stair { list-style: none; padding: 0; display: grid; gap: .45rem; }
+.stair li {
+  margin-left: calc(var(--i) * 1.7rem); border-left: 5px solid var(--cobalt);
+  background: var(--paper-2); padding: .55rem .85rem; display: grid;
+  grid-template-columns: auto minmax(0, 1fr); gap: .15rem .9rem; align-items: baseline;
+}
+.stair b { font: 700 1.1rem/1.2 var(--f-display); font-stretch: 82%; text-transform: uppercase; }
+.stair span:last-child { grid-column: 2; }
+.six { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .7rem; }
+.pc {
+  background: var(--paper-2); border-top: 4px solid var(--ink);
+  padding: .7rem .85rem .9rem; display: grid; gap: .4rem; align-content: start;
+}
+.pc b { font: 700 1.2rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase; }
+.pc i { font-size: 1rem; line-height: 1.35; }
+.pc small { font-size: .86rem; line-height: 1.4; color: var(--ink-2); }
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: .6rem; }
+.st { border: 1.5px solid var(--ink); padding: .7rem .8rem; display: grid; gap: .4rem; align-content: start; }
+.st em {
+  font: 500 .78rem/1.2 var(--f-mono); font-style: normal;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.st span:last-child { font-size: .95rem; line-height: 1.4; }
+.tl { list-style: none; padding: 0; display: grid; gap: 0; }
+.tl li {
+  display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); gap: .8rem;
+  padding: .6rem 0; border-top: 1px solid var(--rule);
+}
+.tl li:first-child { border-top: 2px solid var(--ink); }
+
+/* reference */
+.plain {
+  margin: 0 0 1.2rem; padding-bottom: .5rem; border-bottom: 4px solid var(--ink);
+  font: 800 clamp(1.9rem, 4.8vw, 3.1rem)/1 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase;
+}
+.ref { margin-top: 4rem; }
+.lede { margin: 0 0 1.2rem; max-width: 46rem; color: var(--ink-2); }
+.terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 2.4rem; }
+.term {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .15rem .8rem;
+  padding: .65rem 0; border-top: 1px solid var(--rule);
+}
+.term b { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 85%; }
+.term span:last-child { grid-column: 1/-1; font-size: .93rem; line-height: 1.4; color: var(--ink-2); }
+.end {
+  margin-top: 3.2rem; padding-block: 1.4rem 2.6rem; border-top: 2px solid var(--ink);
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .lead { grid-template-columns: minmax(0, 1fr); }
+  .band-in { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
+  .pl { font-size: 4.2rem; }
+  .cmp { grid-template-columns: minmax(0, 1fr); }
+  .defs > div { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+  .e { grid-template-columns: 14px minmax(0, 1fr); grid-template-areas: "rail ts" "rail b"; column-gap: .8rem; }
+  .rail { grid-area: rail; }
+  .ts {
+    grid-area: ts; text-align: left; display: flex; flex-wrap: wrap; gap: .4rem .8rem;
+    align-items: baseline; padding-top: var(--pt);
+  }
+  .ts span { display: inline; margin: 0; }
+  .ref-pill, .ref-sub { display: inline-block; margin-top: 0; }
+  .b { grid-area: b; padding-top: .35rem; }
+  .rail::before { top: calc(var(--pt) + .1rem); }
+  .b h3 { font-size: 1.4rem; }
+  .stair li { margin-left: calc(var(--i) * .55rem); }
+  .tl li { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+}
+@media (max-width: 480px) { .total { display: none; } .clock { min-width: 4.9rem; font-size: .95rem; } }
+
+@media print {
+  @page { size: A4; margin: 13mm 0; }
+  html { font-size: 13.5px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body::before, .deck { display: none; }
+  .wrap { padding-left: 14mm; padding-right: 14mm; max-width: none; }
+  .band { margin-top: 2rem; break-after: avoid; break-inside: avoid; }
+  .e { break-inside: avoid; }
+  .b h3 { break-after: avoid; }
+  .entries .e:first-child { break-before: avoid; }
+  .x, .dim, .pc, .st, .stair li, .tl li, .term, tr { break-inside: avoid; }
+  .hero { padding-top: 0; }
+  .ref { break-before: page; }
+}
+
+/* Collapsible Navigation & Drawer Styles */
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--paper-2); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: .26rem .55rem; cursor: pointer;
+  font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
+  transition: all .15s ease; flex-shrink: 0;
+}
+.nav-toggle:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.nt-bars { display: flex; flex-direction: column; gap: 2.5px; width: 13px; }
+.nt-bar { height: 1.5px; background: currentColor; width: 100%; }
+.nt-label { font-size: .7rem; letter-spacing: .04em; }
+
+.side-nav {
+  position: fixed; top: 0; bottom: 0; left: 0;
+  width: 320px; max-width: 88vw; z-index: 100;
+  background: var(--paper); color: var(--ink);
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none; overflow: hidden;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+}
+.sn-backdrop {
+  position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
+  backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.sn-header {
+  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+  border-bottom: 2px solid var(--paper-2);
+}
+.sn-brand { display: flex; flex-direction: column; gap: .2rem; }
+.sn-course {
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em;
+  color: var(--band-mute); text-transform: uppercase;
+}
+.sn-title {
+  margin: 0; font: 800 1.25rem/1.05 var(--f-display);
+  font-stretch: 75%; text-transform: uppercase; letter-spacing: -.01em;
+}
+.sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
+.sn-close {
+  background: transparent; border: none; color: var(--paper);
+  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
+  line-height: .9; opacity: .8; transition: opacity .15s ease;
+}
+.sn-close:hover { opacity: 1; color: var(--hl); }
+
+.sn-body {
+  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sn-portal-link {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
+  text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--cobalt); color: #fff; border-color: var(--cobalt);
+}
+.sn-section-label {
+  font: 600 .65rem/1 var(--f-mono); letter-spacing: .1em;
+  color: var(--ink-2); text-transform: uppercase;
+  margin-top: .5rem; margin-bottom: -.2rem; padding-inline: .2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
+.sn-week-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .5rem .65rem; border: 1px solid var(--rule);
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  border-radius: 3px; transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--paper-2); border-color: var(--ink);
+  transform: translateX(2px);
+}
+.sn-week-item.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.sn-week-badge {
+  font: 800 .9rem/1 var(--f-display); font-stretch: 70%;
+  background: var(--paper-2); color: var(--cobalt);
+  padding: .3rem .45rem; border-radius: 2px; min-width: 2rem; text-align: center;
+}
+.sn-week-item.active .sn-week-badge {
+  background: var(--cobalt); color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.sn-week-title {
+  font: 700 .86rem/1.15 var(--f-display); font-stretch: 82%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-sub {
+  font: 400 .65rem/1.2 var(--f-mono); color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-item.active .sn-week-sub { color: var(--band-mute); }
+
+.sn-parts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+}
+.sn-part-btn {
+  display: block; text-align: center; text-decoration: none;
+  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  transition: all .12s ease;
+}
+.sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+
+.sn-res-links { display: flex; gap: .5rem; }
+.sn-res-item {
+  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
+  text-decoration: none; color: var(--ink); border-radius: 2px;
+}
+.sn-res-item:hover { border-color: var(--ink); color: var(--cobalt); }
+
+.sn-footer {
+  padding: .75rem .9rem; border-top: 1px solid var(--rule);
+  background: var(--paper-2); display: flex; justify-content: space-between; align-items: center;
+}
+.sn-theme-toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--rule);
+  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
+}
+.sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
+
+@media (max-width: 480px) {
+  .nav-toggle .nt-label { display: none; }
+  .nav-toggle { padding: .28rem .45rem; }
+}
+
+</style>
+</head>
+<body>
+<!-- Collapsible Left Navigation Drawer -->
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Lecture Tape Hub</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction & Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides &middot; 00:51:13</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Midterm Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Midterm Topic 2 &middot; Ch. 1 &middot; 01:34:41</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item active" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Midterm Topic 3 &middot; Ch. 2 &middot; 01:33:17</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Competitive Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Midterm Topic 4 &middot; Ch. 3 &middot; 01:35:39</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Midterm Topic 5 &middot; Ch. 4 &middot; 01:34:34</span>
+          </div>
+        </a>
+    </nav>
+
+    <div class="sn-section-label">CURRENT TAPE CHAPTERS</div>
+    <div class="sn-parts" id="sn-current-parts">
+        <a href="#part-a" class="sn-part-btn" title="Opening, technical check & Chapter 2 roadmap">A</a>
+        <a href="#part-b" class="sn-part-btn" title="The TELUS case: social learning & culture">B</a>
+        <a href="#part-c" class="sn-part-btn" title="Business processes & cross-functional order flow">C</a>
+        <a href="#part-d" class="sn-part-btn" title="Operational & middle management: TPS & MIS">D</a>
+        <a href="#part-e" class="sn-part-btn" title="Analytical decisions: DSS & executive dashboards (ESS)">E</a>
+        <a href="#part-f" class="sn-part-btn" title="Enterprise applications: ERP, SCM, CRM & KMS">F</a>
+        <a href="#part-g" class="sn-part-btn" title="Collaboration, social business & space/time matrix">G</a>
+        <a href="#part-h" class="sn-part-btn" title="The IS department, governance & executive roles">H</a>
+    </div>
+
+    <div class="sn-section-label">QUICK RESOURCES</div>
+    <div class="sn-res-links">
+      <a href="#glossary" class="sn-res-item">&sect; Glossary</a>
+      <a href="#errata" class="sn-res-item">&sect; Errata</a>
+    </div>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Light / Dark Mode">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+
+<header class="deck"><div class="wrap"><button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open Navigation Menu" title="Open Navigation Menu (M)"><span class="nt-bars" aria-hidden="true"><span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span></span><span class="nt-label">MENU</span></button>
+<span class="clock" id="clock">00:00:00</span><div class="tape" aria-hidden="true"><a class="seg" href="#part-a" style="--d:375" data-s="0" data-e="375" title="Opening, technical check & Chapter 2 roadmap">A</a><a class="seg" href="#part-b" style="--d:615" data-s="375" data-e="990" title="The TELUS case: social learning & culture">B</a><a class="seg" href="#part-c" style="--d:795" data-s="990" data-e="1785" title="Business processes & cross-functional order flow">C</a><a class="seg" href="#part-d" style="--d:840" data-s="1785" data-e="2625" title="Operational & middle management: TPS & MIS">D</a><a class="seg" href="#part-e" style="--d:885" data-s="2625" data-e="3510" title="Analytical decisions: DSS & executive dashboards (ESS)">E</a><a class="seg" href="#part-f" style="--d:960" data-s="3510" data-e="4470" title="Enterprise applications: ERP, SCM, CRM & KMS">F</a><a class="seg" href="#part-g" style="--d:735" data-s="4470" data-e="5205" title="Collaboration, social business & space/time matrix">G</a><a class="seg" href="#part-h" style="--d:392" data-s="5205" data-e="5597" title="The IS department, governance & executive roles">H</a><span class="play" id="play"></span></div><span class="total">/ 01:33:17</span></div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Management Information Systems &middot; Week 4 &middot; Recording 10.10.26 &middot; 01:33:17</div>
+<h1>Global e-business, enterprise systems <span class="c">&amp; collaboration</span></h1>
+<div class="lead"><p><span class="tm">00:04:52</span> Dr. Kenan moves from basic information definitions to the real operating nervous system of the firm: business processes, transaction processing (TPS), management reporting (MIS), analytical decision support (DSS), executive dashboards (ESS), enterprise suites (ERP, SCM, CRM), and collaborative social business.<small>Synthesizes the 93-minute recording (Materials/L5) with the 59-slide deck (Week_3.pptx) and Laudon &amp; Laudon Chapter 2 (p. 70). Margin rails contain exact slide, textbook page, and figure cross-references.</small></p>
+<dl class="glance"><dt>Recording</dt><dd>10.10.26, 01:33:17 (Lecture 5, Dr. Kenan)</dd><dt>Course</dt><dd>COM439 / MIS 301 &middot; Management Information Systems, Week 3</dd><dt>Slides &amp; Book</dt><dd>59 slides (Week_3.pptx), Reference Book Chapter 2, p. 70</dd><dt>Frameworks</dt><dd>Order Fulfillment (Fig 2.1), 4 System Levels (TPS/MIS/DSS/ESS), Enterprise Suites (ERP/SCM/CRM/KMS), Space/Time Matrix</dd><dt>Key Case</dt><dd>TELUS Canadian telecommunications social learning &amp; enterprise wiki transformation</dd></dl></div>
+
+<div class="tapewrap"><div class="tape"><a class="seg" href="#part-a" style="--d:375" data-s="0" data-e="375" title="Opening, technical check & Chapter 2 roadmap">A</a><a class="seg" href="#part-b" style="--d:615" data-s="375" data-e="990" title="The TELUS case: social learning & culture">B</a><a class="seg" href="#part-c" style="--d:795" data-s="990" data-e="1785" title="Business processes & cross-functional order flow">C</a><a class="seg" href="#part-d" style="--d:840" data-s="1785" data-e="2625" title="Operational & middle management: TPS & MIS">D</a><a class="seg" href="#part-e" style="--d:885" data-s="2625" data-e="3510" title="Analytical decisions: DSS & executive dashboards (ESS)">E</a><a class="seg" href="#part-f" style="--d:960" data-s="3510" data-e="4470" title="Enterprise applications: ERP, SCM, CRM & KMS">F</a><a class="seg" href="#part-g" style="--d:735" data-s="4470" data-e="5205" title="Collaboration, social business & space/time matrix">G</a><a class="seg" href="#part-h" style="--d:392" data-s="5205" data-e="5597" title="The IS department, governance & executive roles">H</a></div>
+<ol class="legend">
+<li><a href="#part-a"><span class="l">A</span><span><b>Opening, technical check &amp; Chapter 2 roadmap</b><small>00:00:00 &ndash; 00:06:15 &middot; 6 min 15 s</small></span></a></li>
+<li><a href="#part-b"><span class="l">B</span><span><b>The TELUS case: social learning &amp; culture</b><small>00:06:15 &ndash; 00:16:30 &middot; 10 min 15 s</small></span></a></li>
+<li><a href="#part-c"><span class="l">C</span><span><b>Business processes &amp; cross-functional order flow</b><small>00:16:30 &ndash; 00:29:45 &middot; 13 min 15 s</small></span></a></li>
+<li><a href="#part-d"><span class="l">D</span><span><b>Operational &amp; middle management: TPS &amp; MIS</b><small>00:29:45 &ndash; 00:43:45 &middot; 14 min 00 s</small></span></a></li>
+<li><a href="#part-e"><span class="l">E</span><span><b>Analytical decisions: DSS &amp; executive dashboards (ESS)</b><small>00:43:45 &ndash; 00:58:30 &middot; 14 min 45 s</small></span></a></li>
+<li><a href="#part-f"><span class="l">F</span><span><b>Enterprise applications: ERP, SCM, CRM &amp; KMS</b><small>00:58:30 &ndash; 01:14:30 &middot; 16 min 00 s</small></span></a></li>
+<li><a href="#part-g"><span class="l">G</span><span><b>Collaboration, social business &amp; space/time matrix</b><small>01:14:30 &ndash; 01:26:45 &middot; 12 min 15 s</small></span></a></li>
+<li><a href="#part-h"><span class="l">H</span><span><b>The IS department, governance &amp; executive roles</b><small>01:26:45 &ndash; 01:33:17 &middot; 6 min 32 s</small></span></a></li>
+</ol></div></div></section>
+
+<!-- PART A -->
+<section class="part" id="part-a"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">A</div><div><div class="pr">Part 1 of 8 &middot; 00:00:00 &ndash; 00:06:15 &middot; 6 min 15 s</div><h2>Opening, technical check &amp; Chapter 2 roadmap</h2><p>Audio/video check, greeting, alignment with Laudon &amp; Laudon Chapter 2 (p. 70), and the three central questions.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="0" data-e="215"><div class="ts">00:00:00<span>to 00:03:35</span><span class="ref-pill">Slide 01–02</span><span class="ref-sub">Ch. 2 Intro &bull; p. 70</span></div><div class="rail"></div><div class="b"><h3>Welcome to Week 3: global e-business &amp; collaboration</h3>
+<p>Dr. Kenan conducts a sound and visual check, welcoming students to Week 3. He announces that this session explores <b>Chapter 2: Global E-Business and Collaboration</b> in the reference textbook (page 70).</p>
+<p>He explains the progression of the course: while Week 1 introduced systems thinking and Week 2 examined high-level strategic objectives, Week 3 opens the enterprise hood to examine how internal business processes, distinct management tiers, enterprise applications, and collaboration technologies operate day-to-day.</p>
+</div></article>
+
+<article class="e" data-t="215" data-e="375"><div class="ts">00:03:35<span>to 00:06:15</span><span class="ref-pill">Slide 03</span><span class="ref-sub">3 Core Questions</span></div><div class="rail"></div><div class="b"><h3>The three central questions of Chapter 2</h3>
+<p>The professor guides students to approach the chapter through three core operational questions:</p>
+<div class="x dims"><div class="dim"><span class="tm">00:04:20</span><b>1. Work Flow</b><span>What specific sequence of business processes transforms customer requests into delivered value?</span></div><div class="dim"><span class="tm">00:05:00</span><b>2. System Matching</b><span>How do information systems uniquely serve operational, middle, and senior management tiers?</span></div><div class="dim"><span class="tm">00:05:40</span><b>3. Enterprise Synergy</b><span>How do enterprise applications and collaboration platforms bridge departmental silos?</span></div></div>
+</div></article>
+
+</div></section>
+
+<!-- PART B -->
+<section class="part" id="part-b"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">B</div><div><div class="pr">Part 2 of 8 &middot; 00:06:15 &ndash; 00:16:30 &middot; 10 min 15 s</div><h2>The TELUS case: social learning &amp; culture</h2><p>Canadian telecom workforce retirement risk, formal classroom training failure, video wikis, and cultural incentives.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="375" data-e="640"><div class="ts">00:06:15<span>to 00:10:40</span><span class="ref-pill">Slide 04–05</span><span class="ref-sub">TELUS Case &bull; p. 71</span></div><div class="rail"></div><div class="b"><h3>Opening case: TELUS embraces social learning</h3>
+<p>Dr. Kenan reviews the Chapter 2 opening case: TELUS, a major Canadian telecommunications provider. TELUS faced an existential workforce threat: a huge proportion of its veteran engineers and customer-service technicians were approaching retirement age. Traditional corporate training relied on bringing workers into physical classroom seminars—an approach that was outrageously expensive, painfully slow, and failed to capture the deep, unwritten tacit knowledge of senior workers.</p>
+<p>TELUS abandoned rigid classroom curricula and launched a <mark>social learning platform</mark>: internal video-sharing channels, collaborative wiki repositories, and peer-to-peer discussion boards where employees post 2-minute video demonstrations of how to solve complex network repairs.</p>
+</div></article>
+
+<article class="e" data-t="640" data-e="990"><div class="ts">00:10:40<span>to 00:16:30</span><span class="ref-pill">Slide 05</span><span class="ref-sub">Culture &amp; Tools</span></div><div class="rail"></div><div class="b"><h3>Why technology alone was not enough at TELUS</h3>
+<p>Dr. Kenan emphasizes the vital socio-technical lesson: <i>&ldquo;If TELUS had simply installed video-sharing software and wikis, the project would have failed completely.&rdquo;</i> Software cannot force employees to share proprietary trade secrets if the corporate culture rewards information hoarding.</p>
+<p>TELUS succeeded because senior management paired the digital platform with <mark>cultural incentives and organizational redesign</mark>: employee performance reviews rewarded peer mentorship; managers allocated dedicated work hours for content creation; and leadership actively modeled social learning. Technology provided the pipe, but organizational culture provided the water.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART C -->
+<section class="part" id="part-c"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">C</div><div><div class="pr">Part 3 of 8 &middot; 00:16:30 &ndash; 00:29:45 &middot; 13 min 15 s</div><h2>Business processes &amp; cross-functional order flow</h2><p>Defining business processes, flows of material/info/knowledge, Figure 2.1 order fulfillment, and IT process improvements.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="990" data-e="1380"><div class="ts">00:16:30<span>to 00:23:00</span><span class="ref-pill">Slide 06–08</span><span class="ref-sub">Table 2.1 &bull; p. 73</span></div><div class="rail"></div><div class="b"><h3>What is a business process? Material, information &amp; knowledge flows</h3>
+<p>Dr. Kenan defines a business process as a coordinated collection of activities required to produce a product or deliver a service. Processes represent how work is organized, coordinated, and focused inside an enterprise.</p>
+<p>Processes are supported by three interrelated flows: <mark>flows of material</mark> (physical parts moving across factory floors), <mark>flows of information</mark> (orders, invoices, shipping tracking codes), and <mark>flows of knowledge</mark> (expert diagnostic routines and engineering rules). While some processes are confined to a single department (e.g. Accounts Payable within Finance), the most critical business processes cross functional boundaries.</p>
+</div></article>
+
+<article class="e" data-t="1380" data-e="1785"><div class="ts">00:23:00<span>to 00:29:45</span><span class="ref-pill">Slide 09–12</span><span class="ref-sub">Figure 2.1 &bull; p. 74</span></div><div class="rail"></div><div class="b"><h3>Figure 2.1: the cross-functional order fulfillment process</h3>
+<p>Dr. Kenan analyzes Figure 2.1, showing that fulfilling a customer order is not a sales task—it is an end-to-end cross-functional journey involving three distinct departments:</p>
+<div class="x flow"><div class="st"><em>Sales</em><span><b>Order Generation</b><br>Captures buyer order details, price agreed, and delivery address.</span></div><div class="st"><em>Accounting</em><span><b>Credit Check</b><br>Verifies buyer credit balance, authorizes terms, generates invoice.</span></div><div class="st"><em>Manufacturing</em><span><b>Assembly &amp; Pull</b><br>Pulls items from inventory or schedules factory production run.</span></div><div class="st"><em>Shipping &amp; Logistics</em><span><b>Dispatch &amp; Track</b><br>Generates bill of lading, hands order to carrier, sends tracking API.</span></div></div>
+<p>The professor stresses: <mark>&ldquo;If accounting takes three days to approve credit, the whole order is three days late.&rdquo;</mark> Information systems eliminate manual handoff delays by sharing order data across all three departments simultaneously.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART D -->
+<section class="part" id="part-d"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">D</div><div><div class="pr">Part 4 of 8 &middot; 00:29:45 &ndash; 00:43:45 &middot; 14 min 00 s</div><h2>Operational &amp; middle management: TPS &amp; MIS</h2><p>Transaction Processing Systems (Figure 2.2 payroll), Management Information Systems (Figure 2.3 &amp; 2.4), and exception reporting.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="1785" data-e="2220"><div class="ts">00:29:45<span>to 00:37:00</span><span class="ref-pill">Slide 13–16</span><span class="ref-sub">Figure 2.2 &bull; p. 77</span></div><div class="rail"></div><div class="b"><h3>Transaction processing systems (TPS): the operational foundation</h3>
+<p>Dr. Kenan examines the lowest management tier: operational management. Frontline supervisors need detailed, current data regarding daily transactions to keep operations running. They rely on <mark>Transaction Processing Systems (TPS)</mark>.</p>
+<p>Figure 2.2 illustrates a typical Payroll TPS: employee badge taps and hourly timesheets enter the system; the payroll master file updates deductions and tax withholdings; and the system automatically issues bank salary deposits, government tax reports, and managerial labor-cost totals. TPS is characterized by high transaction volume, rigid standard operating procedures, and internal operational focus.</p>
+</div></article>
+
+<article class="e" data-t="2220" data-e="2625"><div class="ts">00:37:00<span>to 00:43:45</span><span class="ref-pill">Slide 17–20</span><span class="ref-sub">Figure 2.3–2.4 &bull; p. 80</span></div><div class="rail"></div><div class="b"><h3>Management information systems (MIS): control &amp; exception reporting</h3>
+<p>Middle managers do not need to inspect every individual employee paystub or sales receipt. They need summary numbers and performance trends. <mark>Management Information Systems (MIS)</mark> extract transactional data from underlying TPS files, aggregate the records, and generate periodic performance reports.</p>
+<p>Dr. Kenan walks through Figure 2.4 (Sample MIS Report): a consolidated sales report comparing actual regional sales against planned targets. Its greatest managerial power is <mark>exception reporting</mark>: instantly highlighting product lines or stores where performance deviates significantly from planned benchmarks, enabling middle managers to intervene before fiscal quarters end.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART E -->
+<section class="part" id="part-e"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">E</div><div><div class="pr">Part 5 of 8 &middot; 00:43:45 &ndash; 00:58:30 &middot; 14 min 45 s</div><h2>Analytical decisions: DSS &amp; executive dashboards (ESS)</h2><p>Decision Support Systems (Figure 2.5 voyage estimation), Executive Support Systems (Figure 2.6), and drill-down analytics.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2625" data-e="3075"><div class="ts">00:43:45<span>to 00:51:15</span><span class="ref-pill">Slide 21–23</span><span class="ref-sub">Figure 2.5 &bull; p. 84</span></div><div class="rail"></div><div class="b"><h3>Decision support systems (DSS): what-if modeling &amp; simulations</h3>
+<p>When decisions are semi-structured—meaning they cannot be resolved by a rigid mathematical formula—managers turn to <mark>Decision Support Systems (DSS)</mark>. Unlike MIS, which looks backward at what occurred, DSS looks forward, helping managers explore &ldquo;what-if&rdquo; scenarios.</p>
+<p>Dr. Kenan examines Figure 2.5 (Voyage-Estimating DSS for maritime shipping): chartering managers enter cargo weight, fuel price fluctuations, canal transit tolls, and vessel speeds into mathematical models to calculate optimal shipping routes, vessel charter rates, and expected profit margins under volatile weather conditions.</p>
+</div></article>
+
+<article class="e" data-t="3075" data-e="3510"><div class="ts">00:51:15<span>to 00:58:30</span><span class="ref-pill">Slide 24–27</span><span class="ref-sub">Figure 2.6 &bull; p. 87</span></div><div class="rail"></div><div class="b"><h3>Executive support systems (ESS): senior executive dashboards</h3>
+<p>At the apex of the pyramid sits senior management (the C-suite). Senior executives address completely unstructured strategic decisions: <i>&ldquo;Should we acquire a competitor in Latin America? How will new carbon tax regulations impact our supply chain?&rdquo;</i></p>
+<p>They utilize <mark>Executive Support Systems (ESS)</mark>. Figure 2.6 shows an ESS portal: it aggregates internal financial KPIs with external market feeds (stock indices, competitor filings, regulatory news) into visual graphic dials. Crucially, ESS offers <mark>drill-down capability</mark>: an executive noticing an aggregate margin drop can click the red KPI to drill down from global division &rarr; country &rarr; retail branch &rarr; individual product line.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART F -->
+<section class="part" id="part-f"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">F</div><div><div class="pr">Part 6 of 8 &middot; 00:58:30 &ndash; 01:14:30 &middot; 16 min 00 s</div><h2>Enterprise applications: ERP, SCM, CRM &amp; KMS</h2><p>Figure 2.7 architecture: breaking legacy silos, supply chains, customer lifecycle, and knowledge management.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="3510" data-e="3990"><div class="ts">00:58:30<span>to 01:06:30</span><span class="ref-pill">Slide 28–32</span><span class="ref-sub">Figure 2.7 &bull; p. 90</span></div><div class="rail"></div><div class="b"><h3>Enterprise applications: integrating the enterprise suite</h3>
+<p>Dr. Kenan turns to Figure 2.7, explaining that enterprise systems span across business functions and management levels. Rather than maintaining disparate legacy programs that cannot communicate, modern digital firms implement four foundational enterprise applications:</p>
+<div class="x dims"><div class="dim"><span class="tm">01:00:15</span><b>1. ERP</b><span>Enterprise Resource Planning: central database unifying manufacturing, accounting, sales, and HR into one source of truth.</span></div><div class="dim"><span class="tm">01:02:10</span><b>2. SCM</b><span>Supply Chain Management: manages supplier logistics, inventory replenishment, and transit networks across company boundaries.</span></div><div class="dim"><span class="tm">01:04:05</span><b>3. CRM</b><span>Customer Relationship Management: coordinates all marketing, sales, and customer service touchpoints into a unified customer profile.</span></div><div class="dim"><span class="tm">01:05:40</span><b>4. KMS</b><span>Knowledge Management Systems: collects, indexes, and distributes organizational knowledge and expertise (wikis, best practice vaults).</span></div></div>
+</div></article>
+
+<article class="e" data-t="3990" data-e="4470"><div class="ts">01:06:30<span>to 01:14:30</span><span class="ref-pill">Slide 33–39</span><span class="ref-sub">Intranets &bull; p. 97</span></div><div class="rail"></div><div class="b"><h3>Intranets, extranets &amp; e-business terminology</h3>
+<p>Dr. Kenan clarifies essential business networking infrastructure: <mark>Intranets</mark> are internal corporate websites accessible strictly to authorized employees to consult company policies, benefit portals, and training docs. <mark>Extranets</mark> are secure portals that extend private corporate systems to verified external partners, suppliers, and distributors.</p>
+<div class="x cmp"><div class="col"><h4>E-Commerce vs. E-Business</h4><ul class="pts"><li><b>E-Commerce:</b> The buying and selling of goods and services over digital networks.</li><li><b>E-Business:</b> The total use of digital technology to execute all business processes inside the firm.</li></ul></div><div class="col"><h4>E-Government</h4><ul class="pts"><li>Application of the Internet and IS to digitally deliver public services to citizens (G2C).</li><li>Enhances transparency, citizen voting, tax filings, and license renewals.</li></ul></div></div>
+</div></article>
+
+</div></section>
+
+<!-- PART G -->
+<section class="part" id="part-g"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">G</div><div><div class="pr">Part 7 of 8 &middot; 01:14:30 &ndash; 01:26:45 &middot; 12 min 15 s</div><h2>Collaboration, social business &amp; space/time matrix</h2><p>Table 2.4 deconstructed: synchronous vs asynchronous, remote vs co-located, and enterprise social tools.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="4470" data-e="4860"><div class="ts">01:14:30<span>to 01:21:00</span><span class="ref-pill">Slide 40–45</span><span class="ref-sub">Social Business &bull; p. 99</span></div><div class="rail"></div><div class="b"><h3>Why collaboration and social business have become essential</h3>
+<p>Dr. Kenan highlights that modern work has fundamentally shifted: jobs increasingly require teamwork, intellectual problem solving, and global coordination across time zones. Organizations cannot survive through top-down hierarchical commands; they depend on rapid peer-to-peer collaboration.</p>
+<p>Firms invest heavily in <mark>Social Business</mark>—using social platforms (internal wikis, Microsoft Teams, Slack, enterprise social networks) to connect employees with shared interests, discover subject-matter experts, and accelerate innovation.</p>
+</div></article>
+
+<article class="e" data-t="4860" data-e="5205"><div class="ts">01:21:00<span>to 01:26:45</span><span class="ref-pill">Slide 46–50</span><span class="ref-sub">Table 2.4 &bull; p. 104</span></div><div class="rail"></div><div class="b"><h3>The 2&times;2 space/time collaboration matrix</h3>
+<p>The professor walks through Table 2.4, an essential diagnostic framework for evaluating collaborative tools across space and time dimensions:</p>
+<div class="x tw"><table><thead><tr><th>Dimension</th><th>Same Time (Synchronous)</th><th>Different Time (Asynchronous)</th></tr></thead><tbody><tr><td><b>Same Place (Co-located)</b></td><td><b>Face-to-Face Interaction:</b> Decision rooms, interactive smart whiteboards, live shared displays.</td><td><b>Continuous Task Work:</b> Dedicated team project rooms, shift-rotation kiosks, physical bulletin walls.</td></tr><tr><td><b>Different Place (Remote)</b></td><td><b>Remote Synchronous:</b> Video conferencing (Zoom, Teams), VoIP calls, live co-editing docs.</td><td><b>Remote Asynchronous:</b> Corporate e-mail, threaded discussion boards, project wikis, cloud shared drives.</td></tr></tbody></table></div>
+<p>Managers must select collaborative tools that match their team's specific position on the space/time grid.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART H -->
+<section class="part" id="part-h"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">H</div><div><div class="pr">Part 8 of 8 &middot; 01:26:45 &ndash; 01:33:17 &middot; 6 min 32 s</div><h2>The IS department, governance &amp; executive roles</h2><p>CIO, CKO, CPO, CSO/CISO, CDO responsibilities, IT governance mechanisms, and midterm alignment.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="5205" data-e="5445"><div class="ts">01:26:45<span>to 01:30:45</span><span class="ref-pill">Slide 51–56</span><span class="ref-sub">Roles &bull; p. 107</span></div><div class="rail"></div><div class="b"><h3>The modern IS department: executive roles &amp; specialists</h3>
+<p>Dr. Kenan examines the organizational roles comprising the Information Systems department. As information systems expanded from accounting calculation machines to strategic enterprise platforms, executive leadership diversified:</p>
+<div class="x dims"><div class="dim"><span class="tm">01:27:30</span><b>CIO</b><span>Chief Information Officer: senior executive overseeing the entire IT estate and aligning systems with corporate strategy.</span></div><div class="dim"><span class="tm">01:28:15</span><b>CSO / CISO</b><span>Chief Security Officer: enforces IT security policies, data encryption, threat intelligence, and disaster recovery.</span></div><div class="dim"><span class="tm">01:28:50</span><b>CPO</b><span>Chief Privacy Officer: ensures enterprise compliance with data protection laws (GDPR, HIPAA, consumer privacy regulations).</span></div><div class="dim"><span class="tm">01:29:20</span><b>CKO</b><span>Chief Knowledge Officer: designs knowledge management programs to capture expert institutional IP and best practices.</span></div><div class="dim"><span class="tm">01:30:00</span><b>CDO</b><span>Chief Data Officer: governs enterprise data quality, master data taxonomies, analytics assets, and AI training pipelines.</span></div></div>
+</div></article>
+
+<article class="e" data-t="5445" data-e="5597"><div class="ts">01:30:45<span>to 01:33:17</span><span class="ref-pill">Slide 57–59</span><span class="ref-sub">Governance &bull; p. 110</span></div><div class="rail"></div><div class="b"><h3>IT governance &amp; closing synthesis</h3>
+<p>The lecture closes on <mark>IT Governance</mark>: the strategy and policies determining decision rights and accountability for an organization's IT investments. Governance dictates who has the authority to approve a multimillion-dollar software purchase, who sets data security rules, and who resolves disputes between departments.</p>
+<p>Dr. Kenan reminds the class that all core frameworks from Weeks 1, 2, and 3 feed directly into the upcoming midterm exam. He wishes students an excellent weekend and encourages them to review the chapter study guide.</p>
+</div></article>
+
+</div></section>
+
+<!-- REFERENCE SECTION -->
+<section class="ref wrap"><h2 class="plain">Terms, in order of appearance</h2><p class="lede">Each term is stamped with the first moment the professor defines it in the recording.</p><div class="terms">
+<div class="term"><b>Business Process</b><span class="tm">00:17:15</span><span>A coordinated collection of structured, repeatable activities and workflows that transform inputs into products or services.</span></div>
+<div class="term"><b>Cross-Functional Process</b><span class="tm">00:23:45</span><span>A business process spanning multiple distinct functional departments (e.g. Order Fulfillment bridging Sales, Accounting, and Logistics).</span></div>
+<div class="term"><b>Transaction Processing System (TPS)</b><span class="tm">00:30:15</span><span>Operational-level systems recording routine daily transactions (orders, payments, payroll) required to conduct business.</span></div>
+<div class="term"><b>Management Information System (MIS)</b><span class="tm">00:37:30</span><span>Middle-management reporting systems that summarize raw TPS data into scheduled performance, variance, and exception reports.</span></div>
+<div class="term"><b>Exception Reporting</b><span class="tm">00:41:15</span><span>A reporting capability that highlights conditions where actual operational performance falls outside predetermined acceptable boundaries.</span></div>
+<div class="term"><b>Decision Support System (DSS)</b><span class="tm">00:44:20</span><span>Analytical systems supporting semi-structured decision-making through what-if modeling, simulation variables, and sensitivity analysis.</span></div>
+<div class="term"><b>Executive Support System (ESS)</b><span class="tm">00:51:30</span><span>Senior executive portals integrating internal financials with external market data, presenting KPIs via graphical dashboards with drill-down capabilities.</span></div>
+<div class="term"><b>Drill-Down Capability</b><span class="tm">00:54:10</span><span>The interactive software capability allowing an executive to navigate from high-level summary KPIs down to granular underlying transactional records.</span></div>
+<div class="term"><b>Enterprise Resource Planning (ERP)</b><span class="tm">01:00:15</span><span>An integrated suite of business software built around a central shared database unifying manufacturing, finance, sales, and HR.</span></div>
+<div class="term"><b>Supply Chain Management (SCM)</b><span class="tm">01:02:10</span><span>Enterprise applications coordinating the procurement of materials, inventory management, production scheduling, and product distribution with external partners.</span></div>
+<div class="term"><b>Customer Relationship Management (CRM)</b><span class="tm">01:04:05</span><span>Enterprise applications tracking and consolidating customer interactions across sales, marketing, and customer service touchpoints.</span></div>
+<div class="term"><b>Knowledge Management System (KMS)</b><span class="tm">01:05:40</span><span>Systems supporting the capture, codification, organization, and distribution of tacit and explicit organizational knowledge.</span></div>
+<div class="term"><b>Intranet</b><span class="tm">01:07:30</span><span>An internal, private corporate network based on Internet standards accessible strictly to authorized employees.</span></div>
+<div class="term"><b>Extranet</b><span class="tm">01:09:15</span><span>A secure private corporate website that extends internal enterprise applications to authorized external suppliers, vendors, and business clients.</span></div>
+<div class="term"><b>Space/Time Collaboration Matrix</b><span class="tm">01:21:00</span><span>A 2&times;2 analytical framework classifying collaboration technologies across synchronous/asynchronous time and co-located/remote space.</span></div>
+<div class="term"><b>Chief Information Officer (CIO)</b><span class="tm">01:27:30</span><span>The senior corporate executive responsible for overseeing the enterprise's entire information technology investment and digital strategy.</span></div>
+<div class="term"><b>IT Governance</b><span class="tm">01:30:45</span><span>The organizational frameworks, decision rights, and accountability mechanisms established to ensure that IT investments support corporate objectives.</span></div>
+</div></section>
+
+<!-- TRANSCRIPT CLEAN-UP SECTION -->
+<section class="ref wrap" style="margin-top:3rem"><h2 class="plain">Transcript clean-up</h2><p class="lede">The recording was auto-transcribed, and several academic terms came out phonetically garbled. This page reads them as follows based on Laudon &amp; Laudon Chapter 2.</p><ul class="tl">
+<li><span class="tm">00:00:09</span><span>The transcript says &ldquo;Good morning France.&rdquo; This is corrected to <b>Good morning friends</b>.</span></li>
+<li><span class="tm">00:07:15</span><span>&ldquo;The open case is about Telus, a Canadian telecommunications company&rdquo; is standardized to <b>TELUS</b>.</span></li>
+<li><span class="tm">00:23:45</span><span>&ldquo;Becks may miss flights, passengers may be delayed&rdquo; is corrected to <b>bags may miss flights</b>, referring to airport luggage handling failures.</span></li>
+<li><span class="tm">00:30:15</span><span>&ldquo;TPS, Transsection Processing System&rdquo; is corrected to <b>Transaction Processing System (TPS)</b>.</span></li>
+<li><span class="tm">00:44:20</span><span>&ldquo;Voyage estimation DSS&rdquo; refers directly to <b>Figure 2.5 Voyage-Estimating Decision Support System</b> on page 84.</span></li>
+<li><span class="tm">01:02:10</span><span>&ldquo;SCUM systems&rdquo; is corrected to <b>SCM (Supply Chain Management) systems</b>.</span></li>
+<li><span class="tm">01:07:30</span><span>&ldquo;Internet and internet&rdquo; is corrected to <b>Intranets and the Internet</b>.</span></li>
+<li><span class="tm">01:21:00</span><span>&ldquo;Space time collaborate matrix in table 2.4&rdquo; refers to <b>Table 2.4 The Space/Time Collaboration Matrix</b> on page 104.</span></li>
+<li><span class="tm">01:27:30</span><span>&ldquo;The CIO oversees...&rdquo; correctly identifies the <b>Chief Information Officer</b>.</span></li>
+</ul><div class="end">End of recording &middot; 01:33:17</div></section>
+</main>
+
+<script>
+(function(){
+  var TOTAL = 5597;
+  var es = [].slice.call(document.querySelectorAll('.e'));
+  var deck = document.querySelector('.deck');
+  var segs = [].slice.call(deck.querySelectorAll('.seg'));
+  var clock = document.getElementById('clock'), play = document.getElementById('play');
+  var starts = segs.map(function(s){ return +s.getAttribute('data-s'); });
+  var ends = segs.map(function(s){ return +s.getAttribute('data-e'); });
+  function f(s){
+    s = Math.round(s);
+    var a = [Math.floor(s/3600), Math.floor(s%3600/60), s%60];
+    return a.map(function(n){ return (n<10?'0':'')+n; }).join(':');
+  }
+  var busy = false;
+  function upd(){
+    busy = false;
+    var line = deck.getBoundingClientRect().bottom + 28, t = 0;
+    for (var i = 0; i < es.length; i++){
+      var r = es[i].getBoundingClientRect();
+      if (r.top <= line){
+        var a = +es[i].getAttribute('data-t'), b = +es[i].getAttribute('data-e');
+        var p = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+        t = a + p * (b - a);
+      } else break;
+    }
+    clock.textContent = f(t);
+    var k = 0; for (var j = 0; j < starts.length; j++){ if (t >= starts[j]) k = j; }
+    segs.forEach(function(s, n){ s.classList.toggle('on', n === k && t > 0); });
+    var sg = segs[k], fr = Math.max(0, Math.min(1, (t - starts[k]) / Math.max(1, ends[k] - starts[k])));
+    play.style.left = (sg.offsetLeft + fr * sg.offsetWidth - 1.5) + 'px';
+  }
+  function req(){ if (!busy){ busy = true; requestAnimationFrame(upd); } }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', req);
+  upd();
+})();
+</script>
+
+<script>
+
+// Navigation Drawer Controller & Theme Switcher
+(function() {
+  var sideNav = document.getElementById('side-nav');
+  var backdrop = document.getElementById('sn-backdrop');
+  var toggleBtn = document.getElementById('nav-toggle');
+  var closeBtn = document.getElementById('sn-close');
+  var themeBtn = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) {
+      closeNav();
+    }
+    if ((e.key === 'm' || e.key === 'M') && !e.target.matches('input, textarea')) {
+      if (sideNav.classList.contains('is-open')) closeNav();
+      else openNav();
+    }
+  });
+
+  var partLinks = document.querySelectorAll('.sn-parts a, .sn-res-links a');
+  partLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      closeNav();
+    });
+  });
+
+  function initTheme() {
+    var saved = localStorage.getItem('mis_theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('mis_theme', next);
+    });
+  }
+  initTheme();
+})();
+
+</script>
+</body>
+</html>

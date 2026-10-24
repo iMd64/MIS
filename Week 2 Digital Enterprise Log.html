@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 2 Digital Enterprise Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap">
+<style>
+/* Layout concept: the lecture as a tape. Sticky playhead bar on top, eight chapter bands,
+   each entry hung off a ruler rail with its recording timecode in the margin, accompanied
+   by note & slide cross-references. */
+:root {
+  --paper: #ECEEF4; --paper-2: #DFE2EC; --ink: #12141C; --ink-2: #474D61; --rule: #B7BCCF;
+  --cobalt: #2A3BFF; --hl: #FFE14D;
+  --band-bg: #12141C; --band-fg: #ECEEF4; --band-mute: #8E98F5;
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+    --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+  --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.62 var(--f-body); -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--paper);
+}
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.wrap {
+  width: 100%; max-width: 72rem; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+mark {
+  background: linear-gradient(transparent 50%, var(--hl) 50% 94%, transparent 94%);
+  color: inherit; padding: 0 .1em;
+}
+.tm {
+  font: 500 .78rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); white-space: nowrap;
+}
+
+/* sticky playhead */
+.deck {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: var(--paper); border-bottom: 2px solid var(--ink);
+}
+.deck .wrap { display: flex; align-items: center; gap: .9rem; padding-block: .6rem; }
+.clock {
+  font: 500 1.05rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); min-width: 5.4rem;
+}
+.total { font: 400 .78rem/1 var(--f-mono); color: var(--ink-2); }
+.tape { position: relative; display: flex; gap: 2px; min-width: 0; }
+.deck .tape { flex: 1; height: 14px; }
+.seg {
+  flex: var(--d) 1 0%; min-width: 0; background: var(--ink); color: var(--paper);
+  text-decoration: none; text-align: center; overflow: hidden;
+  font: 800 .7rem/14px var(--f-display);
+}
+.seg.on, .seg:hover { background: var(--cobalt); color: #fff; }
+.deck .seg { font-size: 0; }
+.play {
+  position: absolute; top: -5px; bottom: -5px; left: 0; width: 3px;
+  background: var(--hl); box-shadow: 0 0 0 1.5px var(--ink); pointer-events: none;
+}
+
+/* hero */
+.hero { padding-block: 2.4rem 1rem; }
+.eyebrow {
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 {
+  margin: .6rem 0 0; font: 800 clamp(2.9rem, 10.2vw, 8rem)/.86 var(--f-display);
+  font-stretch: 66%; text-transform: uppercase; letter-spacing: -.004em; text-wrap: balance;
+}
+h1 .c { color: var(--cobalt); }
+.lead {
+  display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.6rem 3rem; margin-top: 1.8rem; align-items: start;
+}
+.lead p { margin: 0; font-size: 1.3rem; line-height: 1.42; max-width: 34rem; }
+.lead p small {
+  display: block; margin-top: .7rem; font: 400 .95rem/1.5 var(--f-body);
+  color: var(--ink-2);
+}
+dl.glance {
+  margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: .4rem 1rem; font: 400 .82rem/1.5 var(--f-mono);
+}
+dl.glance dt { color: var(--ink-2); } dl.glance dd { margin: 0; }
+.tapewrap { margin-top: 2.2rem; }
+.tapewrap .tape { height: 48px; }
+.tapewrap .seg { font-size: 1.15rem; line-height: 48px; font-stretch: 70%; }
+.legend {
+  list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: .9rem 1.6rem;
+}
+.legend a {
+  display: grid; grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: .55rem; text-decoration: none;
+}
+.legend .l { font: 800 1.6rem/.9 var(--f-display); font-stretch: 66%; color: var(--cobalt); }
+.legend b { display: block; font: 600 .95rem/1.25 var(--f-display); }
+.legend small {
+  display: block; margin-top: .2rem; font: 400 .74rem/1.4 var(--f-mono);
+  color: var(--ink-2);
+}
+.legend a:hover b {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+
+/* chapter bands */
+.band { background: var(--band-bg); color: var(--band-fg); margin-top: 3.6rem; }
+.band-in {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6rem;
+  align-items: end; padding-block: 1.8rem 1.7rem;
+}
+.pl { font: 900 7.2rem/.74 var(--f-display); font-stretch: 62%; color: var(--band-mute); }
+.pr {
+  font: 500 .78rem/1.4 var(--f-mono); letter-spacing: .07em;
+  text-transform: uppercase; color: var(--band-mute);
+}
+.band h2 {
+  margin: .35rem 0 .5rem; font: 800 clamp(1.9rem, 4.8vw, 3.3rem)/.98 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase; text-wrap: balance;
+}
+.band p { margin: 0; max-width: 46rem; opacity: .88; font-size: 1.02rem; }
+
+/* entries on the ruler rail */
+.entries { --pt: 1.7rem; }
+.e { display: grid; grid-template-columns: 7.6rem 14px minmax(0, 1fr); column-gap: 1.1rem; }
+.ts {
+  text-align: right; font: 500 .95rem/1.2 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); padding-top: calc(var(--pt) + .22rem);
+}
+.ts span { display: block; margin-top: .25rem; font-size: .7rem; font-weight: 400; color: var(--ink-2); }
+
+/* Note & Slide reference badges */
+.ref-pill {
+  display: inline-block; margin-top: .45rem; padding: .15rem .45rem;
+  font: 600 .68rem/1.2 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 3px;
+  letter-spacing: .02em;
+}
+.ref-sub {
+  display: block; margin-top: .2rem; font: 400 .65rem/1.2 var(--f-mono);
+  color: var(--ink-2);
+}
+
+.rail {
+  position: relative;
+  background: linear-gradient(var(--ink-2), var(--ink-2)) right top/1px 100% no-repeat,
+             repeating-linear-gradient(to bottom, var(--ink-2) 0 1px, transparent 1px 9px) right top/7px 100% no-repeat;
+}
+.rail::before {
+  content: ""; position: absolute; top: calc(var(--pt) + .32rem); right: -5px;
+  width: 11px; height: 11px; background: var(--cobalt); outline: 3px solid var(--paper);
+}
+.b { padding-top: var(--pt); padding-bottom: .2rem; }
+.e:last-child .b { padding-bottom: 1.8rem; }
+.b h3 {
+  margin: 0 0 .6rem; font: 700 1.6rem/1.06 var(--f-display);
+  font-stretch: 80%; text-wrap: balance;
+}
+.b p { margin: 0 0 .75rem; max-width: 62ch; }
+.pts {
+  margin: .4rem 0 .9rem; padding: 0; list-style: none; max-width: 62ch;
+  display: grid; gap: .45rem;
+}
+.pts li { position: relative; padding-left: 1.15rem; }
+.pts li::before {
+  content: ""; position: absolute; left: 0; top: .6em;
+  width: 7px; height: 7px; background: var(--cobalt);
+}
+.x { margin: 1rem 0 .5rem; }
+
+/* components */
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .6rem; }
+.dim {
+  border: 1.5px solid var(--ink); background: var(--paper-2);
+  padding: .7rem .8rem .85rem; display: grid; gap: .35rem; align-content: start;
+}
+.dim b {
+  font: 700 1.15rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase;
+}
+.dim span:last-child { font-size: .92rem; line-height: 1.35; color: var(--ink-2); }
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.6rem; }
+.cmp .col { border-top: 4px solid var(--ink); padding-top: .5rem; }
+.cmp h4 {
+  margin: 0 0 .5rem; font: 700 1.15rem/1 var(--f-display);
+  font-stretch: 78%; text-transform: uppercase;
+}
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th {
+  text-align: left; font: 500 .7rem/1.2 var(--f-mono); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2); padding: .4rem .8rem .4rem 0;
+  border-bottom: 2px solid var(--ink);
+}
+td { padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.defs { display: grid; gap: .5rem; }
+.defs > div {
+  display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem;
+  align-items: baseline; border-top: 1px solid var(--rule); padding-top: .5rem;
+}
+.defs b { font: 800 1.5rem/1 var(--f-display); font-stretch: 70%; text-transform: uppercase; }
+.defs p { margin: 0; }
+.stair { list-style: none; padding: 0; display: grid; gap: .45rem; }
+.stair li {
+  margin-left: calc(var(--i) * 1.7rem); border-left: 5px solid var(--cobalt);
+  background: var(--paper-2); padding: .55rem .85rem; display: grid;
+  grid-template-columns: auto minmax(0, 1fr); gap: .15rem .9rem; align-items: baseline;
+}
+.stair b { font: 700 1.1rem/1.2 var(--f-display); font-stretch: 82%; text-transform: uppercase; }
+.stair span:last-child { grid-column: 2; }
+.six { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .7rem; }
+.pc {
+  background: var(--paper-2); border-top: 4px solid var(--ink);
+  padding: .7rem .85rem .9rem; display: grid; gap: .4rem; align-content: start;
+}
+.pc b { font: 700 1.2rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase; }
+.pc i { font-size: 1rem; line-height: 1.35; }
+.pc small { font-size: .86rem; line-height: 1.4; color: var(--ink-2); }
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: .6rem; }
+.st { border: 1.5px solid var(--ink); padding: .7rem .8rem; display: grid; gap: .4rem; align-content: start; }
+.st em {
+  font: 500 .78rem/1.2 var(--f-mono); font-style: normal;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.st span:last-child { font-size: .95rem; line-height: 1.4; }
+.tl { list-style: none; padding: 0; display: grid; gap: 0; }
+.tl li {
+  display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); gap: .8rem;
+  padding: .6rem 0; border-top: 1px solid var(--rule);
+}
+.tl li:first-child { border-top: 2px solid var(--ink); }
+
+/* reference */
+.plain {
+  margin: 0 0 1.2rem; padding-bottom: .5rem; border-bottom: 4px solid var(--ink);
+  font: 800 clamp(1.9rem, 4.8vw, 3.1rem)/1 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase;
+}
+.ref { margin-top: 4rem; }
+.lede { margin: 0 0 1.2rem; max-width: 46rem; color: var(--ink-2); }
+.terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 2.4rem; }
+.term {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .15rem .8rem;
+  padding: .65rem 0; border-top: 1px solid var(--rule);
+}
+.term b { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 85%; }
+.term span:last-child { grid-column: 1/-1; font-size: .93rem; line-height: 1.4; color: var(--ink-2); }
+.end {
+  margin-top: 3.2rem; padding-block: 1.4rem 2.6rem; border-top: 2px solid var(--ink);
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .lead { grid-template-columns: minmax(0, 1fr); }
+  .band-in { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
+  .pl { font-size: 4.2rem; }
+  .cmp { grid-template-columns: minmax(0, 1fr); }
+  .defs > div { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+  .e { grid-template-columns: 14px minmax(0, 1fr); grid-template-areas: "rail ts" "rail b"; column-gap: .8rem; }
+  .rail { grid-area: rail; }
+  .ts {
+    grid-area: ts; text-align: left; display: flex; flex-wrap: wrap; gap: .4rem .8rem;
+    align-items: baseline; padding-top: var(--pt);
+  }
+  .ts span { display: inline; margin: 0; }
+  .ref-pill, .ref-sub { display: inline-block; margin-top: 0; }
+  .b { grid-area: b; padding-top: .35rem; }
+  .rail::before { top: calc(var(--pt) + .1rem); }
+  .b h3 { font-size: 1.4rem; }
+  .stair li { margin-left: calc(var(--i) * .55rem); }
+  .tl li { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+}
+@media (max-width: 480px) { .total { display: none; } .clock { min-width: 4.9rem; font-size: .95rem; } }
+
+@media print {
+  @page { size: A4; margin: 13mm 0; }
+  html { font-size: 13.5px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body::before, .deck { display: none; }
+  .wrap { padding-left: 14mm; padding-right: 14mm; max-width: none; }
+  .band { margin-top: 2rem; break-after: avoid; break-inside: avoid; }
+  .e { break-inside: avoid; }
+  .b h3 { break-after: avoid; }
+  .entries .e:first-child { break-before: avoid; }
+  .x, .dim, .pc, .st, .stair li, .tl li, .term, tr { break-inside: avoid; }
+  .hero { padding-top: 0; }
+  .ref { break-before: page; }
+}
+
+/* Collapsible Navigation & Drawer Styles */
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--paper-2); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: .26rem .55rem; cursor: pointer;
+  font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
+  transition: all .15s ease; flex-shrink: 0;
+}
+.nav-toggle:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.nt-bars { display: flex; flex-direction: column; gap: 2.5px; width: 13px; }
+.nt-bar { height: 1.5px; background: currentColor; width: 100%; }
+.nt-label { font-size: .7rem; letter-spacing: .04em; }
+
+.side-nav {
+  position: fixed; top: 0; bottom: 0; left: 0;
+  width: 320px; max-width: 88vw; z-index: 100;
+  background: var(--paper); color: var(--ink);
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none; overflow: hidden;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+}
+.sn-backdrop {
+  position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
+  backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.sn-header {
+  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+  border-bottom: 2px solid var(--paper-2);
+}
+.sn-brand { display: flex; flex-direction: column; gap: .2rem; }
+.sn-course {
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em;
+  color: var(--band-mute); text-transform: uppercase;
+}
+.sn-title {
+  margin: 0; font: 800 1.25rem/1.05 var(--f-display);
+  font-stretch: 75%; text-transform: uppercase; letter-spacing: -.01em;
+}
+.sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
+.sn-close {
+  background: transparent; border: none; color: var(--paper);
+  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
+  line-height: .9; opacity: .8; transition: opacity .15s ease;
+}
+.sn-close:hover { opacity: 1; color: var(--hl); }
+
+.sn-body {
+  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sn-portal-link {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
+  text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--cobalt); color: #fff; border-color: var(--cobalt);
+}
+.sn-section-label {
+  font: 600 .65rem/1 var(--f-mono); letter-spacing: .1em;
+  color: var(--ink-2); text-transform: uppercase;
+  margin-top: .5rem; margin-bottom: -.2rem; padding-inline: .2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
+.sn-week-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .5rem .65rem; border: 1px solid var(--rule);
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  border-radius: 3px; transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--paper-2); border-color: var(--ink);
+  transform: translateX(2px);
+}
+.sn-week-item.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.sn-week-badge {
+  font: 800 .9rem/1 var(--f-display); font-stretch: 70%;
+  background: var(--paper-2); color: var(--cobalt);
+  padding: .3rem .45rem; border-radius: 2px; min-width: 2rem; text-align: center;
+}
+.sn-week-item.active .sn-week-badge {
+  background: var(--cobalt); color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.sn-week-title {
+  font: 700 .86rem/1.15 var(--f-display); font-stretch: 82%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-sub {
+  font: 400 .65rem/1.2 var(--f-mono); color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-item.active .sn-week-sub { color: var(--band-mute); }
+
+.sn-parts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+}
+.sn-part-btn {
+  display: block; text-align: center; text-decoration: none;
+  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  transition: all .12s ease;
+}
+.sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+
+.sn-res-links { display: flex; gap: .5rem; }
+.sn-res-item {
+  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
+  text-decoration: none; color: var(--ink); border-radius: 2px;
+}
+.sn-res-item:hover { border-color: var(--ink); color: var(--cobalt); }
+
+.sn-footer {
+  padding: .75rem .9rem; border-top: 1px solid var(--rule);
+  background: var(--paper-2); display: flex; justify-content: space-between; align-items: center;
+}
+.sn-theme-toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--rule);
+  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
+}
+.sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
+
+@media (max-width: 480px) {
+  .nav-toggle .nt-label { display: none; }
+  .nav-toggle { padding: .28rem .45rem; }
+}
+
+</style>
+</head>
+<body>
+<!-- Collapsible Left Navigation Drawer -->
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Lecture Tape Hub</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction & Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides &middot; 00:51:13</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item active" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Midterm Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Midterm Topic 2 &middot; Ch. 1 &middot; 01:34:41</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Midterm Topic 3 &middot; Ch. 2 &middot; 01:33:17</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Competitive Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Midterm Topic 4 &middot; Ch. 3 &middot; 01:35:39</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Midterm Topic 5 &middot; Ch. 4 &middot; 01:34:34</span>
+          </div>
+        </a>
+    </nav>
+
+    <div class="sn-section-label">CURRENT TAPE CHAPTERS</div>
+    <div class="sn-parts" id="sn-current-parts">
+        <a href="#part-a" class="sn-part-btn" title="Opening & the socio-technical foundation">A</a>
+        <a href="#part-b" class="sn-part-btn" title="The coffee purchase: what hides behind a transaction">B</a>
+        <a href="#part-c" class="sn-part-btn" title="MIS vs the IT department & the value of data">C</a>
+        <a href="#part-d" class="sn-part-btn" title="Systems thinking & the four socio-technical dimensions">D</a>
+        <a href="#part-e" class="sn-part-btn" title="The four levels of systems: operational to strategic">E</a>
+        <a href="#part-f" class="sn-part-btn" title="Enterprise systems, speed & digital transformation stages">F</a>
+        <a href="#part-g" class="sn-part-btn" title="The GreenBasket case & digital capability diagnostic">G</a>
+        <a href="#part-h" class="sn-part-btn" title="Semester project framing, tools & weekly synthesis">H</a>
+    </div>
+
+    <div class="sn-section-label">QUICK RESOURCES</div>
+    <div class="sn-res-links">
+      <a href="#glossary" class="sn-res-item">&sect; Glossary</a>
+      <a href="#errata" class="sn-res-item">&sect; Errata</a>
+    </div>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Light / Dark Mode">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+
+<header class="deck"><div class="wrap"><button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open Navigation Menu" title="Open Navigation Menu (M)"><span class="nt-bars" aria-hidden="true"><span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span></span><span class="nt-label">MENU</span></button>
+<span class="clock" id="clock">00:00:00</span><div class="tape" aria-hidden="true"><a class="seg" href="#part-a" style="--d:450" data-s="0" data-e="450" title="Opening & the socio-technical foundation">A</a><a class="seg" href="#part-b" style="--d:525" data-s="450" data-e="975" title="The coffee purchase: what hides behind a transaction">B</a><a class="seg" href="#part-c" style="--d:585" data-s="975" data-e="1560" title="MIS vs the IT department & the value of data">C</a><a class="seg" href="#part-d" style="--d:990" data-s="1560" data-e="2550" title="Systems thinking & the four socio-technical dimensions">D</a><a class="seg" href="#part-e" style="--d:945" data-s="2550" data-e="3495" title="The four levels of systems: operational to strategic">E</a><a class="seg" href="#part-f" style="--d:855" data-s="3495" data-e="4350" title="Enterprise systems, speed & digital transformation stages">F</a><a class="seg" href="#part-g" style="--d:735" data-s="4350" data-e="5085" title="The GreenBasket case & digital capability diagnostic">G</a><a class="seg" href="#part-h" style="--d:397" data-s="5085" data-e="5482" title="Semester project framing, tools & weekly synthesis">H</a><span class="play" id="play"></span></div><span class="total">/ 01:31:22</span></div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Management Information Systems &middot; Week 2 &middot; Recording 26.09.26 &middot; 01:31:22</div>
+<h1>MIS &amp; the digital enterprise <span class="c">&amp; socio-technical systems</span></h1>
+<div class="lead"><p><span class="tm">00:05:40</span> Behind a single morning coffee purchase hides an entire organizational information system. Dr. Kenan demonstrates that information systems are not merely computers and software: they are socio-technical arrangements linking people, processes, data, and technology to power enterprise operations and decisions.<small>Synthesizes the 91-minute lecture recording (Materials/L3) with the 30-slide deck (Week_1 (1).pptx) and companion notes (Week_1_PPT_Explanations.docx). Slide references and textbook anchors are aligned directly in the timeline margin rail.</small></p>
+<dl class="glance"><dt>Recording</dt><dd>26.09.26, 01:31:22 (Lecture 3, Dr. Kenan)</dd><dt>Course</dt><dd>COM439 / MIS 301 &middot; Management Information Systems, Week 1</dd><dt>Slides &amp; Docs</dt><dd>30 slides (Week_1 (1).pptx), companion notes (Week_1_PPT_Explanations.docx)</dd><dt>Frameworks</dt><dd>Socio-Technical Fit, Input-Process-Output-Feedback, 4 System Levels (TPS/MIS/DSS/ESS), GreenBasket Diagnostic</dd><dt>Key Case</dt><dd>The Coffee Order cascade &amp; GreenBasket 6-store grocery scaling crisis</dd></dl></div>
+
+<div class="tapewrap"><div class="tape"><a class="seg" href="#part-a" style="--d:450" data-s="0" data-e="450" title="Opening & the socio-technical foundation">A</a><a class="seg" href="#part-b" style="--d:525" data-s="450" data-e="975" title="The coffee purchase: what hides behind a transaction">B</a><a class="seg" href="#part-c" style="--d:585" data-s="975" data-e="1560" title="MIS vs the IT department & the value of data">C</a><a class="seg" href="#part-d" style="--d:990" data-s="1560" data-e="2550" title="Systems thinking & the four socio-technical dimensions">D</a><a class="seg" href="#part-e" style="--d:945" data-s="2550" data-e="3495" title="The four levels of systems: operational to strategic">E</a><a class="seg" href="#part-f" style="--d:855" data-s="3495" data-e="4350" title="Enterprise systems, speed & digital transformation stages">F</a><a class="seg" href="#part-g" style="--d:735" data-s="4350" data-e="5085" title="The GreenBasket case & digital capability diagnostic">G</a><a class="seg" href="#part-h" style="--d:397" data-s="5085" data-e="5482" title="Semester project framing, tools & weekly synthesis">H</a></div>
+<ol class="legend">
+<li><a href="#part-a"><span class="l">A</span><span><b>Opening &amp; the socio-technical foundation</b><small>00:00:00 &ndash; 00:07:30 &middot; 7 min 30 s</small></span></a></li>
+<li><a href="#part-b"><span class="l">B</span><span><b>The coffee purchase: what hides behind a transaction</b><small>00:07:30 &ndash; 00:16:15 &middot; 8 min 45 s</small></span></a></li>
+<li><a href="#part-c"><span class="l">C</span><span><b>MIS vs the IT department &amp; the value of data</b><small>00:16:15 &ndash; 00:26:00 &middot; 9 min 45 s</small></span></a></li>
+<li><a href="#part-d"><span class="l">D</span><span><b>Systems thinking &amp; the four socio-technical dimensions</b><small>00:26:00 &ndash; 00:42:30 &middot; 16 min 30 s</small></span></a></li>
+<li><a href="#part-e"><span class="l">E</span><span><b>The four levels of systems: operational to strategic</b><small>00:42:30 &ndash; 00:58:15 &middot; 15 min 45 s</small></span></a></li>
+<li><a href="#part-f"><span class="l">F</span><span><b>Enterprise systems, speed &amp; digital transformation stages</b><small>00:58:15 &ndash; 01:12:30 &middot; 14 min 15 s</small></span></a></li>
+<li><a href="#part-g"><span class="l">G</span><span><b>The GreenBasket case &amp; digital capability diagnostic</b><small>01:12:30 &ndash; 01:24:45 &middot; 12 min 15 s</small></span></a></li>
+<li><a href="#part-h"><span class="l">H</span><span><b>Semester project framing, tools &amp; weekly synthesis</b><small>01:24:45 &ndash; 01:31:22 &middot; 6 min 37 s</small></span></a></li>
+</ol></div></div></section>
+
+<!-- PART A -->
+<section class="part" id="part-a"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">A</div><div><div class="pr">Part 1 of 8 &middot; 00:00:00 &ndash; 00:07:30 &middot; 7 min 30 s</div><h2>Opening &amp; the socio-technical foundation</h2><p>Audio/video check, course kickoff, the four central business questions, and the core definition of an information system.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="0" data-e="210"><div class="ts">00:00:00<span>to 00:03:30</span><span class="ref-pill">Slide 01</span><span class="ref-sub">Foundations</span></div><div class="rail"></div><div class="b"><h3>Welcome to Week 1: building the course foundation</h3>
+<p>Dr. Kenan conducts an online audio-visual check and welcomes students to the first official topical lecture: <b>MIS and the Digital Enterprise</b>. He reminds the class that while last week was an orientation, today establishes the analytical framework for the entire semester.</p>
+<p>He introduces the foundational axiom of the discipline: <mark>an information system is not merely a computer program or hardware terminal; it is a working arrangement connecting people, process, data, and technology so that an organization can operate, make sound decisions, and continuously improve</mark>.</p>
+</div></article>
+
+<article class="e" data-t="210" data-e="450"><div class="ts">00:03:30<span>to 00:07:30</span><span class="ref-pill">Slide 01</span><span class="ref-sub">Guide &sect; 1</span></div><div class="rail"></div><div class="b"><h3>The four recurring questions every firm must answer</h3>
+<p>Rather than treating technology names as miracles or threats, Dr. Kenan advises students to view every enterprise through four persistent operational questions:</p>
+<div class="x dims"><div class="dim"><span class="tm">00:04:15</span><b>1. Work</b><span>What actual tasks and business workflows must be accomplished to serve customers?</span></div><div class="dim"><span class="tm">00:04:45</span><b>2. Information</b><span>What timely, accurate information is required by workers and managers to execute that work?</span></div><div class="dim"><span class="tm">00:05:15</span><b>3. Alignment</b><span>How do people, business processes, and digital tools fit together to prevent bottlenecks?</span></div><div class="dim"><span class="tm">00:05:50</span><b>4. Feedback</b><span>How does management monitor performance, detect errors, and adapt before failure occurs?</span></div></div>
+<p>Answering these questions prevents companies from adopting expensive software that fails to solve operational problems.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART B -->
+<section class="part" id="part-b"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">B</div><div><div class="pr">Part 2 of 8 &middot; 00:07:30 &ndash; 00:16:15 &middot; 8 min 45 s</div><h2>The coffee purchase: what hides behind a transaction</h2><p>The barista screen, POS telemetry, real-time inventory deductions, payment gateways, and the operational chain reaction.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="450" data-e="695"><div class="ts">00:07:30<span>to 00:11:35</span><span class="ref-pill">Slide 02</span><span class="ref-sub">Coffee Case</span></div><div class="rail"></div><div class="b"><h3>A simple purchase hides an entire information system</h3>
+<p>Dr. Kenan presents the lecture's anchor case: purchasing a cup of coffee before class. To the customer, the transaction appears trivial—tap a credit card, wait three minutes, and receive a cup of latte. But inside the business, that single transaction triggers a complex digital chain reaction:</p>
+<div class="x flow"><div class="st"><em>1. POS Terminal</em><span><b>Data Capture</b><br>Records item SKU, price, timestamp, branch ID, employee ID.</span></div><div class="st"><em>2. Payment Gateway</em><span><b>Authorization</b><br>Encrypts credentials, verifies bank balance, logs interchange fee.</span></div><div class="st"><em>3. Barista Display</em><span><b>Work Dispatch</b><br>Displays beverage customization queue in real-time order.</span></div><div class="st"><em>4. Inventory Engine</em><span><b>Stock Depletion</b><br>Deducts 18g coffee beans, 250ml oat milk, 1 paper cup and lid.</span></div><div class="st"><em>5. General Ledger</em><span><b>Financial Close</b><br>Aggregates revenue, tax liabilities, and hourly labor costs.</span></div></div>
+</div></article>
+
+<article class="e" data-t="695" data-e="975"><div class="ts">00:11:35<span>to 00:16:15</span><span class="ref-pill">Slide 02–03</span><span class="ref-sub">Chains of Failure</span></div><div class="rail"></div><div class="b"><h3>The chain of failure: why isolated software efficiency is not enough</h3>
+<p>Dr. Kenan poses a critical diagnostic scenario: <i>&ldquo;What happens if the credit card payment succeeds, but the kitchen display system drops the barista queue?&rdquo;</i> The customer experiences total service failure even though the bank terminal functioned flawlessly.</p>
+<p>Similarly, if a barista uses whole milk instead of almond milk without updating the POS button, tomorrow's automatic supplier reorder will be distorted. <mark>Data generated at the lowest operational level dictates managerial supply decisions weeks later</mark>. A business cannot fix customer experience by buying better cash registers; it must govern the entire cross-functional information flow.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART C -->
+<section class="part" id="part-c"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">C</div><div><div class="pr">Part 3 of 8 &middot; 00:16:15 &ndash; 00:26:00 &middot; 9 min 45 s</div><h2>MIS vs the IT department &amp; the value of data</h2><p>Why MIS is not just IT, organizational adoption barriers, and data transformation into managerial insight.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="975" data-e="1260"><div class="ts">00:16:15<span>to 00:21:00</span><span class="ref-pill">Slide 04</span><span class="ref-sub">MIS vs IT</span></div><div class="rail"></div><div class="b"><h3>MIS is not another name for the IT department</h3>
+<p>Dr. Kenan confronts a persistent corporate fallacy: confusing Management Information Systems with the Information Technology department. While the IT department maintains networks, server patches, and firewall rules, MIS encompasses how the entire enterprise harnesses information to create business value.</p>
+<div class="x cmp"><div class="col"><h4>IT Department Perspective</h4><ul class="pts"><li>Focuses on server uptime, software builds, and network latency.</li><li>Considers a project successful if the software deploys on time.</li><li>Maintains technical infrastructure and endpoint security.</li></ul></div><div class="col"><h4>MIS Perspective</h4><ul class="pts"><li>Focuses on employee adoption, workflow friction, and profit margin.</li><li>Diagnoses why employees abandon systems despite zero technical bugs.</li><li>Aligns organizational governance, user incentives, and strategic goals.</li></ul></div></div>
+<p>A multimillion-dollar CRM fails if sales reps record client notes on personal spreadsheets. The code did not fail; <mark>the socio-technical system failed</mark>.</p>
+</div></article>
+
+<article class="e" data-t="1260" data-e="1560"><div class="ts">00:21:00<span>to 00:26:00</span><span class="ref-pill">Slide 05</span><span class="ref-sub">Data Value</span></div><div class="rail"></div><div class="b"><h3>Data creates value only when it reaches a decision or action</h3>
+<p>Dr. Kenan dissects the progression from raw data to business action. A timestamp or product barcode by itself has zero commercial value. Data only creates value when it informs a managerial intervention.</p>
+<ul class="stair"><li style="--i:0"><b>1. Raw Events &amp; Data</b><span>Isolated transactional signals: <i>&ldquo;Order #4092, 08:14 AM, 1 latte, $4.50.&rdquo;</i></span></li><li style="--i:1"><b>2. Structured Information</b><span>Aggregated and contextualized facts: <i>&ldquo;Latte sales spike 300% between 08:00 AM and 09:00 AM at Campus Branch.&rdquo;</i></span></li><li style="--i:2"><b>3. Managerial Decision</b><span>Operational policy adjustment: <i>&ldquo;Schedule two baristas and pre-stage milk steamers starting at 07:45 AM.&rdquo;</i></span></li><li style="--i:3"><b>4. Business Value &amp; Outcome</b><span>Realized financial result: <i>&ldquo;Queue wait times drop from 8 mins to 2 mins; morning customer retention rises 18%.&rdquo;</i></span></li></ul>
+</div></article>
+
+</div></section>
+
+<!-- PART D -->
+<section class="part" id="part-d"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">D</div><div><div class="pr">Part 4 of 8 &middot; 00:26:00 &ndash; 00:42:30 &middot; 16 min 30 s</div><h2>Systems thinking &amp; the four socio-technical dimensions</h2><p>Hospital appointment bottlenecks, systemic sub-optimization, the input-process-output loop, and the 4 dimensions.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="1560" data-e="1890"><div class="ts">00:26:00<span>to 00:31:30</span><span class="ref-pill">Slide 06–07</span><span class="ref-sub">Systems Thinking</span></div><div class="rail"></div><div class="b"><h3>Systems thinking: avoiding local optimization traps</h3>
+<p>Dr. Kenan examines how optimizing one department in isolation frequently ruins overall enterprise performance. He illustrates this with a hospital outpatient clinic: if the scheduling department optimizes booking speed by double-booking patients, their departmental efficiency metrics look stellar—while the waiting room overflows, doctors suffer burnout, and medical errors escalate.</p>
+<p><mark>Systems thinking requires analyzing the entire workflow from boundary to boundary</mark>. An elite MIS analyst optimizes the complete customer journey rather than celebrating local departmental milestones.</p>
+</div></article>
+
+<article class="e" data-t="1890" data-e="2220"><div class="ts">00:31:30<span>to 00:37:00</span><span class="ref-pill">Slide 08</span><span class="ref-sub">Feedback Loop</span></div><div class="rail"></div><div class="b"><h3>The input-transformation-output system with closed feedback loops</h3>
+<p>Dr. Kenan reviews the classic systems diagram: an enterprise takes inputs (raw materials, capital, labor, data), executes a transformation process, and delivers outputs (finished products, fulfilled services, customer experiences).</p>
+<div class="x flow"><div class="st"><em>Inputs</em><span><b>Resources &amp; Data</b><br>Customer demand, supplier items, employee time.</span></div><div class="st"><em>Transformation</em><span><b>Business Processes</b><br>Assembly, validation, packaging, customer fulfillment.</span></div><div class="st"><em>Outputs</em><span><b>Goods &amp; Services</b><br>Delivered orders, satisfied customers, revenue.</span></div><div class="st"><em>Feedback Loop</em><span><b>Closed Telemetry</b><br>Defect rates, customer satisfaction scores, audit exceptions.</span></div></div>
+<p>Without continuous feedback loops, an organization operates blind: it continues producing defective outputs until external market forces enforce bankruptcy.</p>
+</div></article>
+
+<article class="e" data-t="2220" data-e="2550"><div class="ts">00:37:00<span>to 00:42:30</span><span class="ref-pill">Slide 09–13</span><span class="ref-sub">4 Dimensions</span></div><div class="rail"></div><div class="b"><h3>Deconstructing the four socio-technical dimensions</h3>
+<p>Dr. Kenan walks through the specific responsibilities of the four dimensions that dictate system performance:</p>
+<div class="x six"><div class="pc"><span class="tm">00:38:10</span><b>People Dimension</b><i>Who decides, who operates, who is held accountable?</i><small>Defines user role permissions, employee incentives, change resistance mitigation, and analytical training.</small></div><div class="pc"><span class="tm">00:39:20</span><b>Process Dimension</b><i>How does work reliably flow across departmental silos?</i><small>Standard operating procedures (SOPs), cross-functional handoffs, segregation of duties, exception routing.</small></div><div class="pc"><span class="tm">00:40:35</span><b>Data Dimension</b><i>Is data an enterprise asset or unmanaged exhaust?</i><small>Data quality, unique primary keys, standardized product taxonomies, single source of truth across branches.</small></div><div class="pc"><span class="tm">00:41:45</span><b>Technology Dimension</b><i>Does architecture enable or constrain workflow?</i><small>Point-of-sale terminals, relational databases, cloud hosting, REST APIs, latency, and disaster recovery redundancy.</small></div></div>
+</div></article>
+
+</div></section>
+
+<!-- PART E -->
+<section class="part" id="part-e"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">E</div><div><div class="pr">Part 5 of 8 &middot; 00:42:30 &ndash; 00:58:15 &middot; 15 min 45 s</div><h2>The four levels of systems: operational to strategic</h2><p>Transaction Processing Systems, Management Information Systems, Decision Support Systems, and Executive Support Systems.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2550" data-e="2880"><div class="ts">00:42:30<span>to 00:48:00</span><span class="ref-pill">Slide 14–15</span><span class="ref-sub">TPS &amp; MIS</span></div><div class="rail"></div><div class="b"><h3>Operational systems (TPS) &amp; managerial reporting (MIS)</h3>
+<p>Dr. Kenan contrasts operational-level systems with managerial-level reporting. At the operational base, <mark>Transaction Processing Systems (TPS)</mark> track the daily, high-volume heartbeat of the firm: sales scans, airline seat bookings, ATM withdrawals, and payroll clock-ins. TPS must be fast, error-tolerant, and perfectly consistent.</p>
+<p>One tier above, <mark>Management Information Systems (MIS)</mark> summarize raw TPS transactions into structured, periodic performance reports for middle managers: weekly sales by region, variance against budget, and inventory stock-out exceptions. Middle managers do not read individual cash-register tapes; they need summary tables showing where targets are missed.</p>
+</div></article>
+
+<article class="e" data-t="2880" data-e="3210"><div class="ts">00:48:00<span>to 00:53:30</span><span class="ref-pill">Slide 16–17</span><span class="ref-sub">DSS &amp; ESS</span></div><div class="rail"></div><div class="b"><h3>Analytical decision support (DSS) &amp; strategic vision (ESS)</h3>
+<p>For complex business decisions where answers are not routine, firms deploy higher-tier systems:</p>
+<div class="x cmp"><div class="col"><h4>Decision Support Systems (DSS)</h4><ul class="pts"><li>Supports semi-structured analytical decisions.</li><li>Utilizes mathematical models, sensitivity analysis, and what-if simulations.</li><li>Example: calculating dynamic shipping routes during canal closures or pricing flight seats.</li></ul></div><div class="col"><h4>Executive Support Systems (ESS)</h4><ul class="pts"><li>Supports completely unstructured, long-term strategic choices.</li><li>Features high-level executive dashboards with real-time KPI dials.</li><li>Integrates internal financials with external macroeconomic and competitive intelligence.</li></ul></div></div>
+</div></article>
+
+<article class="e" data-t="3210" data-e="3495"><div class="ts">00:53:30<span>to 00:58:15</span><span class="ref-pill">Slide 18</span><span class="ref-sub">Level Matrix</span></div><div class="rail"></div><div class="b"><h3>Connecting the levels: four different questions, one shared truth</h3>
+<p>Dr. Kenan synthesizes how all four levels utilize connected enterprise data to answer four distinct questions:</p>
+<div class="x dims"><div class="dim"><span class="tm">00:54:10</span><b>Operational</b><span><i>&ldquo;What happened today?&rdquo;</i><br>Order #1042 processed at 10:14 AM for $85.</span></div><div class="dim"><span class="tm">00:55:05</span><b>Managerial</b><span><i>&ldquo;Are we on target?&rdquo;</i><br>Store sales are 12% below budget this week; stock is low.</span></div><div class="dim"><span class="tm">00:56:15</span><b>Analytical</b><span><i>&ldquo;What if we change?&rdquo;</i><br>Simulation shows 5% price cut will lift volume by 18%.</span></div><div class="dim"><span class="tm">00:57:20</span><b>Strategic</b><span><i>&ldquo;Where should we go?&rdquo;</i><br>Board evaluates expanding retail into Scandinavian markets.</span></div></div>
+</div></article>
+
+</div></section>
+
+<!-- PART F -->
+<section class="part" id="part-f"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">F</div><div><div class="pr">Part 6 of 8 &middot; 00:58:15 &ndash; 01:12:30 &middot; 14 min 15 s</div><h2>Enterprise systems, speed &amp; digital transformation stages</h2><p>Cross-functional integration, sensing and responding at speed, and the three stages of digital maturity.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="3495" data-e="3915"><div class="ts">00:58:15<span>to 01:05:15</span><span class="ref-pill">Slide 19–20</span><span class="ref-sub">Enterprise Integration</span></div><div class="rail"></div><div class="b"><h3>Enterprise systems: dissolving departmental silos</h3>
+<p>Older corporations suffered from &ldquo;islands of automation&rdquo;: sales used one software program, the warehouse ran a second, and accounting kept records on a third. When a customer inquired about order status, nobody had a single clear answer.</p>
+<p><mark>Enterprise Resource Planning (ERP) systems replace these fragmented silos with a single central database</mark>. When sales enters an order, the warehouse instantly sees shipping requirements, accounting updates receivable balances, and manufacturing schedules replacement parts without duplicate manual entry.</p>
+</div></article>
+
+<article class="e" data-t="3915" data-e="4350"><div class="ts">01:05:15<span>to 01:12:30</span><span class="ref-pill">Slide 21–22</span><span class="ref-sub">Transformation</span></div><div class="rail"></div><div class="b"><h3>Digitization vs. digitalization vs. digital transformation</h3>
+<p>Dr. Kenan clarifies three terms that corporate managers frequently confuse:</p>
+<ul class="stair"><li style="--i:0"><b>1. Digitization</b><span>Converting analog physical information into digital format (e.g. scanning a paper invoice into a PDF file). The underlying business process remains identical.</span></li><li style="--i:1"><b>2. Digitalization</b><span>Using digital technology to modify an existing business workflow (e.g. introducing electronic invoice approval workflows that automatically route PDFs).</span></li><li style="--i:2"><b>3. Digital Transformation</b><span>Fundamentally reimagining the entire business model and customer value proposition through digital capabilities (e.g. Netflix shifting from DVD rentals to global streaming subscriptions).</span></li></ul>
+<p>Companies that only digitize paper forms without reforming workflows fail to achieve genuine competitive advantages.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART G -->
+<section class="part" id="part-g"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">G</div><div><div class="pr">Part 7 of 8 &middot; 01:12:30 &ndash; 01:24:45 &middot; 12 min 15 s</div><h2>The GreenBasket case &amp; digital capability diagnostic</h2><p>Scaling bottlenecks at a 6-store grocery chain, symptom vs root cause, and the 1-to-5 maturity framework.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="4350" data-e="4725"><div class="ts">01:12:30<span>to 01:18:45</span><span class="ref-pill">Slide 23–25</span><span class="ref-sub">GreenBasket Case</span></div><div class="rail"></div><div class="b"><h3>Case analysis: GreenBasket grocery scaling crisis</h3>
+<p>Dr. Kenan presents the applied diagnostic case: GreenBasket, a rapidly expanding regional grocery chain with six retail stores, introduces an online pickup and delivery application. Within three months, online orders skyrocket—and operational chaos erupts.</p>
+<p>Store pickers spend 20 minutes hunting for missing items; customers arrive at pickup lockers only to receive out-of-stock cancellation alerts; and warehouse inventory counts disagree with store shelves. Management's instinctive reaction is: <i>&ldquo;Let's buy an expensive AI replenishment algorithm.&rdquo;</i></p>
+<div class="x cmp"><div class="col"><h4>Superficial Symptoms</h4><ul class="pts"><li>Customers receive &ldquo;item unavailable&rdquo; text messages.</li><li>Store associates spend excessive time searching shelves.</li><li>Online store displays outdated item availability.</li></ul></div><div class="col"><h4>Root System Causes</h4><ul class="pts"><li>No unified master product database across stores.</li><li>In-store cash register sales do not update online stock.</li><li>Store staff receive zero training on inventory reconciliation.</li></ul></div></div>
+</div></article>
+
+<article class="e" data-t="4725" data-e="5085"><div class="ts">01:18:45<span>to 01:24:45</span><span class="ref-pill">Slide 26–28</span><span class="ref-sub">Diagnostic &bull; 1–5 Scale</span></div><div class="rail"></div><div class="b"><h3>The 1-to-5 digital capability diagnostic</h3>
+<p>Dr. Kenan introduces the evidence-based capability maturity scale used to diagnose organizations before investing in software:</p>
+<div class="x tw"><table><thead><tr><th>Level</th><th>Maturity Stage</th><th>Operational Characteristics</th><th>GreenBasket Status</th></tr></thead><tbody><tr><td><b>Level 1</b></td><td>Ad hoc</td><td>Processes are undocumented, chaotic, and dependent on heroic individual effort.</td><td>Inventory reconciliation (Score: 1)</td></tr><tr><td><b>Level 2</b></td><td>Repeatable</td><td>Basic procedures exist within isolated stores, but vary across locations.</td><td>Store order picking (Score: 2)</td></tr><tr><td><b>Level 3</b></td><td>Defined</td><td>Standardized organization-wide procedures and central data definitions documented.</td><td>Point-of-sale scanning (Score: 3)</td></tr><tr><td><b>Level 4</b></td><td>Managed</td><td>Workflows and data quality are quantitatively measured and controlled via telemetry.</td><td>Target baseline for Year 1</td></tr><tr><td><b>Level 5</b></td><td>Optimizing</td><td>Continuous automated optimization via advanced analytics and predictive AI.</td><td>Where GreenBasket wrongly wanted to start</td></tr></tbody></table></div>
+<p>Dr. Kenan's golden diagnostic rule: <mark>&ldquo;Fix foundational data and process ownership (Levels 1–3) before purchasing Level 5 artificial intelligence.&rdquo;</mark></p>
+</div></article>
+
+</div></section>
+
+<!-- PART H -->
+<section class="part" id="part-h"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">H</div><div><div class="pr">Part 8 of 8 &middot; 01:24:45 &ndash; 01:31:22 &middot; 6 min 37 s</div><h2>Semester project framing, tools &amp; weekly synthesis</h2><p>Forming balanced project teams, free diagramming and data tools, and the Week 1 core takeaway.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="5085" data-e="5295"><div class="ts">01:24:45<span>to 01:28:15</span><span class="ref-pill">Slide 29</span><span class="ref-sub">Project Teams</span></div><div class="rail"></div><div class="b"><h3>Forming balanced project teams: avoiding homogenous groups</h3>
+<p>Dr. Kenan advises students on assembling teams for the semester capstone project. He strongly discourages teams made up exclusively of software programmers or exclusively of marketing students: <mark>the highest-performing teams combine diverse analytical perspectives</mark>.</p>
+<p>A balanced 4-to-5 person team includes: a business process analyst (to map workflows), a data modeler (to design entity relationships), a system architect (to specify software and APIs), and a project/change manager (to evaluate governance, risks, and ROI). He confirms that all modeling tools used in the course are 100% free or web-based.</p>
+</div></article>
+
+<article class="e" data-t="5295" data-e="5482"><div class="ts">01:28:15<span>to 01:31:22</span><span class="ref-pill">Slide 30</span><span class="ref-sub">Recap &bull; Synthesis</span></div><div class="rail"></div><div class="b"><h3>Weekly synthesis: improve the system, not merely the software</h3>
+<p>Dr. Kenan concludes the lecture by revisiting the core lesson: <mark>&ldquo;Never attempt to solve an organizational crisis merely by installing new software.&rdquo;</mark> Software without trained people produces user confusion; software without streamlined processes produces automated waste; software without governed data produces fast bad decisions.</p>
+<p>He announces that next Saturday's session will cover <b>Chapter 1 from the textbook: Information Systems in Global Business Today</b>, exploring the six strategic business objectives of IT and the Ponsse forestry telematics case study. He wishes the students an excellent week and signs off.</p>
+</div></article>
+
+</div></section>
+
+<!-- REFERENCE SECTION -->
+<section class="ref wrap"><h2 class="plain">Terms, in order of appearance</h2><p class="lede">Each term is stamped with the first moment the professor defines it in the recording.</p><div class="terms">
+<div class="term"><b>Socio-Technical System</b><span class="tm">00:03:15</span><span>An organization structured as an interdependent network of both social actors (people, roles, incentives) and technical artifacts (machines, code, data).</span></div>
+<div class="term"><b>Point-of-Sale (POS) System</b><span class="tm">00:08:45</span><span>The specialized terminal hardware and software capturing transactional sales data, triggering payment authorizations, and initiating inventory deductions.</span></div>
+<div class="term"><b>Transactional Chain Reaction</b><span class="tm">00:10:20</span><span>The automated cascade where a single operational event propagates data to inventory, accounting, kitchen displays, and managerial replenishment pipelines.</span></div>
+<div class="term"><b>Local Sub-Optimization</b><span class="tm">00:27:10</span><span>The management error of maximizing the efficiency of a single department (e.g. clinic booking) at the expense of overall enterprise performance.</span></div>
+<div class="term"><b>Closed Feedback Loop</b><span class="tm">00:33:45</span><span>The architectural mechanism by which operational output metrics (defect rates, customer wait times) are returned to managers to adjust inputs and processes.</span></div>
+<div class="term"><b>Transaction Processing System (TPS)</b><span class="tm">00:43:10</span><span>Basic operational-level information systems tracking routine daily business transactions required to conduct business (sales, bookings, payroll).</span></div>
+<div class="term"><b>Management Information System (MIS)</b><span class="tm">00:46:25</span><span>Middle-management systems converting transactional TPS data into scheduled summary and exception reports to monitor organizational performance.</span></div>
+<div class="term"><b>Decision Support System (DSS)</b><span class="tm">00:49:15</span><span>Analytical systems supporting semi-structured decision-making using interactive models, simulation parameters, and what-if scenarios.</span></div>
+<div class="term"><b>Executive Support System (ESS)</b><span class="tm">00:52:10</span><span>Senior executive systems providing generalized computing and telecommunications capacity to evaluate unstructured strategic issues via graphical dashboards.</span></div>
+<div class="term"><b>Enterprise Resource Planning (ERP)</b><span class="tm">00:59:40</span><span>A unified software suite built around a central shared database integrating operational data across manufacturing, finance, sales, and HR.</span></div>
+<div class="term"><b>Digitization</b><span class="tm">01:06:20</span><span>The technical conversion of analog, physical information into binary digital formats without redesigning the underlying business process.</span></div>
+<div class="term"><b>Digitalization</b><span class="tm">01:08:15</span><span>The exploitation of digital technologies to streamline, automate, and optimize an existing business process.</span></div>
+<div class="term"><b>Digital Transformation</b><span class="tm">01:10:05</span><span>The comprehensive organizational change creating new business models, customer experiences, and revenue channels enabled by digital platforms.</span></div>
+<div class="term"><b>Root-Cause Diagnostic</b><span class="tm">01:14:40</span><span>The analytical technique of drilling beneath visible operational symptoms (e.g. stockout alerts) to expose deeper data, process, or incentive failures.</span></div>
+<div class="term"><b>Capability Maturity Scale</b><span class="tm">01:19:15</span><span>A 5-stage framework (Ad hoc, Repeatable, Defined, Managed, Optimizing) measuring how formally an organization governs its digital capabilities.</span></div>
+</div></section>
+
+<!-- TRANSCRIPT CLEAN-UP SECTION -->
+<section class="ref wrap" style="margin-top:3rem"><h2 class="plain">Transcript clean-up</h2><p class="lede">The recording was auto-transcribed, and several academic terms came out phonetically garbled. This page reads them as follows based on the Week 1 slide deck and companion explanations.</p><ul class="tl">
+<li><span class="tm">00:08:20</span><span>The transcript says &ldquo;point of cell device.&rdquo; This is corrected to <b>point-of-sale (POS) device</b>.</span></li>
+<li><span class="tm">00:15:30</span><span>&ldquo;Transports them into output&rdquo; is corrected to <b>transforms them into output</b>, describing the systemic input-transformation-output cycle.</span></li>
+<li><span class="tm">00:22:15</span><span>&ldquo;A time stamp or a product call can all be data&rdquo; is corrected to <b>a product code (SKU)</b>.</span></li>
+<li><span class="tm">00:38:50</span><span>&ldquo;Who is allowed to approve a reforms&rdquo; is corrected to <b>who is allowed to approve a refund</b> (examining decision rights).</span></li>
+<li><span class="tm">00:54:10</span><span>&ldquo;Toll hierarchy and flutter organization&rdquo; is corrected to <b>tall hierarchy and flatter organization</b>.</span></li>
+<li><span class="tm">01:02:40</span><span>&ldquo;Operational information systems support organizations' data activities&rdquo; refers directly to <b>Transaction Processing Systems (TPS)</b>.</span></li>
+<li><span class="tm">01:16:15</span><span>&ldquo;The green basket case&rdquo; is standardized to <b>GreenBasket</b>, the 6-store grocery diagnostic case.</span></li>
+<li><span class="tm">01:23:25</span><span>&ldquo;I may maybe modify the sea levels a little bit&rdquo; is corrected to <b>modify the syllabus</b> to align with departmental pacing.</span></li>
+<li><span class="tm">01:28:05</span><span>&ldquo;It will be free, of course&rdquo; confirms that student modeling tools (Draw.io, Lucidchart) carry no financial cost.</span></li>
+</ul><div class="end">End of recording &middot; 01:31:22</div></section>
+</main>
+
+<script>
+(function(){
+  var TOTAL = 5482;
+  var es = [].slice.call(document.querySelectorAll('.e'));
+  var deck = document.querySelector('.deck');
+  var segs = [].slice.call(deck.querySelectorAll('.seg'));
+  var clock = document.getElementById('clock'), play = document.getElementById('play');
+  var starts = segs.map(function(s){ return +s.getAttribute('data-s'); });
+  var ends = segs.map(function(s){ return +s.getAttribute('data-e'); });
+  function f(s){
+    s = Math.round(s);
+    var a = [Math.floor(s/3600), Math.floor(s%3600/60), s%60];
+    return a.map(function(n){ return (n<10?'0':'')+n; }).join(':');
+  }
+  var busy = false;
+  function upd(){
+    busy = false;
+    var line = deck.getBoundingClientRect().bottom + 28, t = 0;
+    for (var i = 0; i < es.length; i++){
+      var r = es[i].getBoundingClientRect();
+      if (r.top <= line){
+        var a = +es[i].getAttribute('data-t'), b = +es[i].getAttribute('data-e');
+        var p = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+        t = a + p * (b - a);
+      } else break;
+    }
+    clock.textContent = f(t);
+    var k = 0; for (var j = 0; j < starts.length; j++){ if (t >= starts[j]) k = j; }
+    segs.forEach(function(s, n){ s.classList.toggle('on', n === k && t > 0); });
+    var sg = segs[k], fr = Math.max(0, Math.min(1, (t - starts[k]) / Math.max(1, ends[k] - starts[k])));
+    play.style.left = (sg.offsetLeft + fr * sg.offsetWidth - 1.5) + 'px';
+  }
+  function req(){ if (!busy){ busy = true; requestAnimationFrame(upd); } }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', req);
+  upd();
+})();
+</script>
+
+<script>
+
+// Navigation Drawer Controller & Theme Switcher
+(function() {
+  var sideNav = document.getElementById('side-nav');
+  var backdrop = document.getElementById('sn-backdrop');
+  var toggleBtn = document.getElementById('nav-toggle');
+  var closeBtn = document.getElementById('sn-close');
+  var themeBtn = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) {
+      closeNav();
+    }
+    if ((e.key === 'm' || e.key === 'M') && !e.target.matches('input, textarea')) {
+      if (sideNav.classList.contains('is-open')) closeNav();
+      else openNav();
+    }
+  });
+
+  var partLinks = document.querySelectorAll('.sn-parts a, .sn-res-links a');
+  partLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      closeNav();
+    });
+  });
+
+  function initTheme() {
+    var saved = localStorage.getItem('mis_theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('mis_theme', next);
+    });
+  }
+  initTheme();
+})();
+
+</script>
+</body>
+</html>

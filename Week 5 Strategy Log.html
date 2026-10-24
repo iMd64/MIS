@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 5 Strategy Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap">
+<style>
+/* Layout concept: the lecture as a tape. Sticky playhead bar on top, eight chapter bands,
+   each entry hung off a ruler rail with its recording timecode in the margin, accompanied
+   by note & slide cross-references. */
+:root {
+  --paper: #ECEEF4; --paper-2: #DFE2EC; --ink: #12141C; --ink-2: #474D61; --rule: #B7BCCF;
+  --cobalt: #2A3BFF; --hl: #FFE14D;
+  --band-bg: #12141C; --band-fg: #ECEEF4; --band-mute: #8E98F5;
+  --f-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+    --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1119; --paper-2: #181B28; --ink: #E9ECF5; --ink-2: #A3AAC2; --rule: #2C3144;
+  --cobalt: #8F99FF; --hl: #6A5A00; --band-bg: #1B2145; --band-fg: #E9ECF5; --band-mute: #8F99FF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.62 var(--f-body); -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--paper);
+}
+a { color: inherit; }
+a:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.wrap {
+  width: 100%; max-width: 72rem; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+mark {
+  background: linear-gradient(transparent 50%, var(--hl) 50% 94%, transparent 94%);
+  color: inherit; padding: 0 .1em;
+}
+.tm {
+  font: 500 .78rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); white-space: nowrap;
+}
+
+/* sticky playhead */
+.deck {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: var(--paper); border-bottom: 2px solid var(--ink);
+}
+.deck .wrap { display: flex; align-items: center; gap: .9rem; padding-block: .6rem; }
+.clock {
+  font: 500 1.05rem/1 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); min-width: 5.4rem;
+}
+.total { font: 400 .78rem/1 var(--f-mono); color: var(--ink-2); }
+.tape { position: relative; display: flex; gap: 2px; min-width: 0; }
+.deck .tape { flex: 1; height: 14px; }
+.seg {
+  flex: var(--d) 1 0%; min-width: 0; background: var(--ink); color: var(--paper);
+  text-decoration: none; text-align: center; overflow: hidden;
+  font: 800 .7rem/14px var(--f-display);
+}
+.seg.on, .seg:hover { background: var(--cobalt); color: #fff; }
+.deck .seg { font-size: 0; }
+.play {
+  position: absolute; top: -5px; bottom: -5px; left: 0; width: 3px;
+  background: var(--hl); box-shadow: 0 0 0 1.5px var(--ink); pointer-events: none;
+}
+
+/* hero */
+.hero { padding-block: 2.4rem 1rem; }
+.eyebrow {
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 {
+  margin: .6rem 0 0; font: 800 clamp(2.9rem, 10.2vw, 8rem)/.86 var(--f-display);
+  font-stretch: 66%; text-transform: uppercase; letter-spacing: -.004em; text-wrap: balance;
+}
+h1 .c { color: var(--cobalt); }
+.lead {
+  display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.6rem 3rem; margin-top: 1.8rem; align-items: start;
+}
+.lead p { margin: 0; font-size: 1.3rem; line-height: 1.42; max-width: 34rem; }
+.lead p small {
+  display: block; margin-top: .7rem; font: 400 .95rem/1.5 var(--f-body);
+  color: var(--ink-2);
+}
+dl.glance {
+  margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: .4rem 1rem; font: 400 .82rem/1.5 var(--f-mono);
+}
+dl.glance dt { color: var(--ink-2); } dl.glance dd { margin: 0; }
+.tapewrap { margin-top: 2.2rem; }
+.tapewrap .tape { height: 48px; }
+.tapewrap .seg { font-size: 1.15rem; line-height: 48px; font-stretch: 70%; }
+.legend {
+  list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: .9rem 1.6rem;
+}
+.legend a {
+  display: grid; grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: .55rem; text-decoration: none;
+}
+.legend .l { font: 800 1.6rem/.9 var(--f-display); font-stretch: 66%; color: var(--cobalt); }
+.legend b { display: block; font: 600 .95rem/1.25 var(--f-display); }
+.legend small {
+  display: block; margin-top: .2rem; font: 400 .74rem/1.4 var(--f-mono);
+  color: var(--ink-2);
+}
+.legend a:hover b {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
+}
+
+/* chapter bands */
+.band { background: var(--band-bg); color: var(--band-fg); margin-top: 3.6rem; }
+.band-in {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.6rem;
+  align-items: end; padding-block: 1.8rem 1.7rem;
+}
+.pl { font: 900 7.2rem/.74 var(--f-display); font-stretch: 62%; color: var(--band-mute); }
+.pr {
+  font: 500 .78rem/1.4 var(--f-mono); letter-spacing: .07em;
+  text-transform: uppercase; color: var(--band-mute);
+}
+.band h2 {
+  margin: .35rem 0 .5rem; font: 800 clamp(1.9rem, 4.8vw, 3.3rem)/.98 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase; text-wrap: balance;
+}
+.band p { margin: 0; max-width: 46rem; opacity: .88; font-size: 1.02rem; }
+
+/* entries on the ruler rail */
+.entries { --pt: 1.7rem; }
+.e { display: grid; grid-template-columns: 7.6rem 14px minmax(0, 1fr); column-gap: 1.1rem; }
+.ts {
+  text-align: right; font: 500 .95rem/1.2 var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--cobalt); padding-top: calc(var(--pt) + .22rem);
+}
+.ts span { display: block; margin-top: .25rem; font-size: .7rem; font-weight: 400; color: var(--ink-2); }
+
+/* Note & Slide reference badges */
+.ref-pill {
+  display: inline-block; margin-top: .45rem; padding: .15rem .45rem;
+  font: 600 .68rem/1.2 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 3px;
+  letter-spacing: .02em;
+}
+.ref-sub {
+  display: block; margin-top: .2rem; font: 400 .65rem/1.2 var(--f-mono);
+  color: var(--ink-2);
+}
+
+.rail {
+  position: relative;
+  background: linear-gradient(var(--ink-2), var(--ink-2)) right top/1px 100% no-repeat,
+             repeating-linear-gradient(to bottom, var(--ink-2) 0 1px, transparent 1px 9px) right top/7px 100% no-repeat;
+}
+.rail::before {
+  content: ""; position: absolute; top: calc(var(--pt) + .32rem); right: -5px;
+  width: 11px; height: 11px; background: var(--cobalt); outline: 3px solid var(--paper);
+}
+.b { padding-top: var(--pt); padding-bottom: .2rem; }
+.e:last-child .b { padding-bottom: 1.8rem; }
+.b h3 {
+  margin: 0 0 .6rem; font: 700 1.6rem/1.06 var(--f-display);
+  font-stretch: 80%; text-wrap: balance;
+}
+.b p { margin: 0 0 .75rem; max-width: 62ch; }
+.pts {
+  margin: .4rem 0 .9rem; padding: 0; list-style: none; max-width: 62ch;
+  display: grid; gap: .45rem;
+}
+.pts li { position: relative; padding-left: 1.15rem; }
+.pts li::before {
+  content: ""; position: absolute; left: 0; top: .6em;
+  width: 7px; height: 7px; background: var(--cobalt);
+}
+.x { margin: 1rem 0 .5rem; }
+
+/* components */
+.dims { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .6rem; }
+.dim {
+  border: 1.5px solid var(--ink); background: var(--paper-2);
+  padding: .7rem .8rem .85rem; display: grid; gap: .35rem; align-content: start;
+}
+.dim b {
+  font: 700 1.15rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase;
+}
+.dim span:last-child { font-size: .92rem; line-height: 1.35; color: var(--ink-2); }
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.6rem; }
+.cmp .col { border-top: 4px solid var(--ink); padding-top: .5rem; }
+.cmp h4 {
+  margin: 0 0 .5rem; font: 700 1.15rem/1 var(--f-display);
+  font-stretch: 78%; text-transform: uppercase;
+}
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th {
+  text-align: left; font: 500 .7rem/1.2 var(--f-mono); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2); padding: .4rem .8rem .4rem 0;
+  border-bottom: 2px solid var(--ink);
+}
+td { padding: .55rem .8rem .55rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.defs { display: grid; gap: .5rem; }
+.defs > div {
+  display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem;
+  align-items: baseline; border-top: 1px solid var(--rule); padding-top: .5rem;
+}
+.defs b { font: 800 1.5rem/1 var(--f-display); font-stretch: 70%; text-transform: uppercase; }
+.defs p { margin: 0; }
+.stair { list-style: none; padding: 0; display: grid; gap: .45rem; }
+.stair li {
+  margin-left: calc(var(--i) * 1.7rem); border-left: 5px solid var(--cobalt);
+  background: var(--paper-2); padding: .55rem .85rem; display: grid;
+  grid-template-columns: auto minmax(0, 1fr); gap: .15rem .9rem; align-items: baseline;
+}
+.stair b { font: 700 1.1rem/1.2 var(--f-display); font-stretch: 82%; text-transform: uppercase; }
+.stair span:last-child { grid-column: 2; }
+.six { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .7rem; }
+.pc {
+  background: var(--paper-2); border-top: 4px solid var(--ink);
+  padding: .7rem .85rem .9rem; display: grid; gap: .4rem; align-content: start;
+}
+.pc b { font: 700 1.2rem/1.05 var(--f-display); font-stretch: 78%; text-transform: uppercase; }
+.pc i { font-size: 1rem; line-height: 1.35; }
+.pc small { font-size: .86rem; line-height: 1.4; color: var(--ink-2); }
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr)); gap: .6rem; }
+.st { border: 1.5px solid var(--ink); padding: .7rem .8rem; display: grid; gap: .4rem; align-content: start; }
+.st em {
+  font: 500 .78rem/1.2 var(--f-mono); font-style: normal;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.st span:last-child { font-size: .95rem; line-height: 1.4; }
+.tl { list-style: none; padding: 0; display: grid; gap: 0; }
+.tl li {
+  display: grid; grid-template-columns: 5.6rem minmax(0, 1fr); gap: .8rem;
+  padding: .6rem 0; border-top: 1px solid var(--rule);
+}
+.tl li:first-child { border-top: 2px solid var(--ink); }
+
+/* reference */
+.plain {
+  margin: 0 0 1.2rem; padding-bottom: .5rem; border-bottom: 4px solid var(--ink);
+  font: 800 clamp(1.9rem, 4.8vw, 3.1rem)/1 var(--f-display);
+  font-stretch: 72%; text-transform: uppercase;
+}
+.ref { margin-top: 4rem; }
+.lede { margin: 0 0 1.2rem; max-width: 46rem; color: var(--ink-2); }
+.terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 2.4rem; }
+.term {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .15rem .8rem;
+  padding: .65rem 0; border-top: 1px solid var(--rule);
+}
+.term b { font: 700 1.05rem/1.2 var(--f-display); font-stretch: 85%; }
+.term span:last-child { grid-column: 1/-1; font-size: .93rem; line-height: 1.4; color: var(--ink-2); }
+.end {
+  margin-top: 3.2rem; padding-block: 1.4rem 2.6rem; border-top: 2px solid var(--ink);
+  font: 500 .78rem/1.5 var(--f-mono); letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+
+@media (max-width: 760px) {
+  .lead { grid-template-columns: minmax(0, 1fr); }
+  .band-in { grid-template-columns: minmax(0, 1fr); gap: .3rem; }
+  .pl { font-size: 4.2rem; }
+  .cmp { grid-template-columns: minmax(0, 1fr); }
+  .defs > div { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+  .e { grid-template-columns: 14px minmax(0, 1fr); grid-template-areas: "rail ts" "rail b"; column-gap: .8rem; }
+  .rail { grid-area: rail; }
+  .ts {
+    grid-area: ts; text-align: left; display: flex; flex-wrap: wrap; gap: .4rem .8rem;
+    align-items: baseline; padding-top: var(--pt);
+  }
+  .ts span { display: inline; margin: 0; }
+  .ref-pill, .ref-sub { display: inline-block; margin-top: 0; }
+  .b { grid-area: b; padding-top: .35rem; }
+  .rail::before { top: calc(var(--pt) + .1rem); }
+  .b h3 { font-size: 1.4rem; }
+  .stair li { margin-left: calc(var(--i) * .55rem); }
+  .tl li { grid-template-columns: minmax(0, 1fr); gap: .2rem; }
+}
+@media (max-width: 480px) { .total { display: none; } .clock { min-width: 4.9rem; font-size: .95rem; } }
+
+@media print {
+  @page { size: A4; margin: 13mm 0; }
+  html { font-size: 13.5px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body::before, .deck { display: none; }
+  .wrap { padding-left: 14mm; padding-right: 14mm; max-width: none; }
+  .band { margin-top: 2rem; break-after: avoid; break-inside: avoid; }
+  .e { break-inside: avoid; }
+  .b h3 { break-after: avoid; }
+  .entries .e:first-child { break-before: avoid; }
+  .x, .dim, .pc, .st, .stair li, .tl li, .term, tr { break-inside: avoid; }
+  .hero { padding-top: 0; }
+  .ref { break-before: page; }
+}
+
+/* Collapsible Navigation & Drawer Styles */
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--paper-2); color: var(--ink);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: .26rem .55rem; cursor: pointer;
+  font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
+  transition: all .15s ease; flex-shrink: 0;
+}
+.nav-toggle:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+.nt-bars { display: flex; flex-direction: column; gap: 2.5px; width: 13px; }
+.nt-bar { height: 1.5px; background: currentColor; width: 100%; }
+.nt-label { font-size: .7rem; letter-spacing: .04em; }
+
+.side-nav {
+  position: fixed; top: 0; bottom: 0; left: 0;
+  width: 320px; max-width: 88vw; z-index: 100;
+  background: var(--paper); color: var(--ink);
+  border-right: 2px solid var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none; overflow: hidden;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+}
+.sn-backdrop {
+  position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
+  backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+.sn-header {
+  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+  border-bottom: 2px solid var(--paper-2);
+}
+.sn-brand { display: flex; flex-direction: column; gap: .2rem; }
+.sn-course {
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em;
+  color: var(--band-mute); text-transform: uppercase;
+}
+.sn-title {
+  margin: 0; font: 800 1.25rem/1.05 var(--f-display);
+  font-stretch: 75%; text-transform: uppercase; letter-spacing: -.01em;
+}
+.sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
+.sn-close {
+  background: transparent; border: none; color: var(--paper);
+  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
+  line-height: .9; opacity: .8; transition: opacity .15s ease;
+}
+.sn-close:hover { opacity: 1; color: var(--hl); }
+
+.sn-body {
+  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  display: flex; flex-direction: column; gap: .85rem;
+  -webkit-overflow-scrolling: touch;
+}
+.sn-portal-link {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
+  text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--cobalt); color: #fff; border-color: var(--cobalt);
+}
+.sn-section-label {
+  font: 600 .65rem/1 var(--f-mono); letter-spacing: .1em;
+  color: var(--ink-2); text-transform: uppercase;
+  margin-top: .5rem; margin-bottom: -.2rem; padding-inline: .2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
+.sn-week-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .5rem .65rem; border: 1px solid var(--rule);
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  border-radius: 3px; transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--paper-2); border-color: var(--ink);
+  transform: translateX(2px);
+}
+.sn-week-item.active {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.sn-week-badge {
+  font: 800 .9rem/1 var(--f-display); font-stretch: 70%;
+  background: var(--paper-2); color: var(--cobalt);
+  padding: .3rem .45rem; border-radius: 2px; min-width: 2rem; text-align: center;
+}
+.sn-week-item.active .sn-week-badge {
+  background: var(--cobalt); color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.sn-week-title {
+  font: 700 .86rem/1.15 var(--f-display); font-stretch: 82%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-sub {
+  font: 400 .65rem/1.2 var(--f-mono); color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sn-week-item.active .sn-week-sub { color: var(--band-mute); }
+
+.sn-parts {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+}
+.sn-part-btn {
+  display: block; text-align: center; text-decoration: none;
+  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  transition: all .12s ease;
+}
+.sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+
+.sn-res-links { display: flex; gap: .5rem; }
+.sn-res-item {
+  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
+  text-decoration: none; color: var(--ink); border-radius: 2px;
+}
+.sn-res-item:hover { border-color: var(--ink); color: var(--cobalt); }
+
+.sn-footer {
+  padding: .75rem .9rem; border-top: 1px solid var(--rule);
+  background: var(--paper-2); display: flex; justify-content: space-between; align-items: center;
+}
+.sn-theme-toggle {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--rule);
+  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
+}
+.sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
+
+@media (max-width: 480px) {
+  .nav-toggle .nt-label { display: none; }
+  .nav-toggle { padding: .28rem .45rem; }
+}
+
+</style>
+</head>
+<body>
+<!-- Collapsible Left Navigation Drawer -->
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Lecture Tape Hub</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction & Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides &middot; 00:51:13</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Midterm Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Midterm Topic 2 &middot; Ch. 1 &middot; 01:34:41</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Midterm Topic 3 &middot; Ch. 2 &middot; 01:33:17</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item active" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Competitive Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Midterm Topic 4 &middot; Ch. 3 &middot; 01:35:39</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Midterm Topic 5 &middot; Ch. 4 &middot; 01:34:34</span>
+          </div>
+        </a>
+    </nav>
+
+    <div class="sn-section-label">CURRENT TAPE CHAPTERS</div>
+    <div class="sn-parts" id="sn-current-parts">
+        <a href="#part-a" class="sn-part-btn" title="Opening, midterm exam guidance & roadmap">A</a>
+        <a href="#part-b" class="sn-part-btn" title="Sears case & the two-way relationship">B</a>
+        <a href="#part-c" class="sn-part-btn" title="What is an organization: technical vs behavioral">C</a>
+        <a href="#part-d" class="sn-part-btn" title="Organizational features, politics, culture & structure">D</a>
+        <a href="#part-e" class="sn-part-btn" title="Economic & behavioral impacts: transaction costs & flattening">E</a>
+        <a href="#part-f" class="sn-part-btn" title="Porter's five forces & generic strategies">F</a>
+        <a href="#part-g" class="sn-part-btn" title="Value chain, value web & network economics">G</a>
+        <a href="#part-h" class="sn-part-btn" title="Sustaining advantage, labs & quiz">H</a>
+    </div>
+
+    <div class="sn-section-label">QUICK RESOURCES</div>
+    <div class="sn-res-links">
+      <a href="#glossary" class="sn-res-item">&sect; Glossary</a>
+      <a href="#errata" class="sn-res-item">&sect; Errata</a>
+    </div>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Light / Dark Mode">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+
+
+<header class="deck"><div class="wrap"><button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open Navigation Menu" title="Open Navigation Menu (M)"><span class="nt-bars" aria-hidden="true"><span class="nt-bar"></span><span class="nt-bar"></span><span class="nt-bar"></span></span><span class="nt-label">MENU</span></button>
+<span class="clock" id="clock">00:00:00</span><div class="tape" aria-hidden="true"><a class="seg" href="#part-a" style="--d:736" data-s="0" data-e="736" title="Opening, midterm exam guidance & roadmap">A</a><a class="seg" href="#part-b" style="--d:830" data-s="736" data-e="1566" title="Sears case & the two-way relationship">B</a><a class="seg" href="#part-c" style="--d:546" data-s="1566" data-e="2112" title="What is an organization: technical vs behavioral">C</a><a class="seg" href="#part-d" style="--d:774" data-s="2112" data-e="2886" title="Organizational features, politics, culture & structure">D</a><a class="seg" href="#part-e" style="--d:992" data-s="2886" data-e="3878" title="Economic & behavioral impacts: transaction costs & flattening">E</a><a class="seg" href="#part-f" style="--d:670" data-s="3878" data-e="4548" title="Porter's five forces & generic strategies">F</a><a class="seg" href="#part-g" style="--d:808" data-s="4548" data-e="5356" title="Value chain, value web & network economics">G</a><a class="seg" href="#part-h" style="--d:383" data-s="5356" data-e="5739" title="Sustaining advantage, labs & quiz">H</a><span class="play" id="play"></span></div><span class="total">/ 01:35:39</span></div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">Management Information Systems &middot; Week 5 &middot; Recording 17.10.26 &middot; 01:35:39</div>
+<h1>Organizations, management <span class="c">&amp; competitive strategy</span></h1>
+<div class="lead"><p><span class="tm">00:04:47</span> The professor spends ninety-five minutes on one core truth: technology by itself guarantees nothing. Success comes from aligning systems with organizational politics, culture, and business strategy to achieve sustained competitive advantage.<small>Every entry below carries the recording timecode in the margin alongside exact slide and textbook references. The tape bar at the top follows your scroll position.</small></p>
+<dl class="glance"><dt>Recording</dt><dd>17.10.26, 01:35:39 (Lecture 6)</dd><dt>Course</dt><dd>Management information systems, week 5</dd><dt>Slides</dt><dd>65 slides (Week_4.pptx), reference book Chapter 3, p. 108</dd><dt>Frameworks</dt><dd>Two-way model, 5 forces, value chain/web, Leavitt's diamond, transaction costs</dd><dt>Midterm</dt><dd>Mandatory 20-point target: Porter's Five Forces & Generic Strategies</dd></dl></div>
+
+<div class="tapewrap"><div class="tape"><a class="seg" href="#part-a" style="--d:736" data-s="0" data-e="736" title="Opening, midterm exam guidance & roadmap">A</a><a class="seg" href="#part-b" style="--d:830" data-s="736" data-e="1566" title="Sears case & the two-way relationship">B</a><a class="seg" href="#part-c" style="--d:546" data-s="1566" data-e="2112" title="What is an organization: technical vs behavioral">C</a><a class="seg" href="#part-d" style="--d:774" data-s="2112" data-e="2886" title="Organizational features, politics, culture & structure">D</a><a class="seg" href="#part-e" style="--d:992" data-s="2886" data-e="3878" title="Economic & behavioral impacts: transaction costs & flattening">E</a><a class="seg" href="#part-f" style="--d:670" data-s="3878" data-e="4548" title="Porter's five forces & generic strategies">F</a><a class="seg" href="#part-g" style="--d:808" data-s="4548" data-e="5356" title="Value chain, value web & network economics">G</a><a class="seg" href="#part-h" style="--d:383" data-s="5356" data-e="5739" title="Sustaining advantage, labs & quiz">H</a></div>
+<ol class="legend">
+<li><a href="#part-a"><span class="l">A</span><span><b>Opening, midterm exam guidance &amp; roadmap</b><small>00:00:00 &ndash; 00:12:16 &middot; 12 min 16 s</small></span></a></li>
+<li><a href="#part-b"><span class="l">B</span><span><b>Sears case &amp; the two-way relationship</b><small>00:12:16 &ndash; 00:26:06 &middot; 13 min 50 s</small></span></a></li>
+<li><a href="#part-c"><span class="l">C</span><span><b>What is an organization: technical vs behavioral</b><small>00:26:06 &ndash; 00:35:12 &middot; 9 min 06 s</small></span></a></li>
+<li><a href="#part-d"><span class="l">D</span><span><b>Organizational features, politics, culture &amp; structure</b><small>00:35:12 &ndash; 00:48:06 &middot; 12 min 54 s</small></span></a></li>
+<li><a href="#part-e"><span class="l">E</span><span><b>Economic &amp; behavioral impacts: transaction costs &amp; flattening</b><small>00:48:06 &ndash; 01:04:38 &middot; 16 min 32 s</small></span></a></li>
+<li><a href="#part-f"><span class="l">F</span><span><b>Porter's five forces &amp; generic strategies</b><small>01:04:38 &ndash; 01:15:48 &middot; 11 min 10 s</small></span></a></li>
+<li><a href="#part-g"><span class="l">G</span><span><b>Value chain, value web &amp; network economics</b><small>01:15:48 &ndash; 01:29:16 &middot; 13 min 28 s</small></span></a></li>
+<li><a href="#part-h"><span class="l">H</span><span><b>Sustaining advantage, labs &amp; quiz</b><small>01:29:16 &ndash; 01:35:39 &middot; 6 min 23 s</small></span></a></li>
+</ol></div></div></section>
+
+<!-- PART A -->
+<section class="part" id="part-a"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">A</div><div><div class="pr">Part 1 of 8 &middot; 00:00:00 &ndash; 00:12:16 &middot; 12 min 16 s</div><h2>Opening, midterm exam guidance &amp; roadmap</h2><p>Audio check, student question on exams, the five-question midterm structure, and the Chapter 3 roadmap.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="0" data-e="158"><div class="ts">00:00:00<span>to 00:02:38</span><span class="ref-pill">Slide 01</span><span class="ref-sub">Ch. 3 Intro</span></div><div class="rail"></div><div class="b"><h3>Getting started &amp; audio check</h3>
+<p>The professor greets the class, verifies that students can hear clearly, and opens the slide presentation for Chapter 3. He notes that this session explores the connection between organizations, management decisions, and strategic advantage.</p>
+</div></article>
+
+<article class="e" data-t="158" data-e="218"><div class="ts">00:02:38<span>to 00:03:38</span><span class="ref-pill">Guidance</span><span class="ref-sub">Midterm Plan</span></div><div class="rail"></div><div class="b"><h3>Student inquiry: quizzes and the midterm examination</h3>
+<p>A student asks whether there will be mandatory quizzes or project homework submissions. The professor confirms that no quizzes will be graded for submission: <mark>only the midterm examination and final examination determine the course grade</mark>.</p>
+<p>He announces that an official midterm study guide will be posted immediately, detailing the exact sections to prioritize for the exam.</p>
+</div></article>
+
+<article class="e" data-t="218" data-e="380"><div class="ts">00:03:38<span>to 00:06:20</span><span class="ref-pill">Slide 02</span><span class="ref-sub">Roadmap • p. 108</span></div><div class="rail"></div><div class="b"><h3>The chapter roadmap: connecting systems to strategy</h3>
+<p>The lesson covers three interconnected areas before practical work: first, understanding what organizations are and how structure, culture, and politics shape technology adoption; second, analyzing economic and behavioral impacts such as transaction costs and flattening; third, applying Porter's competitive forces and the value chain to gain business advantage.</p>
+<p>The core objective is learning how to design and govern an information system so that it <mark>fits the organization and supports a clear strategic objective</mark>.</p>
+</div></article>
+
+<article class="e" data-t="380" data-e="558"><div class="ts">00:06:20<span>to 00:09:18</span><span class="ref-pill">Slide 03</span><span class="ref-sub">Learning Obj.</span></div><div class="rail"></div><div class="b"><h3>Self-assessment quiz availability</h3>
+<p>The professor notes that a review quiz is placed at the end of the slide deck. While students do not need to submit their answers, completing the quiz independently provides essential preparation for the open-ended midterm examination questions.</p>
+</div></article>
+
+<article class="e" data-t="558" data-e="736"><div class="ts">00:09:18<span>to 00:12:16</span><span class="ref-pill">Slide 03</span><span class="ref-sub">Objectives • p. 109</span></div><div class="rail"></div><div class="b"><h3>Learning objectives: what you should be able to do</h3>
+<p>By the end of this chapter, students should be able to: describe the salient features of organizations; analyze the relationship between IT and organizational structure, cost, and politics; apply Porter's competitive forces model; use value chain and value web models to identify strategic opportunities; and explain synergies, core competencies, and network-based ecosystems.</p>
+<ul class="pts"><li>Identify how organizational structure, routines, and culture mediate IT adoption.</li><li>Apply microeconomic theories (transaction cost and agency theory) to IT investment.</li><li>Deconstruct an industry using Porter's five forces framework.</li><li>Map activities within a firm using the value chain and synchronize external partners using the value web.</li></ul>
+</div></article>
+
+</div></section>
+
+<!-- PART B -->
+<section class="part" id="part-b"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">B</div><div><div class="pr">Part 2 of 8 &middot; 00:12:16 &ndash; 00:26:06 &middot; 13 min 50 s</div><h2>Sears case &amp; the two-way relationship</h2><p>Why technology alone failed at Sears, the mediating box, and the two-way relationship between IT and organizations.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="736" data-e="988"><div class="ts">00:12:16<span>to 00:16:28</span><span class="ref-pill">Slide 04–05</span><span class="ref-sub">Case • p. 110</span></div><div class="rail"></div><div class="b"><h3>Opening case: will Sears' technology strategy work this time?</h3>
+<p>Sears spent billions of dollars on cutting-edge information technology, customer databases, and automated logistics. Yet the company continued to lose market share to Walmart, Target, and Amazon, eventually plunging into bankruptcy.</p>
+<p>Why did technology fail? The professor highlights that <mark>management defined a technology-first solution without reforming its store layout, customer service culture, employee incentives, or merchandising strategy</mark>. Technology is merely a tool; without organizational restructuring and customer alignment, massive IT spending produces zero competitive advantage.</p>
+</div></article>
+
+<article class="e" data-t="988" data-e="1242"><div class="ts">00:16:28<span>to 00:20:42</span><span class="ref-pill">Slide 06</span><span class="ref-sub">Two-Way • p. 111</span></div><div class="rail"></div><div class="b"><h3>The two-way relationship between organizations &amp; IT</h3>
+<p>Information systems and business enterprises have a reciprocal, bidirectional relationship. While management decides what systems to purchase and build, the technology itself reshapes the enterprise once deployed, altering communication patterns, job roles, and operating costs.</p>
+<p>Crucially, this relationship is not direct or automatic: <mark>it is mediated by a middle layer of organizational factors</mark>. Changing software code is easy; changing organizational culture, power distribution, and daily habits is far harder.</p>
+</div></article>
+
+<article class="e" data-t="1242" data-e="1438"><div class="ts">00:20:42<span>to 00:23:58</span><span class="ref-pill">Slide 07</span><span class="ref-sub">Figure 3.1 • p. 112</span></div><div class="rail"></div><div class="b"><h3>Reading Figure 3.1: the mediating box</h3>
+<p>The professor directs students to Figure 3.1. Between Information Technology on the right and Organizations on the left sits the vital mediating box: <mark>Environment, Culture, Structure, Business Processes, Politics, and Management Decisions</mark>.</p>
+<div class="x flow"><div class="st"><em>Left</em><span><b>Organizations</b><br>Goals, workforce, capital, physical assets.</span></div><div class="st"><em>Middle (Mediators)</em><span><b>Organizational Factors</b><br>Culture, structure, politics, routines, environment, decisions.</span></div><div class="st"><em>Right</em><span><b>Information Technology</b><br>Software, hardware, telematics, databases, cloud platforms.</span></div></div>
+<p>A manager cannot simply connect IT directly to the bottom line. Every technological implementation passes through the filter of company politics, employee habits, and competitive environmental pressures.</p>
+</div></article>
+
+<article class="e" data-t="1438" data-e="1566"><div class="ts">00:23:58<span>to 00:26:06</span><span class="ref-pill">Book Ref</span><span class="ref-sub">Reference p. 111</span></div><div class="rail"></div><div class="b"><h3>Checking the reference book</h3>
+<p>The professor consults the reference textbook (Laudon &amp; Laudon Chapter 3, page 111), pointing out that slide summaries are concise by design. Students should use the textbook to explore detailed corporate case histories and complete definition passages.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART C -->
+<section class="part" id="part-c"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">C</div><div><div class="pr">Part 3 of 8 &middot; 00:26:06 &ndash; 00:35:12 &middot; 9 min 06 s</div><h2>What is an organization: technical vs behavioral</h2><p>Microeconomic production functions vs sociological balances of rights, privileges, and political friction.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="1566" data-e="1867"><div class="ts">00:26:06<span>to 00:31:07</span><span class="ref-pill">Slide 08–09</span><span class="ref-sub">Figure 3.2 • p. 113</span></div><div class="rail"></div><div class="b"><h3>The technical microeconomic definition</h3>
+<p>Under the technical definition from microeconomics, an organization is a stable, formal social structure that draws resources (capital and labor) from the external environment and <mark>transforms them through a production process into finished goods and services</mark>, which are returned to the environment.</p>
+<p>This model treats the organization like an input-output machine. Inputs are capital and labor; the production function combines them; and outputs are sold to replenish resources. This view is useful for analyzing capacity, scalability, and capital/labor substitution.</p>
+</div></article>
+
+<article class="e" data-t="1867" data-e="2112"><div class="ts">00:31:07<span>to 00:35:12</span><span class="ref-pill">Slide 10–11</span><span class="ref-sub">Figure 3.3 • p. 114</span></div><div class="rail"></div><div class="b"><h3>The behavioral sociological definition</h3>
+<p>The professor turns to Figure 3.3: the behavioral definition views an organization as a collection of rights, privileges, obligations, and responsibilities delicately balanced over time through conflict and political negotiation.</p>
+<div class="x cmp"><div class="col"><h4>Technical View (Figure 3.2)</h4><ul class="pts"><li>Formal production function (inputs &rarr; outputs).</li><li>Focuses on capital, labor, efficiency, and scale.</li><li>Assumes change is easy: adjust capital or retrain labor.</li><li>Favored by computer scientists and software engineers.</li></ul></div><div class="col"><h4>Behavioral View (Figure 3.3)</h4><ul class="pts"><li>Social structure of people, power, and norms.</li><li>Focuses on unwritten rules, job security, and status.</li><li>Shows change is difficult: altering systems threatens privileges.</li><li>Explains why technically sound software implementations fail.</li></ul></div></div>
+<p>Engineers often see organizations purely through the technical lens. But when software is deployed in a real company, <mark>the behavioral reality strikes</mark>: an ERP or dashboard that threatens middle-manager influence will be politically undermined, no matter how efficient it appears on paper.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART D -->
+<section class="part" id="part-d"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">D</div><div><div class="pr">Part 4 of 8 &middot; 00:35:12 &ndash; 00:48:06 &middot; 12 min 54 s</div><h2>Organizational features, politics, culture &amp; structure</h2><p>Routines, standard operating procedures, political friction, cultural fit, environmental threats, and Mintzberg's five structures.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2112" data-e="2278"><div class="ts">00:35:12<span>to 00:37:58</span><span class="ref-pill">Slide 12–13</span><span class="ref-sub">Figure 3.4 • p. 116</span></div><div class="rail"></div><div class="b"><h3>Routines &amp; standard operating procedures (SOPs)</h3>
+<p>Routines are precise, standardized rules and practices developed over time to handle virtually all expected operational tasks. Related routines assemble into business processes, which in turn form the firm.</p>
+<p>While SOPs create high efficiency and consistency, they create severe <mark>organizational inertia</mark>. When a new information system requires employees to change how work is done, workers resist because they must unlearn long-standing routines.</p>
+</div></article>
+
+<article class="e" data-t="2278" data-e="2374"><div class="ts">00:37:58<span>to 00:39:34</span><span class="ref-pill">Slide 14</span><span class="ref-sub">Politics • p. 117</span></div><div class="rail"></div><div class="b"><h3>Organizational politics &amp; resistance</h3>
+<p>Politics inside a company refers to the competition between coalitions over resources, rewards, and influence. Because information systems inevitably redistribute power, authority, and control over operational data, they trigger political resistance.</p>
+<p>For example, if an executive dashboard provides senior executives with real-time operational figures, middle managers lose their status as information gatekeepers. Consequently, <mark>middle managers will resist, delay, or sabotage the system</mark> to protect their organizational influence.</p>
+</div></article>
+
+<article class="e" data-t="2374" data-e="2505"><div class="ts">00:39:34<span>to 00:41:45</span><span class="ref-pill">Slide 15</span><span class="ref-sub">Culture • p. 118</span></div><div class="rail"></div><div class="b"><h3>Organizational culture: the invisible force</h3>
+<p>Organizational culture consists of fundamental, unwritten assumptions about what goals the firm should pursue, what goods it should produce, and how work should be accomplished. Culture creates common understanding and minimizes daily friction.</p>
+<p>However, culture can strongly resist technologies that challenge accepted beliefs. A collaborative, open culture adopts digital workspaces (Teams, Slack, shared drives) with ease; a culture rooted in internal rivalry and departmental secrecy will treat shared digital platforms with suspicion and hostility.</p>
+</div></article>
+
+<article class="e" data-t="2505" data-e="2688"><div class="ts">00:41:45<span>to 00:44:48</span><span class="ref-pill">Slide 16–17</span><span class="ref-sub">Figure 3.5 • p. 119</span></div><div class="rail"></div><div class="b"><h3>Environments &amp; disruptive technologies</h3>
+<p>No organization exists in isolation. Figure 3.5 shows environmental forces constantly acting on the firm: customers, competitors, suppliers, government regulations, financial markets, and technology trends. Environments change much faster than internal routines.</p>
+<p>This gap breeds <mark>disruptive technologies</mark> (Clayton Christensen): breakthrough innovations that ride a low-cost, convenient technical trajectory. Initially, they may underperform incumbent products, but they improve rapidly until they conquer the market. Fast-followers with strong execution often win over first-movers (e.g. Apple with the iPod and iPhone).</p>
+</div></article>
+
+<article class="e" data-t="2688" data-e="2886"><div class="ts">00:44:48<span>to 00:48:06</span><span class="ref-pill">Slide 18–20</span><span class="ref-sub">Table 3.2 • p. 121</span></div><div class="rail"></div><div class="b"><h3>Mintzberg's five organizational structures</h3>
+<p>The professor reviews Henry Mintzberg's classification of organizational structures, showing that system design must fit the structural type:</p>
+<div class="x dims"><div class="dim"><span class="tm">00:46:10</span><b>Entrepreneurial</b><span>Young, small startup; single founder; simple systems.</span></div><div class="dim"><span class="tm">00:46:18</span><b>Machine Bureaucracy</b><span>Large traditional manufacturing plant; centralized rules and silos.</span></div><div class="dim"><span class="tm">00:46:25</span><b>Divisionalized</b><span>Fortune 500 enterprise; multiple machine bureaucracies under central HQ.</span></div><div class="dim"><span class="tm">00:46:30</span><b>Professional</b><span>Knowledge-dominated firm (hospitals, universities); decentralized expert power.</span></div><div class="dim"><span class="tm">00:46:35</span><b>Adhocracy</b><span>Task-force project organization; rapidly shifting cross-functional teams.</span></div></div>
+</div></article>
+
+</div></section>
+
+<!-- PART E -->
+<section class="part" id="part-e"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">E</div><div><div class="pr">Part 5 of 8 &middot; 00:48:06 &ndash; 01:04:38 &middot; 16 min 32 s</div><h2>Economic &amp; behavioral impacts: transaction costs &amp; flattening</h2><p>Coase's transaction cost theory, agency theory, organizational flattening, and Leavitt's diamond.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="2886" data-e="3080"><div class="ts">00:48:06<span>to 00:51:20</span><span class="ref-pill">Slide 22</span><span class="ref-sub">Figure 3.4 • p. 123</span></div><div class="rail"></div><div class="b"><h3>Transaction cost theory: why IT shrinks the firm</h3>
+<p>According to Ronald Coase's Transaction Cost Theory, firms traditionally grew large because conducting business internally was cheaper than searching for suppliers, negotiating contracts, and insuring against default in open markets.</p>
+<p>Information technology <mark>drastically lowers market transaction costs</mark>: searching online catalogs, obtaining digital bids, and tracking shipments via APIs is fast and cheap. Because transaction costs drop, firms can shrink their physical headcount, outsource non-core work to cloud partners, and remain highly profitable.</p>
+</div></article>
+
+<article class="e" data-t="3080" data-e="3270"><div class="ts">00:51:20<span>to 00:54:30</span><span class="ref-pill">Slide 23</span><span class="ref-sub">Figure 3.5 • p. 124</span></div><div class="rail"></div><div class="b"><h3>Agency theory: reducing supervision costs</h3>
+<p>Under Jensen and Meckling's Agency Theory, the firm is viewed as a nexus of contracts among self-interested agents (employees) who require monitoring by principals (owners). As a company grows, the cost of managing and supervising staff escalates rapidly.</p>
+<p>Information systems reduce agency costs. Telematics, automated audit trails, and executive dashboards allow a small group of senior executives to supervise thousands of employees directly, <mark>reducing the need for intermediate supervisory middle managers</mark>.</p>
+</div></article>
+
+<article class="e" data-t="3270" data-e="3537"><div class="ts">00:54:30<span>to 00:58:57</span><span class="ref-pill">Slide 24–26</span><span class="ref-sub">Figure 3.6 • p. 125</span></div><div class="rail"></div><div class="b"><h3>Flattening organizations</h3>
+<p>The professor contrasts the traditional tall hierarchy with a modern flatter organization. In a tall hierarchy, numerous management layers exist merely to filter and pass reports upward.</p>
+<div class="x cmp"><div class="col"><h4>Traditional Tall Hierarchy</h4><ul class="pts"><li>Many intermediate management layers.</li><li>Frontline workers have narrow decision rights.</li><li>Reports travel slowly up; approvals travel slowly down.</li><li>High administrative and supervisory overhead.</li></ul></div><div class="col"><h4>Flatter Organization</h4><ul class="pts"><li>Fewer management layers; broad span of control.</li><li>Operational data pushed directly to frontline workers.</li><li>Eliminates delays between information, decision, and action.</li><li>Requires capable employees and clear responsibilities.</li></ul></div></div>
+</div></article>
+
+<article class="e" data-t="3537" data-e="3878"><div class="ts">00:58:57<span>to 01:04:38</span><span class="ref-pill">Slide 28–29</span><span class="ref-sub">Figure 3.7 • p. 127</span></div><div class="rail"></div><div class="b"><h3>Leavitt's diamond &amp; managing implementation resistance</h3>
+<p>Why do employees resist new information systems? Harold Leavitt's Diamond demonstrates that an organization consists of four interdependent components: <mark>Technology, Task, People, and Structure</mark>.</p>
+<p>If you change the technology without simultaneously redesigning employee tasks, updating job incentives, and adjusting reporting structures, workers will resist to protect their status and power. Diagnosing the root cause of resistance allows managers to build a supportive change management plan rather than blaming stubborn workers.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART F -->
+<section class="part" id="part-f"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">F</div><div><div class="pr">Part 6 of 8 &middot; 01:04:38 &ndash; 01:15:48 &middot; 11 min 10 s</div><h2>Porter's five forces &amp; generic strategies</h2><p>The core midterm exam target: Michael Porter's competitive forces, generic strategies, and the impact of the Internet.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="3878" data-e="4060"><div class="ts">00:04:38<span>to 01:07:40</span><span class="ref-pill">Slide 34–38</span><span class="ref-sub">Figure 3.8 • p. 129</span></div><div class="rail"></div><div class="b"><h3>Porter's five competitive forces model</h3>
+<p>The professor identifies Porter's model as a mandatory priority for the midterm exam. In any industry, five structural forces dictate profitability:</p>
+<div class="x dims"><div class="dim"><span class="tm">01:05:24</span><b>Traditional Competitors</b><span>Rival firms in the same market space competing on price and service.</span></div><div class="dim"><span class="tm">01:05:40</span><b>New Market Entrants</b><span>New companies entering with fresh capacity and lower startup costs.</span></div><div class="dim"><span class="tm">01:06:16</span><b>Substitute Products</b><span>Alternative goods meeting the same need (e.g. streaming vs. physical CDs).</span></div><div class="dim"><span class="tm">01:07:05</span><b>Customer Power</b><span>Buyers demanding lower prices or higher quality when choices abound.</span></div><div class="dim"><span class="tm">01:07:22</span><b>Supplier Power</b><span>Vendors exercising leverage when essential inputs have few sources.</span></div></div>
+</div></article>
+
+<article class="e" data-t="4060" data-e="4318"><div class="ts">01:07:40<span>to 01:11:58</span><span class="ref-pill">Slide 39–40</span><span class="ref-sub">Strategies • p. 132</span></div><div class="rail"></div><div class="b"><h3>Low-cost leadership &amp; product differentiation</h3>
+<p>Information systems enable four generic competitive strategies to counter the five forces:</p>
+<div class="x six"><div class="pc"><span class="tm">01:08:46</span><b>Low-Cost Leadership</b><i>Achieving the lowest operational costs and lowest prices.</i><small>Walmart's Retail Link directly links store cash registers to supplier factories, restocking inventory just-in-time and slashing storage overhead.</small></div><div class="pc"><span class="tm">01:11:42</span><b>Product Differentiation</b><i>Offering unique, customized, or novel features competitors cannot match.</i><small>Apple differentiates the iPhone through the integrated iOS ecosystem (App Store, iCloud, Apple Pay); Nike uses NikeiD for online custom sneakers.</small></div><div class="pc"><span class="tm">01:12:39</span><b>Focus on Market Niche</b><i>Dominating a specialized, highly profitable target market segment.</i><small>Hilton Hotels uses OnQ CRM to analyze guest preferences across properties, offering bespoke luxury services to high-spending travelers.</small></div><div class="pc"><span class="tm">01:12:57</span><b>Customer &amp; Supplier Intimacy</b><i>Raising switching costs by digitally locking in buyers and suppliers.</i><small>Amazon Prime, 1-Click checkout, and purchase history make switching painful; Chrysler connects CAD/CAM directly with auto-parts vendors.</small></div></div>
+</div></article>
+
+<article class="e" data-t="4318" data-e="4548"><div class="ts">01:11:58<span>to 01:15:48</span><span class="ref-pill">Slide 42–43</span><span class="ref-sub">Table 3.3 • p. 135</span></div><div class="rail"></div><div class="b"><h3>The Internet's impact on competitive advantage</h3>
+<p>The Internet inflates customer bargaining power by providing instant price-comparison engines and transparent reviews, reducing search friction and driving switching costs toward zero. This intensifies industry rivalry as geographical barriers dissolve.</p>
+<p>To defend margins, smart companies use information systems to <mark>create switching costs</mark>—embedding account data, customized preferences, and proprietary loyalty ecosystems that make abandoning the firm inconvenient and costly.</p>
+</div></article>
+
+</div></section>
+
+<!-- PART G -->
+<section class="part" id="part-g"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">G</div><div><div class="pr">Part 7 of 8 &middot; 01:15:48 &ndash; 01:29:16 &middot; 13 min 28 s</div><h2>Value chain, value web &amp; network economics</h2><p>Primary vs support activities, synchronizing multi-firm value webs, synergies, and platform ecosystems.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="4548" data-e="4780"><div class="ts">01:15:48<span>to 01:19:39</span><span class="ref-pill">Slide 44–45</span><span class="ref-sub">Figure 3.9 • p. 138</span></div><div class="rail"></div><div class="b"><h3>The business value chain model</h3>
+<p>Michael Porter's value chain model categorizes firm activities into primary and support activities to pinpoint where information systems can add margin:</p>
+<ul class="pts"><li><b>Primary Activities (5):</b> Inbound Logistics, Operations, Outbound Logistics, Marketing &amp; Sales, and Service. Directly related to creating and delivering the product.</li><li><b>Support Activities (4):</b> Administration &amp; Management, Human Resources, Technology Development, and Procurement. Infrastructure that enables the primary activities.</li></ul>
+<p>Delays in one activity cascade into others. Linking these activities via shared databases eliminates friction and accelerates order-to-cash cycles.</p>
+</div></article>
+
+<article class="e" data-t="4780" data-e="5004"><div class="ts">01:19:39<span>to 01:23:24</span><span class="ref-pill">Slide 46–47</span><span class="ref-sub">Figure 3.10 • p. 140</span></div><div class="rail"></div><div class="b"><h3>From the linear value chain to the networked value web</h3>
+<p>The traditional value chain is strictly linear and focused on a single firm. In modern digital business, enterprises coordinate via a <mark>Value Web</mark>: a synchronized, customer-driven network of independent suppliers, distributors, carriers, and retailers communicating in real time.</p>
+<p>Rather than pushing products down a rigid sequential pipeline, the Value Web responds dynamically to live customer orders, rerouting shipments and updating inventory across independent business partners.</p>
+</div></article>
+
+<article class="e" data-t="5004" data-e="5192"><div class="ts">01:23:24<span>to 01:26:32</span><span class="ref-pill">Slide 48–51</span><span class="ref-sub">Network Econ • p. 142</span></div><div class="rail"></div><div class="b"><h3>Synergies &amp; network economics</h3>
+<p>When merged companies link separate IT systems into a single shared database, they achieve <mark>synergies</mark> by slashing redundant corporate overhead.</p>
+<p>In physical manufacturing, adding more labor leads to diminishing marginal returns. In digital platforms, <mark>network economics produces increasing returns to scale</mark>: the marginal cost of adding another user is near zero, while the value of the platform grows exponentially with each participant (e.g. Uber, Airbnb, eBay).</p>
+</div></article>
+
+<article class="e" data-t="5192" data-e="5356"><div class="ts">01:26:32<span>to 01:29:16</span><span class="ref-pill">Slide 53–54</span><span class="ref-sub">Figure 3.11 • p. 144</span></div><div class="rail"></div><div class="b"><h3>Business ecosystems: keystone platforms vs. niche firms</h3>
+<p>Competition increasingly occurs between entire business ecosystems rather than standalone companies. Figure 3.11 highlights:</p>
+<ul class="pts"><li><b>Keystone Firms:</b> Dominant platform providers that set the core operating standards, app stores, and APIs (e.g. Apple iOS, Google Android, Microsoft Azure).</li><li><b>Niche Firms:</b> Specialized app developers and accessory makers that build products inside the keystone platform.</li></ul>
+</div></article>
+
+</div></section>
+
+<!-- PART H -->
+<section class="part" id="part-h"><div class="band"><div class="wrap band-in"><div class="pl" aria-hidden="true">H</div><div><div class="pr">Part 8 of 8 &middot; 01:29:16 &ndash; 01:35:39 &middot; 6 min 23 s</div><h2>Sustaining advantage, labs &amp; quiz</h2><p>Advantage erosion, strategic transitions, practical labs, and midterm exam preparation.</p></div></div></div><div class="wrap entries">
+
+<article class="e" data-t="5356" data-e="5510"><div class="ts">01:29:16<span>to 01:31:50</span><span class="ref-pill">Slide 55–58</span><span class="ref-sub">Transitions • p. 146</span></div><div class="rail"></div><div class="b"><h3>Sustaining competitive advantage &amp; strategic transitions</h3>
+<p>Strategic information systems rarely guarantee permanent advantage because competitors inevitably copy software and adopt industry standards (e.g. airline web check-in or bank ATMs).</p>
+<p>Moving an enterprise from one business model to another is a <mark>strategic transition</mark> requiring socio-technical change management across job roles, incentives, and culture.</p>
+</div></article>
+
+<article class="e" data-t="5510" data-e="5628"><div class="ts">01:31:50<span>to 01:33:48</span><span class="ref-pill">Slide 59–61</span><span class="ref-sub">Labs &amp; Mistakes</span></div><div class="rail"></div><div class="b"><h3>Practical labs &amp; common pitfalls to avoid</h3>
+<p>The professor points out the practical lab on Slide 60 (analyzing strategic information systems) and reviews four fatal mistakes: assuming technology by itself solves business problems; ignoring middle-management political resistance; attempting to change technology without adjusting Leavitt's other three components; and failing to build customer switching costs.</p>
+</div></article>
+
+<article class="e" data-t="5628" data-e="5739"><div class="ts">01:33:48<span>to 01:35:39</span><span class="ref-pill">Slide 62–65</span><span class="ref-sub">Recap &amp; Quiz</span></div><div class="rail"></div><div class="b"><h3>Weekly recap &amp; midterm exam confirmation</h3>
+<p>The lecture closes with a recap of the 5-question midterm exam format: exactly 1 question per week covering Weeks 1 through 5 (20 points each, 60 minutes total). The professor encourages students to review the self-check quiz on Slide 65 and wishes everyone success.</p>
+</div></article>
+
+</div></section>
+
+<!-- REFERENCE SECTION -->
+<section class="ref wrap"><h2 class="plain">Terms, in order of appearance</h2><p class="lede">Each term is stamped with the first moment the professor defines it in the recording.</p><div class="terms">
+<div class="term"><b>Two-Way Relationship</b><span class="tm">00:16:28</span><span>Reciprocal influence between IT and the organization, mediated by culture, structure, and politics.</span></div>
+<div class="term"><b>Technical Definition</b><span class="tm">00:29:14</span><span>A microeconomic production function transforming capital and labor inputs into outputs.</span></div>
+<div class="term"><b>Behavioral Definition</b><span class="tm">00:32:04</span><span>A collection of rights, privileges, obligations, and power balances negotiated over time.</span></div>
+<div class="term"><b>Routines &amp; SOPs</b><span class="tm">00:35:12</span><span>Precise standardized rules for handling expected situations, creating operational efficiency but organizational inertia.</span></div>
+<div class="term"><b>Organizational Politics</b><span class="tm">00:38:33</span><span>Competition over resources and status; systems altering information flows trigger political resistance.</span></div>
+<div class="term"><b>Organizational Culture</b><span class="tm">00:39:34</span><span>Shared unconscious assumptions that either facilitate system adoption or block it.</span></div>
+<div class="term"><b>Disruptive Technology</b><span class="tm">00:43:05</span><span>Innovations that ride a low-cost trajectory to conquer mainstream markets over time.</span></div>
+<div class="term"><b>Transaction Cost Theory</b><span class="tm">00:48:06</span><span>Economic theory (Coase): IT lowers market search and contracting costs, shrinking physical firm size.</span></div>
+<div class="term"><b>Agency Theory</b><span class="tm">00:51:20</span><span>Economic theory (Jensen &amp; Meckling): IT lowers monitoring costs, enabling broader managerial spans of control.</span></div>
+<div class="term"><b>Flatter Organization</b><span class="tm">00:54:30</span><span>An organization with fewer management layers, decentralized decision rights, and faster reaction speed.</span></div>
+<div class="term"><b>Leavitt's Diamond</b><span class="tm">00:58:57</span><span>Socio-technical framework: technology changes require coordinated changes to Task, People, and Structure.</span></div>
+<div class="term"><b>Porter's Five Forces</b><span class="tm">01:04:38</span><span>Traditional competitors, new entrants, substitutes, customer bargaining power, supplier bargaining power.</span></div>
+<div class="term"><b>Low-Cost Leadership</b><span class="tm">01:08:46</span><span>Using IT to achieve lowest operational costs and retail prices (e.g. Walmart Retail Link).</span></div>
+<div class="term"><b>Product Differentiation</b><span class="tm">01:11:42</span><span>Using digital services and custom features to make products unique and difficult to replicate (e.g. Apple iOS, NikeiD).</span></div>
+<div class="term"><b>Switching Costs</b><span class="tm">01:09:55</span><span>The expense, effort, and inconvenience required for a customer to switch to a rival.</span></div>
+<div class="term"><b>Value Chain Model</b><span class="tm">01:15:48</span><span>Framework categorizing business activities into primary (5) and support (4) activities to build margin.</span></div>
+<div class="term"><b>Value Web</b><span class="tm">01:19:39</span><span>A customer-driven, synchronized digital network of independent business partners.</span></div>
+<div class="term"><b>Network Economics</b><span class="tm">01:23:44</span><span>Market dynamic where marginal cost of additional users is near zero, producing increasing returns to scale.</span></div>
+<div class="term"><b>Keystone Firm</b><span class="tm">01:27:37</span><span>Dominant platform enterprise coordinating a broad multi-industry ecosystem (e.g. Apple, Google, Microsoft).</span></div>
+<div class="term"><b>Strategic Transitions</b><span class="tm">01:31:41</span><span>A movement between levels of socio-technical systems affecting both technology and human institutions.</span></div>
+</div></section>
+
+<!-- TRANSCRIPT CLEAN-UP SECTION -->
+<section class="ref wrap" style="margin-top:3rem"><h2 class="plain">Transcript clean-up</h2><p class="lede">The recording was auto-transcribed, and several academic terms came out phonetically garbled. This page reads them as follows based on Laudon &amp; Laudon Chapter 3.</p><ul class="tl">
+<li><span class="tm">00:26:06</span><span>The transcript says &ldquo;ticker number 2, 3.1.&rdquo; This is corrected to <b>Figure number 3.1</b> on page 111.</span></li>
+<li><span class="tm">00:29:38</span><span>&ldquo;Transports them into output&rdquo; is corrected to <b>transforms them into output</b>, describing the microeconomic production function.</span></li>
+<li><span class="tm">00:38:33</span><span>&ldquo;Vehicles of this measure systems&rdquo; is read as <b>because of this, major systems</b> create political resistance.</span></li>
+<li><span class="tm">00:54:30</span><span>&ldquo;Flutter structure&rdquo; and &ldquo;Flutter organization&rdquo; (repeated multiple times) are corrected to <b>flatter organization</b> (an organization with fewer management layers).</span></li>
+<li><span class="tm">00:55:40</span><span>&ldquo;Toll hierarchy&rdquo; is corrected to traditional <b>tall hierarchy</b>.</span></li>
+<li><span class="tm">01:06:16</span><span>&ldquo;For 3.8, in this figure&rdquo; is corrected to <b>Figure 3.8</b> (Porter's Competitive Forces Model).</span></li>
+<li><span class="tm">01:06:31</span><span>&ldquo;Direct arrivals&rdquo; is corrected to <b>direct rivals</b> (&ldquo;other airlines are direct rivals, while a train may provide a substitute&rdquo;).</span></li>
+<li><span class="tm">01:08:46</span><span>&ldquo;A new firm selling the same type of product is an entrance&rdquo; is corrected to <b>a new entrant</b>.</span></li>
+</ul><div class="end">End of recording &middot; 01:35:39</div></section>
+</main>
+
+<script>
+(function(){
+  var TOTAL = 5739;
+  var es = [].slice.call(document.querySelectorAll('.e'));
+  var deck = document.querySelector('.deck');
+  var segs = [].slice.call(deck.querySelectorAll('.seg'));
+  var clock = document.getElementById('clock'), play = document.getElementById('play');
+  var starts = segs.map(function(s){ return +s.getAttribute('data-s'); });
+  var ends = segs.map(function(s){ return +s.getAttribute('data-e'); });
+  function f(s){
+    s = Math.round(s);
+    var a = [Math.floor(s/3600), Math.floor(s%3600/60), s%60];
+    return a.map(function(n){ return (n<10?'0':'')+n; }).join(':');
+  }
+  var busy = false;
+  function upd(){
+    busy = false;
+    var line = deck.getBoundingClientRect().bottom + 28, t = 0;
+    for (var i = 0; i < es.length; i++){
+      var r = es[i].getBoundingClientRect();
+      if (r.top <= line){
+        var a = +es[i].getAttribute('data-t'), b = +es[i].getAttribute('data-e');
+        var p = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+        t = a + p * (b - a);
+      } else break;
+    }
+    clock.textContent = f(t);
+    var k = 0; for (var j = 0; j < starts.length; j++){ if (t >= starts[j]) k = j; }
+    segs.forEach(function(s, n){ s.classList.toggle('on', n === k && t > 0); });
+    var sg = segs[k], fr = Math.max(0, Math.min(1, (t - starts[k]) / Math.max(1, ends[k] - starts[k])));
+    play.style.left = (sg.offsetLeft + fr * sg.offsetWidth - 1.5) + 'px';
+  }
+  function req(){ if (!busy){ busy = true; requestAnimationFrame(upd); } }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', req);
+  upd();
+})();
+</script>
+
+<script>
+
+// Navigation Drawer Controller & Theme Switcher
+(function() {
+  var sideNav = document.getElementById('side-nav');
+  var backdrop = document.getElementById('sn-backdrop');
+  var toggleBtn = document.getElementById('nav-toggle');
+  var closeBtn = document.getElementById('sn-close');
+  var themeBtn = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openNav);
+  if (closeBtn) closeBtn.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) {
+      closeNav();
+    }
+    if ((e.key === 'm' || e.key === 'M') && !e.target.matches('input, textarea')) {
+      if (sideNav.classList.contains('is-open')) closeNav();
+      else openNav();
+    }
+  });
+
+  var partLinks = document.querySelectorAll('.sn-parts a, .sn-res-links a');
+  partLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      closeNav();
+    });
+  });
+
+  function initTheme() {
+    var saved = localStorage.getItem('mis_theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var isDark = cur === 'dark' || (!cur && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('mis_theme', next);
+    });
+  }
+  initTheme();
+})();
+
+</script>
+</body>
+</html>
