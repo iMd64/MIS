@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MIS 301 Midterm Study Guide</title>
+<style>
+:root{--bg:#fafaf9;--surf:#fff;--tx:#1c1c1a;--mu:#63635e;--bd:#deded9;--ac:#2b2b28;--ok:#2d6a4f;--no:#a4343a;--hl:#fde68a;--hlt:#1c1c1a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--surf:#1f1f1d;--tx:#e8e8e4;--mu:#a2a29a;--bd:#34342f;--ac:#e8e8e4;--ok:#6fcf97;--no:#f08a8f;--hl:#fde68a;--hlt:#1c1c1a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161615;--surf:#1f1f1d;--tx:#e8e8e4;--mu:#a2a29a;--bd:#34342f;--ac:#e8e8e4;--ok:#6fcf97;--no:#f08a8f;--hl:#fde68a;--hlt:#1c1c1a;color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 110px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 Georgia,"Times New Roman",serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surf);z-index:10}
+h1,h2,h3,h4,nav,button,table,.ui{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surf);border-bottom:1px solid var(--bd)}
+.bar{max-width:980px;margin:auto;padding:8px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.brand{font:600 15px system-ui,sans-serif;margin-right:auto}
+nav a,.chip,button{font-size:14px;color:var(--tx);background:none;border:1px solid var(--bd);border-radius:6px;padding:5px 11px;text-decoration:none;cursor:pointer;font-family:system-ui,sans-serif;line-height:1.4}
+nav a:hover,.chip:hover,button:hover{background:var(--bg)}
+.sub{max-width:980px;margin:auto;padding:0 16px 8px;display:flex;gap:6px;flex-wrap:wrap}
+.sub .chip{padding:3px 9px;font-size:13px;color:var(--mu)}
+main{max-width:980px;margin:auto;padding:8px 16px 60px}
+.part{margin-top:44px}
+.part>h2{font-size:26px;margin:0 0 4px;padding-bottom:8px;border-bottom:2px solid var(--ac)}
+.lead{color:var(--mu);margin:8px 0 20px;font-size:15px}
+.week{margin-top:36px}
+.week>h3{font-size:21px;margin:0 0 2px}
+.focus{color:var(--mu);font-size:14.5px;margin:0 0 14px;font-style:italic}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:8px;padding:14px 18px;margin:12px 0}
+.card h4{margin:0 0 8px;font-size:16.5px}
+.card p{margin:6px 0}.card ul{margin:6px 0;padding-left:22px}.card li{margin:3px 0}
+.card.sup{border-style:dashed}
+mark{background:var(--hl);color:var(--hlt);padding:0 3px;border-radius:3px}
+.tw{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th,td{border:1px solid var(--bd);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.rem{font:14.5px system-ui,sans-serif;color:var(--mu);border-top:1px solid var(--bd);margin-top:10px;padding-top:7px}
+.rem b{color:var(--tx)}
+.qr .card{padding:10px 16px}
+.qr li{font-size:15px}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin:4px 0 14px}
+.seg button{border:0;border-radius:0;padding:8px 18px}
+.seg button.on{background:var(--ac);color:var(--bg)}
+.ctl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+.prog{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin:6px 0 14px}
+.prog i{display:block;height:100%;background:var(--ac);width:0}
+.stat{display:flex;justify-content:space-between;font:14px system-ui,sans-serif;color:var(--mu)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 14px;font-size:15px;background:var(--surf)}
+.opt.sel{border-color:var(--ac);border-width:2px}
+.opt.right{border-color:var(--ok);border-width:2px}
+.opt.wrong{border-color:var(--no);border-width:2px}
+.fb{font:15px/1.5 system-ui,sans-serif;margin-top:10px;padding:10px 14px;border-left:4px solid var(--ok);background:var(--bg)}
+.fb.bad{border-color:var(--no)}
+.act{margin-top:12px;display:flex;gap:8px}
+.act .pri{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+button:disabled{opacity:.45;cursor:not-allowed}
+details.qa{background:var(--surf);border:1px solid var(--bd);border-radius:8px;margin:8px 0}
+details.qa summary{cursor:pointer;padding:11px 16px;font:500 15.5px system-ui,sans-serif}
+details.qa .an{padding:0 16px 12px}
+footer{text-align:center;color:var(--mu);font:13px system-ui,sans-serif;padding:20px}
+@media (max-width:600px){body{font-size:15.5px}.part>h2{font-size:22px}.brand{width:100%}}
+@media print{header{display:none}}
+
+/* === COURSE_DRAWER_CSS_START === */
+.sn-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 20, 28, 0.48);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+  z-index: 9998;
+}
+.sn-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 86vw;
+  background: var(--surf, #fff);
+  color: var(--tx, #1c1c1a);
+  border-right: 1px solid var(--bd, #deded9);
+  box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+  z-index: 9999;
+  transform: translateX(-100%);
+  transition: transform .28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.side-nav.is-open {
+  transform: translateX(0);
+}
+.sn-header {
+  padding: 1.1rem 1.1rem 0.9rem;
+  border-bottom: 1px solid var(--bd, #deded9);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+  background: var(--bg, #fafaf9);
+}
+.sn-brand { display: flex; flex-direction: column; gap: 2px; }
+.sn-course { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2A3BFF; }
+.sn-title { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--tx, #1c1c1a); }
+.sn-term { font-size: 0.75rem; color: var(--mu, #63635e); }
+.sn-close {
+  background: none;
+  border: 1px solid var(--bd, #deded9);
+  border-radius: 4px;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 2px 8px;
+  color: var(--tx, #1c1c1a);
+  cursor: pointer;
+}
+.sn-close:hover { background: var(--bg, #fafaf9); }
+.sn-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.9rem 0.9rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.sn-portal-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.8rem;
+  background: var(--bg, #fafaf9);
+  border: 1px solid var(--bd, #deded9);
+  border-radius: 6px;
+  color: var(--tx, #1c1c1a);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background .15s ease, border-color .15s ease;
+}
+.sn-portal-link:hover, .sn-portal-link.active {
+  background: var(--surf, #fff);
+  border-color: #2A3BFF;
+  color: #2A3BFF;
+}
+.sn-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mu, #63635e);
+  margin-top: 0.5rem;
+  margin-bottom: -0.2rem;
+  padding-left: 0.2rem;
+}
+.sn-weeks { display: flex; flex-direction: column; gap: 0.4rem; }
+.sn-week-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--tx, #1c1c1a);
+  border: 1px solid transparent;
+  transition: all .15s ease;
+}
+.sn-week-item:hover {
+  background: var(--bg, #fafaf9);
+  border-color: var(--bd, #deded9);
+}
+.sn-week-item.active {
+  background: var(--bg, #fafaf9);
+  border-color: #2A3BFF;
+  font-weight: 600;
+}
+.sn-week-badge {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 4px;
+  background: var(--bd, #deded9);
+  color: var(--tx, #1c1c1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.sn-week-item.active .sn-week-badge {
+  background: #2A3BFF;
+  color: #fff;
+}
+.sn-week-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.sn-week-title { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sn-week-sub { font-size: 0.72rem; color: var(--mu, #63635e); }
+.sn-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--bd, #deded9);
+  background: var(--bg, #fafaf9);
+}
+.sn-theme-toggle {
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 6px;
+  background: var(--surf, #fff);
+  border: 1px solid var(--bd, #deded9);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tx, #1c1c1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.sn-theme-toggle:hover { background: var(--bg, #fafaf9); }
+/* === COURSE_DRAWER_CSS_END === */
+
+</style>
+</head>
+<body>
+<header>
+ <div class="bar">
+  <button id="nav-toggle" class="chip" style="font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;" type="button" aria-label="Open Course Menu">☰ Menu</button>
+  <a href="index.html" class="chip" style="font-weight:600;display:inline-flex;align-items:center;gap:4px;">← Course Hub</a>
+  <span class="brand">MIS 301 · Midterm Study Guide</span>
+  <nav class="ui" style="display:flex;gap:6px;flex-wrap:wrap"><a href="#notes">1 · Study Notes</a><a href="#revision">2 · Quick Revision</a><a href="#quiz">3 · Quiz</a></nav>
+  <button id="theme" aria-label="Toggle dark or light mode">Dark mode</button></div>
+ <div class="sub" id="sub"></div>
+</header>
+<main>
+ <p class="lead" style="margin-top:20px">Weeks 1–5 · Exam: five open-ended questions, 20 points each, 60 minutes. Explain concepts in your own words, compare related ideas, and give business examples. A good answer: <b>name</b> the concept → explain its <b>purpose</b> → give an <b>example</b> → state the <b>benefit</b> or harm.</p>
+ <section class="part" id="notes"><h2>Part 1 · Study Notes</h2><div id="notesBox"></div></section>
+ <section class="part qr" id="revision"><h2>Part 2 · Quick Revision</h2><p class="lead">Compact recap of Part 1, week by week.</p><div id="revBox"></div></section>
+ <section class="part" id="quiz"><h2>Part 3 · Quiz &amp; Test Yourself</h2>
+  <div class="seg ui" role="tablist"><button id="mQuiz" class="on">Quiz Mode (MCQ)</button><button id="mQA">Q&amp;A Mode</button></div>
+  <div class="ctl" id="wkSel"></div>
+  <div id="quizBox"></div><div id="qaBox" hidden></div>
+ </section>
+</main>
+<footer>MIS 301 · Asst. Prof. Kenan BÜYÜKATAK · Fall 2026–2027</footer>
+<script>
+const h=s=>s.replace(/\*([^*]+)\*/g,(m,x,o,str)=>{const b=str.slice(0,o),a=str.slice(o+m.length);
+ const label=o===0||/:$/.test(x)||/^(A|An|The) $/.test(b)||/\(\d\) $/.test(b)||/^\s*[:=—·;(,]/.test(a)||/^ (is|are|means|=)\b/.test(a);
+ return label?'<b>'+x+'</b>':x});
+const KW = [
+  'recorded facts', 'raw facts', 'meaningful form', 'meaningful context',
+  'summarized performance reports', 'summarized reports', 'routine transactions',
+  'operational managers', 'middle managers', 'senior managers',
+  'exception reports', 'exception report', 'periodic reports', 'periodic report',
+  'what-if analysis', 'analytical models', 'models and assumptions',
+  'long-term direction', 'unstructured decisions', 'semi-structured',
+  'structured decisions', 'office automation', 'operational excellence',
+  'business models', 'business model', 'customer intimacy', 'supplier intimacy',
+  'improved decision making', 'competitive advantage', 'survival',
+  'complementary assets', 'sociotechnical', 'enterprise applications',
+  'common database', 'information silos', 'information silo', 'interorganizational',
+  'replenishment', 'customer-facing activities', 'customer records',
+  'retain profitable customers', 'capture, organize, share and apply',
+  'knowledge base', 'reusable expertise', 'reusable knowledge',
+  'business processes', 'business process', 'ubiquity', 'global reach',
+  'universal standards', 'information density', 'interactivity', 'social technology',
+  'b2b', 'b2c', 'c2c', 'c2b', 'security failures', 'unequal digital access',
+  'traditional competitors', 'new entrants', 'substitute products', 'substitutes',
+  'switching costs', 'buyer power', 'supplier power', 'low-cost leadership',
+  'product differentiation', 'market niche', 'unique data', 'effective processes',
+  'value chain', 'value web', 'flattening', 'flatten', 'moral dimensions',
+  'information rights', 'privacy', 'fair information practices', 'profiling',
+  'nora', 'opt-in', 'opt-out', 'property rights', 'intellectual property',
+  'trade secrets', 'trade secret', 'copyright', 'patents', 'patent',
+  'accountability', 'liability', 'due process', 'system quality',
+  'software errors', 'quality of life', 'technostress', 'rsi', 'cvs',
+  'digital divide', 'ethical analysis', 'stakeholders'
+].sort((a,b)=>b.length-a.length);
+const KR=new RegExp('\b('+KW.map(k=>k.replace(/[.*+?^${}()|[\]\]/g,'\$&')).join('|')+')\b','gi');
+/* highlight only key phrases inside definition text (first use per card); never names, labels, headings or table headers */
+function kw(html){const seen=new Set();let skip=0;return html.split(/(<[^>]+>)/).map(t=>{if(t[0]==='<'){if(/^<(b|th|h4|h3)\b/.test(t))skip++;else if(/^<\/(b|th|h4|h3)>/.test(t))skip--;return t}
+ if(skip>0)return t;return t.replace(KR,m=>{const k=m.toLowerCase();if(seen.has(k))return m;seen.add(k);return '<mark>'+m+'</mark>'})}).join('')}
+const tb=(hd,rows)=>'<div class="tw"><table><tr>'+hd.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,k)=>'<td>'+(k===0&&c.indexOf('*')<0?'<b>'+c+'</b>':h(c))+'</td>').join('')+'</tr>').join('')+'</table></div>';
+const ul=a=>'<ul>'+a.map(x=>'<li>'+h(x)+'</li>').join('')+'</ul>';
+const p=s=>'<p>'+h(s)+'</p>';
+const rem=s=>'<div class="rem"><b>Remember:</b> '+h(s)+'</div>';
+const W=[
+{n:1,t:'MIS and the Digital Enterprise',f:'Types of information systems and the decisions they support (slides 14–18). For each: purpose, users/level, information needs, example.',
+topics:[
+{q:'What are IS and MIS, and how is data different from information?',s:'An *information system* combines people, processes, data and technology to support work and decisions. *Data* = recorded raw facts; *information* = data organized into a meaningful form. “MIS” as a field studies how IT supports work, management and strategy; as a system type it gives managers summarized performance reports.',
+ h:p('An *information system (IS)* combines *people, processes, data and technology* to support work and decisions.')+p('*Data* are recorded facts; *information* is data organized into a meaningful form. Example: individual sales records are data; monthly sales compared with a target are information.')+p('*MIS as a field* studies how information and technology support organizational work, management and strategy. *MIS as a system type* provides summarized performance reports for managers. Use the meaning that fits the question.')},
+{q:'What is an operational information system (TPS)?',s:'Records routine transactions and coordinates daily work (e.g. a *Transaction Processing System*). Users: frontline employees and operational managers. Needs detailed, current records; speed, accuracy, reliability. Example: supermarket checkout records a sale and updates stock. Answers: what happened and what must happen next.',
+ h:p('An *operational system* records routine transactions and coordinates daily work. A *Transaction Processing System (TPS)* is the classic example.')+ul(['*Users:* frontline employees and operational managers','*Information:* detailed, current records (orders, payments, stock quantities, shipment status); needs speed, accuracy, reliability, clear business rules','*Example:* a supermarket checkout records a sale and updates stock','*Asks:* what happened, and what must happen next?'])+rem('Operational = record today’s transactions and current status.')},
+{q:'What is a Management Information System (MIS)?',s:'Summarizes data (mainly from TPS) to help managers plan, monitor, coordinate and control performance. Users: mainly *middle managers*. Gives summaries, trends, targets vs actual results; *periodic reports* (scheduled) and *exception reports* (deviations). Example: regional manager compares monthly store sales with targets.',
+ h:p('An *MIS* summarizes data, mainly from TPS, to help managers plan, monitor, coordinate and control performance.')+ul(['*Users:* mainly middle managers','*Information:* summaries, trends, targets and actual results','A *periodic report* appears on a schedule (weekly, monthly); an *exception report* highlights a deviation needing attention','*Example:* a regional manager compares monthly store sales with targets and investigates underperforming stores','*Asks:* are we meeting targets, and where are the exceptions?'])+rem('MIS = performance summaries, targets, trends and exceptions.')},
+{q:'What is a Decision Support System (DSS)?',s:'Combines data, models and assumptions to compare alternatives through *what-if analysis*. Users: managers and analysts. Supports *nonroutine or semi-structured* decisions. Example: estimate voyage profit if fuel costs rise 10%. The system compares results; the manager chooses (human judgment). Asks: what may happen, what should we do?',
+ h:p('A *DSS* combines *data, models and assumptions* to compare alternatives through *what-if analysis*.')+ul(['*Users:* managers and analysts, often middle managers','*Information:* internal and external data, costs, forecasts, assumptions','Supports *nonroutine or semi-structured* decisions: an unusual problem, or one partly solved by calculation and partly by judgment','*Example:* estimate voyage profit if fuel costs rise 10%. The system changes an assumption and compares results; the manager chooses','*Asks:* what may happen, and what should we do?'])+rem('DSS = change assumptions, compare outcomes, use human judgment.')},
+{q:'What does a strategic information system support?',s:'Long-term direction, competitive position, investment and business models. Users (Week 1 levels): *senior managers*. Needs broad internal and external information (markets, competitors, risks). Example: use market trends to decide whether to enter a new country. *ESS* (Executive Support System) is the senior-management system; strategic IS is broader (any system can have strategic value) so they are not exact synonyms.',
+ h:p('A *strategic information system* supports long-term direction, competitive position, investment and business models.')+ul(['*Users:* senior managers','*Information:* broad internal and external information on performance, markets, competitors, opportunities, threats, risks','*Example:* use market trends and forecasts to decide whether to enter a new country','*Asks:* where should the organization go, and how will it create value?'])+p('An *Executive Support System (ESS)* is the senior-management system. “Strategic IS” is a broader term: any system can have strategic value if it supports competitive advantage. They are not exact synonyms.')+rem('Strategic = long-term direction and competitive position.')},
+{q:'How do the four system types differ, and how can one business use all four?',s:'*TPS records; MIS reports; DSS compares; strategic systems guide direction.* Identify the system by the decision supported, not by whether it is a report or dashboard. In a supermarket: TPS records sales and updates stock; MIS compares monthly sales by store; DSS compares profit under staffing plans; strategic system supports entering a new market. TPS records feed summaries and analysis; strategy guides targets and rules.',
+ h:p('Use the *decision being supported* to identify the system. A report or dashboard alone does not decide its type.')+tb(['System / users','Information and decision','Supermarket example'],[['*Operational / TPS* · staff and supervisors','Detailed current transactions; routine daily work','Record a sale and update stock'],['*Managerial / MIS* · middle managers','Weekly or monthly summaries; actual vs target','Compare monthly sales by store'],['*DSS* · managers and analysts','Models and assumptions; scenario-dependent horizon','Compare profits under different staffing plans'],['*Strategic* · senior managers','Broad internal and external trends; long-term direction','Decide whether to enter a new market']])+p('*Connection:* TPS records feed summaries and analysis; strategy guides targets and daily rules. The differences are purpose, users, detail and decision horizon.')+rem('TPS records; MIS reports; DSS compares; strategic systems guide direction.')},
+{q:'How do operational, tactical and strategic decisions differ?',s:'*Operational:* frontline staff/supervisors, detailed current data, routine decisions (registration office checks open seats; TPS). *Tactical:* middle managers, summaries and forecasts, plan/allocate resources over weeks or months (retailer compares sales to targets and adjusts orders; MIS). *Strategic:* senior managers, internal results plus external trends, long-term direction (bank decides whether to expand into a new lending market).',
+ h:ul(['*Operational* — frontline staff and supervisors use detailed, current data for routine decisions. A university registration office checks open seats and confirms enrollment (TPS).','*Tactical* — middle managers use summaries and forecasts to plan and allocate resources over weeks or months. A retailer compares sales with targets in MIS and adjusts stock orders or staffing.','*Strategic* — senior managers use internal results and external trends to set long-term direction. Bank executives review portfolio risk and economic trends to decide whether to expand into a new lending market.'])+p('*How they connect (bank):* TPS records loan payments; MIS summarizes late payments and flags unusual changes; DSS uses transaction data, summaries and economic assumptions to estimate losses. Accurate records keep reports and forecasts dependable; current data matters most when a decision cannot wait.')+rem('Operational runs daily work, tactical turns goals into plans, strategic sets direction.')},
+{q:'Where do TPS, MIS, DSS, ESS and OAS fit in the information systems pyramid?',s:'TPS = base (routine operations). MIS = middle managers (summaries, exception reports). DSS = managers/analysts comparing alternatives. ESS = senior managers (summarized internal and external information for strategic decisions). *Office Automation Systems (OAS)* help staff at several levels create/share documents, schedule meetings and communicate (shared calendars, email).',
+ h:ul(['*TPS* — routine operations at the base of the pyramid','*MIS* — middle managers: summaries and exception reports','*DSS* — managers and analysts comparing alternatives','*ESS* — senior managers: summarized internal and external information for strategic decisions','*Office Automation Systems (OAS)* — help staff at several levels create and share documents, schedule meetings and communicate (e.g. shared calendars and email)'])+p('Note: older hint sheets group “DSS / ISS” without defining ISS; the current slides use ESS for Executive Support Systems.')+rem('TPS records, MIS reports, DSS compares, ESS supports strategy, OAS helps office work.')}
+]},
+{n:2,t:'Information Systems in Global Business Today (Chapter 1)',f:'Business reasons for investing in information systems: the six strategic business objectives (slides 13–18).',
+topics:[
+{q:'What are the six strategic business objectives of information systems?',s:'(1) *Operational excellence*; (2) *new products, services and business models*; (3) *customer and supplier intimacy*; (4) *improved decision making*; (5) *competitive advantage*; (6) *survival*. One system can support several. Name the objective, explain the system’s action, connect to a business benefit.',
+ h:tb(['Objective','Meaning','Example'],[['*Operational excellence*','Improve efficiency, productivity, consistency','Walmart’s digitally linked supply network supports replenishment and reduces inventory waste'],['*New products, services, business models*','New offerings and new ways to earn revenue','Apple’s digital distribution of content'],['*Customer and supplier intimacy*','Strengthen relationships through shared information','Hotel personalizes rooms from guest preferences; retailer shares stock levels with suppliers'],['*Improved decision making*','Timely, accurate information for managers','Live outage dashboard sends support staff to the most urgent problem'],['*Competitive advantage*','Perform better than rivals (lower cost or superior value)','Integrated order tracking gives more dependable delivery than rivals'],['*Survival*','Meet requirements to remain in business','Bank installs a required digital compliance archive']])+rem('Operate better; offer something new; build relationships; decide better; compete; survive.')},
+{q:'How do information systems support operational excellence?',s:'*Operational excellence* = improving efficiency, productivity, speed, accuracy and consistency in *existing* operations. Systems automate routine work, share current information, reduce errors, coordinate stock/delivery. Example: Walmart’s connected supply network. Benefit: fewer shortages, less excess inventory, less wasted time, lower costs.',
+ h:p('*Operational excellence* means improving efficiency, productivity, speed, accuracy and consistency in *existing operations*.')+p('Systems automate routine work, share current information, reduce errors and coordinate stock and delivery. Example: Walmart’s digitally connected supply network. Benefit: fewer shortages, less excess inventory, less wasted time, lower operating costs. State the improvement; do not just say “the firm uses computers”.')+rem('Operational excellence = do existing work better.')},
+{q:'How do systems enable new products, services and business models?',s:'Systems make new offerings and new ways of doing business possible. A *business model* explains how a firm *creates, delivers and captures value*. Example: Apple’s digital distribution model. Difference from operational excellence: faster processing improves existing work; a new digital service changes what is offered or how it is delivered and paid for.',
+ h:p('Information systems can make new offerings and new ways of doing business possible. A *business model* explains how a firm *creates, delivers and captures value*.')+p('Example: Apple’s digital distribution model lets customers obtain digital content through an online platform, changing how the offering reaches customers and how the firm earns revenue.')+p('*Compare with operational excellence:* faster processing improves existing work; a new digital service or distribution model changes what the business offers or how it earns value.')},
+{q:'What are customer intimacy and supplier intimacy?',s:'*Customer intimacy:* understanding customers and using that knowledge for better, personalized service and loyalty (hotel stores guest preferences). *Supplier intimacy:* sharing information and coordinating closely with suppliers (retailer shares sales and stock levels so supplier plans replenishment). Benefits: loyalty, dependable supply, lower inventory, fewer delays, lower cost. CRM supports customers; SCM supports suppliers.',
+ h:ul(['*Customer intimacy:* understanding customers and using that knowledge for better, more personalized service and loyalty. Example: a hotel stores guest preferences and prepares a suitable room before arrival.','*Supplier intimacy:* sharing information and coordinating closely with suppliers. Example: a retailer shares sales and stock levels so a supplier can plan replenishment earlier.','*Benefits:* customer loyalty, dependable supply, lower inventory, fewer delays, lower costs. CRM supports customer relationships; SCM supports supplier coordination.'])},
+{q:'How do information systems improve decision making?',s:'Give managers *timely, accurate and complete* information so they choose suitable actions. Example: a dashboard of current service outages lets managers prioritize problems and send support teams. Late or incorrect information causes poor staffing, stock or resource decisions. Human judgment is still needed.',
+ h:p('*Improved decision making* means giving managers *timely, accurate and complete* information so they can choose suitable actions.')+p('Example: a dashboard shows current service outages; managers identify the most serious problems and send support teams where needed. Late or incorrect information can cause poor staffing, stock or resource decisions. Human judgment remains necessary.')+rem('Better information → better choice → better allocation of resources.')},
+{q:'What is the difference between competitive advantage and survival?',s:'*Competitive advantage:* performing better than rivals through lower costs, faster response, superior service or distinctive value (integrated order system, more dependable delivery). *Survival:* installing a system to meet a requirement for remaining in business (customer expectations, industry standards, legal obligation), e.g. a required bank compliance archive. An advantage can later become a basic market expectation.',
+ h:tb(['','Competitive advantage','Survival'],[['Meaning','Outperform rivals: lower costs, faster response, superior service, distinctive value','Meet a requirement to remain in business: customer expectations, industry standards, legal obligation'],['Example','Integrated order system gives more dependable delivery than competitors','Bank introduces a required digital compliance archive']])+p('A system can begin as an advantage and later become a basic market expectation. A survival system can be strategically necessary even if it is not innovative.')},
+{q:'Which objective does each of the lecturer’s examples support?',s:'Automatic supermarket reordering → *operational excellence and supplier intimacy*. Hotel room prepared from guest preferences → *customer intimacy*. Live service-outage dashboard → *improved decision making*. Required bank compliance archive → *survival*. Pattern: name the objective, say what the system does, explain the business benefit.',
+ h:ul(['Automatic supermarket reordering → *operational excellence* and *supplier intimacy* (less manual work and fewer shortages; coordinates supply)','Hotel room prepared using guest preferences → *customer intimacy* (personalizes service, encourages loyalty)','Live service-outage dashboard → *improved decision making* (prioritize problems, allocate staff)','Required bank compliance archive → *survival* (meets a requirement to keep operating)'])+p('*Answer pattern:* name the objective, identify what the system does, explain the resulting benefit. Several objectives may fit if each link is explained.')},
+{sup:1,q:'Supporting concepts (Chapter 1 quiz items)',s:'Data = raw facts; information = processed, meaningful data. Four activities: *input, processing, output, feedback*. Three dimensions: *organization, management, technology*. Different returns from similar IT: *complementary assets* (organizational, managerial, social). *Sociotechnical* perspective: optimize technical and social systems together.',
+ h:ul(['*Four basic activities:* input (collect facts), processing (convert), output (deliver information), feedback (use results to check and correct)','*Three dimensions of IS:* organization (people, processes), management (direction, decisions), technology (tools)','*Different returns from similar IT:* depend on *complementary assets* — organizational (processes, culture), managerial (leadership, incentives, training), social (infrastructure, standards)','*Sociotechnical perspective:* optimize the technical system and the social/organizational system together; adjust tools, processes, roles, training and incentives until they fit'])}
+]},
+{n:3,t:'Global E-business and Collaboration (Chapter 2)',f:'Enterprise applications that connect business activities (slides 26–31): role, what each connects, benefits.',
+topics:[
+{q:'Why do firms need enterprise applications?',s:'An *information silo* = data stuck in one department. Separate systems cause duplicate entry, inconsistent records and delays. *Enterprise applications* connect functions, management levels and sometimes external partners so the firm acts as one organization (sales knows the order, inventory the stock, finance the payment; the customer needs one accurate order status).',
+ h:p('An *information silo* occurs when data stays in one department and is difficult for others to use. Separate systems cause duplicate entry, inconsistent records and delays.')+p('*Enterprise applications* connect business functions, management levels and sometimes external partners, coordinating shared information and processes so the firm responds as one organization.')+rem('Enterprise applications connect work and data across organizational boundaries.')},
+{q:'What is an ERP system?',s:'*Enterprise Resource Planning* integrates key *internal* business processes using a *common database*: sales, inventory, purchasing, production, finance, accounting, HR. A sales order becomes available for inventory checks, production, accounting and service. Benefits: less duplicate entry, fewer inconsistent records, better coordination, efficiency.',
+ h:p('*Enterprise Resource Planning (ERP)* integrates key *internal* business processes using a *common database*.')+ul(['*Connects:* sales, inventory, purchasing, production, finance, accounting, HR','*Example:* a sales order becomes available for inventory checks, production scheduling, accounting and customer service','*Benefits:* less duplicate entry, fewer inconsistent records, better coordination, improved efficiency (needs shared definitions and reliable data)'])+rem('ERP = integrate internal processes around shared data.')},
+{q:'What does a Supply Chain Management (SCM) system do?',s:'Coordinates relationships and flows among *suppliers, purchasing firms, distributors and logistics partners* — materials, products, information, sometimes money. Often *interorganizational*. Example: retailer shares sales and stock data so supplier replenishes before stock runs out. Benefits: fewer shortages, less excess inventory, better delivery, lower cost.',
+ h:p('*SCM* coordinates relationships and flows among suppliers, purchasing firms, distributors and logistics partners. It supports movement of materials, products, information and sometimes money. Many SCM systems are *interorganizational* (connect different organizations).')+p('Example: a retailer shares sales and stock information with its supplier, allowing replenishment before stock runs out. Benefits: fewer shortages, less unnecessary inventory, better delivery, lower cost.')+rem('SCM = coordinate supply, stock and delivery across partners.')},
+{q:'What does a Customer Relationship Management (CRM) system do?',s:'Coordinates customer-facing activities in *sales, marketing and service* using shared customer records and interactions; helps identify, attract, serve and retain profitable customers. Example: support agent sees purchases, earlier complaints and marketing contacts before answering. Benefits: consistent service, relevant offers, faster resolution, loyalty.',
+ h:p('*CRM* coordinates customer-facing activities in sales, marketing and service. It connects customer records and interactions across the employees and departments serving customers, helping identify, attract, serve and retain profitable customers.')+p('Example: a support agent sees purchases, earlier complaints and marketing contacts before answering a call. Benefits: consistent service, relevant offers, faster problem resolution, stronger loyalty.')+rem('CRM = one shared customer view across sales, marketing and service.')},
+{q:'What does a Knowledge Management System (KMS) do?',s:'Helps an organization *capture, organize, share and apply* knowledge and expertise; connects employees/experts with documents, project experience and solutions. Example: support team stores a difficult solution in a searchable knowledge base (TELUS case: knowledge sharing and employee learning). Benefits: faster access to expertise, less repeated problem solving, learning, retained knowledge.',
+ h:p('A *KMS* helps an organization capture, organize, share and apply knowledge and expertise. It connects employees and experts with documents, project experience, solutions and knowledge from inside or outside the firm.')+p('Example: a support team stores a difficult problem’s solution in a searchable knowledge base so the next employee can reuse it (the TELUS case illustrates knowledge sharing and employee learning). Benefits: faster access to expertise, less repeated problem solving, better learning, retention of organizational knowledge.')+rem('KMS = make useful knowledge available to people who need it.')},
+{q:'How do ERP, SCM, CRM and KMS differ in one business?',s:'Distinguish by *what each connects*. *ERP* = internal departments and shared records (order, stock, invoice, accounting). *SCM* = suppliers, distributors, logistics partners (share demand, coordinate replenishment). *CRM* = sales, marketing, service and customer history (agent sees purchases/complaints). *KMS* = people, expertise and reusable knowledge (search previous solutions). TPS/MIS/DSS/ESS describe decision support; ERP/SCM/CRM/KMS describe the activities connected.',
+ h:tb(['Application','Main connections','Example in an online retailer'],[['*ERP*','Internal departments and shared business records','Connect the order, stock, invoice and accounting entry'],['*SCM*','Suppliers, distributors, logistics partners','Share demand with suppliers; coordinate replenishment'],['*CRM*','Sales, marketing, service, customer history','Show an agent the customer’s purchases and complaints'],['*KMS*','People, expertise, reusable organizational knowledge','Let staff search previous solutions to delivery problems']])+p('*Avoid confusion:* TPS, MIS, DSS and ESS describe transaction or decision support; ERP, SCM, CRM and KMS describe the business activities connected. Work can overlap and data can be integrated (an ERP can record transactions and provide management reports).')+rem('ERP = internal work. SCM = supply partners. CRM = customers. KMS = expertise.')},
+{q:'What is e-commerce, and what are its key digital features?',s:'*E-commerce* = buying and selling goods or services online plus supporting activities. *E-business* also includes digital work inside the firm and with partners. Features: *ubiquity*, *global reach*, *universal standards*, *richness*, *interactivity*, *information density*, *personalization*, *social technology* (reviews, shared content).',
+ h:p('*E-commerce* is buying and selling goods or services online, including supporting activities. *E-business* also includes digital work inside the firm and with partners.')+ul(['*Ubiquity:* shop almost anywhere, any time','*Global reach:* market extends across borders','*Universal standards:* common internet technology','*Richness:* text, images, video','*Interactivity:* search, ask questions, customize orders','*Information density:* detailed product and price information easier to access and compare','*Personalization:* tailored recommendations','*Social technology:* reviews and shared content influence choices'])},
+{q:'What are the four e-commerce models?',s:'*B2B* (business to business): café orders beans from a wholesale supplier portal. *B2C* (business to consumer): online bookstore sells a textbook to a student. *C2C* (consumer to consumer): student sells used textbook to another student via marketplace. *C2B* (consumer to business): individual licenses a photograph to a company. Read from seller/provider to buyer.',
+ h:tb(['Model','Example'],[['*B2B* business to business','Café orders beans from a wholesale supplier through an online portal'],['*B2C* business to consumer','Online bookstore sells a textbook to a student'],['*C2C* consumer to consumer','Student sells a used textbook to another student via a marketplace'],['*C2B* consumer to business','Individual licenses a photograph to a company through an online platform']])+rem('Read the model from seller/provider to buyer.')},
+{q:'What are the advantages and disadvantages of e-commerce?',s:'*Organizations:* reach more customers, automate orders, use demand data. *Consumers:* convenient times, compare prices/reviews, more sellers. *Society:* connects small producers and remote areas to wider markets. *Technical drawbacks:* outages, poor connectivity, security failures, integration problems. *Nontechnical:* distrust of unfamiliar sellers, difficulty judging products, delivery/return problems, unequal digital access.',
+ h:ul(['*Organizations:* reach more customers, automate orders, use demand data to plan stock','*Consumers:* shop at convenient times, compare prices and reviews, more sellers','*Society:* connects small producers and remote areas to wider markets','*Technical drawbacks:* outages, poor connectivity, security failures, integration problems','*Nontechnical drawbacks:* distrust of unfamiliar sellers, difficulty judging products unseen, delivery and return problems, unequal digital access'])},
+{sup:1,q:'Supporting concepts (Chapter 2 quiz items)',s:'*Business process* = coordinated collection of activities producing a product or service (order fulfillment). TPS records routine daily transactions. MIS = regular summarized reports; DSS = nonroutine analysis, models, what-if. *E-business* = major digital business processes; *e-commerce* = online buying/selling part of it. Collaboration can fail even when software works: needs culture, clear goals, participation, processes. *Systems analyst* translates business requirements into system requirements.',
+ h:ul(['*Business process:* coordinated collection of activities that produces a product or service (e.g. order fulfillment links sales, payment, stock preparation, delivery)','*MIS vs DSS:* MIS = regular summarized performance reports; DSS = nonroutine analysis, models, what-if choices','*E-business vs e-commerce:* e-business includes major digital business processes; e-commerce is the online buying-and-selling part','*Collaboration technology can fail* even if software works: it also needs a suitable culture, clear goals, participation and appropriate processes','*Systems analyst:* translates business requirements into system requirements'])}
+]},
+{n:4,t:'Information Systems, Organizations, and Strategy (Chapter 3)',f:'Competitive forces and information systems as strategic tools: Porter’s Five Forces and strategic responses.',
+topics:[
+{q:'What is Porter’s Five Forces Model?',s:'Analyzes competitive pressures around a firm: *traditional competitors, new market entrants, substitute products/services, customers, suppliers*. Their strength affects prices, costs, profitability and strategy. They are external pressures, not internal departments. Approach: identify the pressure → choose an IS response → explain how it improves position. *Competitive advantage* = superior customer value or lower cost relative to rivals.',
+ h:p('*Porter’s model* analyzes the competitive pressures around a firm: *traditional competitors, new market entrants, substitute products and services, customers, suppliers*.')+p('Their strength affects prices, costs, profitability and strategic choices. They are external competitive pressures, not internal departments. Managers identify the pressure, choose an IS response and explain how it improves the firm’s position. *Competitive advantage* = superior customer value or lower cost relative to rivals.')+rem('Five forces = rivals, entrants, substitutes, customers, suppliers.')},
+{q:'How do traditional competitors affect a firm?',s:'Existing rivals compete on price, features, promotions, service or business models; strong rivalry reduces margins and makes customers harder to retain. IS response: sales/inventory information to cut costs, customer information to improve service, market information to monitor rivals. Example: online retailer improves stock accuracy and delivery information for more dependable service.',
+ h:p('*Traditional competitors* are existing rivals competing through price, features, promotions, service or business models. Strong rivalry can reduce margins and make customers harder to retain.')+p('*IS response:* use sales and inventory information to reduce costs, customer information to improve service, market information to monitor rivals. Example: an online retailer improves stock accuracy and delivery information so customers receive more dependable service than competitors provide.')},
+{q:'How are new entrants different from substitutes?',s:'*New entrant* = a new competitor entering the industry (lower cost, new technology or different model); pressures prices and profits. *Entry barriers*: capital requirements, brand loyalty, regulation, patents, strong networks. *Substitute* = meets the same underlying need in a *different way*; limits demand and pricing power. Lecture example: streaming substitutes for physical media. Food delivery: new delivery platform = entrant; cooking at home = substitute.',
+ h:tb(['','New entrant','Substitute'],[['Meaning','New competitor entering the industry','Different way of meeting the same customer need'],['Effect','Takes customers; pressures prices and profits','Limits demand and pricing power'],['Example','Newly launched delivery platform','Cooking at home; streaming vs physical media'],['IS response','Efficiency, relationships, distinctive services (entry barriers: capital, brand loyalty, regulation, patents, networks)','Improve ordering convenience and delivery reliability']])+rem('Entrant = new industry rival. Substitute = different way to meet the same need.')},
+{q:'When do customers and suppliers gain bargaining power?',s:'*Customer power* rises when buyers compare prices easily, switch cheaply or buy in large quantities. IS response: CRM, personalization, reliable service, loyalty; raise *switching costs* (money, time, effort or lost benefits of changing provider). *Supplier power* rises when the firm depends on few important suppliers. IS response: purchasing data for comparison/negotiation; SCM for coordination, availability, cost. Integration does not automatically remove supplier power.',
+ h:ul(['*Customer power* rises when buyers can compare prices easily, switch cheaply or buy large quantities. IS response: CRM, personalization, reliable service and loyalty support. *Switching costs* = money, time, effort or lost benefits of changing provider.','*Supplier power* rises when a firm depends on a small number of important suppliers (higher prices, less favorable terms). IS response: purchasing data for supplier comparison and negotiation; SCM for coordination, availability, cost. Dependence and alternatives still matter.'])+rem('Power rises when the other side has choices and your firm depends on the relationship.')},
+{q:'What four information-system strategies help a firm compete?',s:'*Low-cost leadership* (lowest operating costs, e.g. automate replenishment; not simply a low price), *product differentiation* (unique offer, e.g. personalized recommendations, online configurator), *focus on a market niche* (narrow segment, e.g. preference data for business travelers), *customer and supplier intimacy* (relationships via CRM/SCM). Differentiation = how the offer is unique; niche = which narrow segment is served.',
+ h:tb(['Strategy','Meaning and IS example'],[['*Low-cost leadership*','Lowest operating costs in the industry. Automate replenishment, reduce inventory waste and errors'],['*Product differentiation*','Offer something customers see as unique. Personalized recommendations, online product configurator'],['*Focus on a market niche*','Serve a narrow customer segment. Use preference data to tailor a travel service to business travelers'],['*Customer and supplier intimacy*','Strengthen relationships through shared information. CRM for personal service; SCM to coordinate suppliers']])+p('*Key distinction:* differentiation concerns how the offer is unique; a niche strategy concerns which narrow segment is served; low-cost leadership concerns operating cost, not simply charging a low price.')},
+{q:'How can Porter’s forces be applied to a food-delivery platform?',s:'*Competitors:* other apps compete on price/service → routing and order tracking improve efficiency. *Entrants:* new platform with different cost/service model → customer data and reliable service build loyalty. *Substitutes:* cooking at home/collecting food → convenient ordering and dependable delivery. *Customers:* compare fees, switch easily → CRM, relevant offers, faster complaint resolution. *Suppliers:* popular restaurants demand favorable terms → shared demand data, supplier comparisons. Strategic link: personalization = customer intimacy; routing = low-cost leadership.',
+ h:ul(['*Traditional competitors:* existing apps compete on price and service, pressuring margins → routing and order-tracking systems improve efficiency and reliability','*New entrants:* a new platform with a different cost or service model → customer data and reliable service strengthen loyalty','*Substitutes:* cooking at home or collecting food limits what customers pay → convenient ordering and dependable delivery','*Customers:* users compare fees and switch easily (high buyer power) → CRM, relevant offers, faster complaint resolution encourage repeat orders','*Suppliers:* popular restaurants can demand favorable terms → shared order/demand information improves coordination; supplier comparisons support negotiation'])+p('*Strategic link:* personalized offers = customer intimacy; efficient routing = low-cost leadership.')+rem('Force → business pressure → IS action → strategy → expected benefit.')},
+{q:'Why is competitive advantage from information systems sometimes temporary?',s:'Competitors can copy systems and features, technology changes, and an advantage can become an industry requirement. Lasting advantage needs systems combined with *unique data, effective processes, expertise and relationships*, plus training and organizational change. The Internet creates opportunities and lowers coordination costs but also makes comparison and market entry easier. The organization’s combined capabilities are harder to copy than the software itself.',
+ h:ul(['Competitors can copy systems and digital features; technology changes; a former advantage can become an industry requirement','Lasting advantage needs systems combined with unique data, effective processes, expertise and strong relationships; technology must fit the business goal and be supported by training and organizational change','The Internet creates new offerings and lower coordination costs but also makes comparison and market entry easier; the effect depends on industry and strategy','Hard to copy: the software itself, or *the way the organization uses it*? The combined capabilities and way of using the system are usually harder to copy'])},
+{sup:1,q:'Supporting concepts (Chapter 3 quiz items)',s:'Organizational factors: structure, business processes, politics, culture, environment, management decisions. *Technical* definition: inputs → production process → outputs. *Behavioral*: people with rights, obligations, values, norms, relationships (explains resistance). IS can *flatten* organizations: direct access to information, wider supervision, decisions closer to work. *Value chain* = value-adding activities within/around a firm; *value web* = network of independent firms.',
+ h:ul(['*Organizational factors:* structure, business processes, politics, culture, environment, management decisions','*Technical definition:* resources enter a production process and become outputs. *Behavioral definition:* people work within rights, obligations, values, norms, responsibilities and relationships (helps explain resistance when systems change power or work)','*Flattening:* IS give managers and lower-level employees direct access to information, allowing wider supervision and decisions closer to the work; some management layers become less necessary','*Value chain:* value-adding activities within and around a firm. *Value web:* coordinates value-creating activities across a network of independent firms'])}
+]},
+{n:5,t:'Ethical and Social Issues in Information Systems (Chapter 4)',f:'The five moral dimensions of the information age (slides 10–16): privacy, ownership, responsibility, reliability, social effects.',
+topics:[
+{q:'What are the five moral dimensions of the information age?',s:'(1) *Information rights and obligations* (privacy, fair data use); (2) *property rights and obligations* (ownership, permitted use); (3) *accountability and control* (who answers for harm); (4) *system quality* (accuracy, reliability, safety); (5) *quality of life* (work, family, access, health, society). *Ethics* = judging right and wrong and making responsible choices; a legal or possible action can still raise ethical concerns. One system can affect several dimensions.',
+ h:p('*Ethics* concerns judging right and wrong and making responsible choices. A technically possible or legally permitted action can still raise ethical concerns.')+ul(['*Information rights and obligations:* personal information, privacy, fair data use','*Property rights and obligations:* ownership and permitted use of digital creations','*Accountability and control:* identifying decision makers and responsibility for harm','*System quality:* acceptable accuracy, reliability, safety','*Quality of life:* effects on work, family, access, health, society'])+p('One system can affect several dimensions. New technology creates individual ethical questions, wider social debate and political responses through rules or laws.')+rem('Privacy; ownership; responsibility; reliability; social effects.')},
+{q:'Information rights: what information about a person may an organization collect and use?',s:'Core question of information rights. *Privacy* = control over personal information and freedom from inappropriate surveillance. *Fair Information Practices*: explain collection/use, offer meaningful choices, allow access and correction, protect records, use data for stated purposes, assign responsibility. *Secondary use* = beyond original purpose. *Opt-in* = permission first; *opt-out* = continues unless refused. *Profiling* = combining data into a detailed picture of a person. *Cookie* = stored identifier a browser returns on later visits (recognition, possible tracking).',
+ h:p('Privacy includes control over personal information and freedom from inappropriate surveillance or interference.')+ul(['*Fair Information Practices:* explain collection and use, offer meaningful choices, allow access and correction, protect records, use data for stated purposes, assign responsibility','*Secondary use:* using data beyond its original purpose','*Opt-in:* permission first. *Opt-out:* collection or use continues unless refused','*Profiling:* combining data from different sources into a detailed picture of a person','*Cookie:* an identifier stored by the browser and returned to the server on later visits, supporting recognition and potentially tracking'])+p('Example: a delivery app needs an address to deliver food; keeping detailed location history indefinitely or sharing it without meaningful explanation exposes personal habits and removes user control.')+rem('Ask what data, why, who sees it, and what the person understands and controls.')},
+{q:'Property rights: how should ownership be protected when digital copying is easy?',s:'*Intellectual property* = intangible creations (software, writing, images, designs). Copying is cheap and fast, but creation takes work; easy access ≠ permission. *Trade secrets* = confidential knowledge giving advantage (protected by secrecy). *Copyright* = expression of an idea (text, code, image). *Patents* = exclusive rights over qualifying inventions/processes for a limited period. Example: copying a competitor’s menu photographs without permission.',
+ h:tb(['Protection','Meaning'],[['*Trade secrets*','Confidential knowledge giving a business an advantage; protected through secrecy'],['*Copyright*','Protects the expression of an idea: text, code, image'],['*Patents*','Exclusive rights over qualifying inventions or processes for a limited period']])+p('*Intellectual property* means intangible creations such as software, writing, images and designs. Digital copying is cheap and fast but creating the original takes work and investment; easy access does not establish permission. Example: an app should use software and menu photographs with permission or licensing.')+rem('Property rights = who owns the creation and what use is permitted.')},
+{q:'Accountability and control: when a system causes harm, who should answer for it?',s:'Trace who designed, approved, operated, changed or supplied data. *Responsibility* = accepting duties, obligations and consequences. *Accountability* = mechanisms exist to identify who acted or decided. *Liability* = legal arrangements allow recovery for damage. *Due process* = known rules and procedures for challenging or appealing decisions. Naming the software does not explain who controlled the harmful action. Example: app wrongly blocks a driver → decision records, responsible people, a way to challenge.',
+ h:ul(['*Responsibility:* accepting duties, obligations and consequences','*Accountability:* mechanisms exist to identify who acted or decided','*Liability:* legal arrangements allow recovery for damage','*Due process:* known rules and procedures for challenging or appealing decisions'])+p('Trace who designed, approved, operated, changed or supplied data to the system; responsibility can involve several parties. Example: if an app wrongly blocks a driver, keep decision records, identify the responsible people and provide a way to challenge the result.')+rem('Responsibility accepts duties; accountability traces actors; liability concerns legal recovery.')},
+{q:'System quality: when is a system good enough to use, and who decides?',s:'Acceptable *accuracy, reliability and safety*. No complex system is defect-free, but preventable harm matters. Managers assess testing, data quality, reliability, likelihood and seriousness of harm before release. Three sources of poor performance: *software errors*, *hardware or facility failures*, *poor input data*. Correct processing cannot fix inaccurate input. Reduce harm with validation, testing, correction procedures, recovery arrangements.',
+ h:p('Quality means acceptable accuracy, reliability and safety. No complex system is completely defect-free, but preventable harm still matters. Managers assess testing, data quality, reliability, and the likelihood and seriousness of harm before release. A defect in a game and one in a medical system have very different consequences.')+ul(['*Three sources of poor performance:* software errors; hardware or facility failures; poor input data','Correct processing cannot make inaccurate input trustworthy (e.g. wrong addresses send orders to the wrong place)','Reduce harm with validation, testing, correction procedures and recovery arrangements'])+rem('Quality = accurate, reliable and safe enough for the consequences of failure.')},
+{q:'Quality of life: what kind of society and working life are we creating?',s:'Systems improve convenience and productivity but have social costs: *work-life boundaries* (pressure to be available), *employment* (automation changes jobs and skills), *equity and access* (unequal devices, networks, skills), *power and dependence* (data concentrates influence; outages disrupt services), *health*: *RSI* (repeated movements), *CVS* (prolonged screen use), *technostress* (pressure from technology/constant connection).',
+ h:ul(['*Work-life boundaries:* constant messages create pressure to be available','*Employment:* automation changes jobs and skills','*Equity and access:* unequal devices, networks or skills can exclude people','*Power and dependence:* data can concentrate influence; outages can disrupt essential services','*Health:* *Repetitive Stress Injury (RSI)* = repeated movements; *Computer Vision Syndrome (CVS)* = prolonged screen use; *technostress* = pressure from technology and constant connection'])+p('Example: a delivery app makes ordering easier but pressures workers to be constantly available and excludes customers without digital access. Consider boundaries, training, accessibility and alternatives.')+rem('Quality of life = effects on people’s work, health, opportunities and daily life.')},
+{q:'How can all five moral dimensions be applied to one familiar digital service (food-delivery app)?',s:'*Information rights:* addresses/locations/purchase histories reveal behavior → explain use, limit access, meaningful consent. *Property rights:* copying software or photos without permission → permissions and licenses. *Accountability and control:* incorrect charge or automated worker penalty → identify actors, decision records, review process. *System quality:* bad addresses, payment errors, outages → test, validate data, plan recovery. *Quality of life:* worker pressure, unequal access → working conditions, boundaries, inclusion. If asked for one issue, pick the dimension most directly tied to the facts (secret location tracking = information rights; wrong address = system quality). Per dimension: name it, identify the issue, explain the harm, suggest a response.',
+ h:ul(['*Information rights:* addresses, locations and purchase histories reveal behavior → explain collection and use, limit access, obtain meaningful consent','*Property rights:* copying software or photographs without permission violates ownership → use permissions and licenses','*Accountability and control:* incorrect charge or automated worker penalty → identify responsible actors, keep decision records, provide a review process','*System quality:* bad addresses, payment errors, outages → test, validate data, plan recovery','*Quality of life:* convenience vs worker pressure and unequal access → consider working conditions, boundaries, inclusion'])+p('*Choosing one issue:* pick the dimension most directly related to the facts. Secret location tracking = information rights; a wrong delivery address = system quality. One scenario may involve several dimensions.')+rem('For each dimension: name it, identify the issue, explain the harm, suggest a response.')},
+{sup:1,q:'Supporting concepts (Chapter 4 quiz items)',s:'*Five steps of ethical analysis:* facts → dilemma and values → stakeholders → options → consequences. *Candidate ethical principles:* Golden Rule, Kant’s categorical imperative, Descartes’ rule of change, Utilitarian Principle, Risk Aversion Principle, No Free Lunch rule.',
+ h:ul(['*Ethical analysis (5 steps):* establish the facts → identify the dilemma and values → identify stakeholders → compare options → assess consequences','*Golden Rule:* treat others as you would want to be treated','*Kant:* a rule should be acceptable for everyone','*Descartes:* consider whether repeating the action is safe','*Utilitarian Principle:* choose the action producing greater overall value','*Risk Aversion:* prefer the least harm','*No Free Lunch:* respect another person’s creation and ownership'])}
+]}
+];
+const R=[
+['Four system types',tb(['System','Users','Purpose','Example'],[['*Operational / TPS*','Staff, operational managers','Detailed current records; routine transactions','Record a sale, update stock'],['*MIS*','Middle managers','Summaries, targets; periodic and exception reports','Monthly sales vs target'],['*DSS*','Managers, analysts','Data + models + assumptions; what-if; nonroutine','Profit if fuel costs rise'],['*Strategic / ESS*','Senior managers','Internal + external trends; long-term direction','Enter a new market']])+ul(['*Data* = raw facts; *information* = meaningful processed data','*Operational / tactical / strategic* decisions: daily routine / weeks–months planning / long-term direction','*OAS:* documents, scheduling, communication across levels','Cue: TPS records → MIS reports → DSS compares → strategic guides direction'])],
+['Six business objectives',ul(['*Operational excellence:* do existing work better (automatic reordering)','*New products, services, business models:* new offering or way to earn revenue (digital content)','*Customer and supplier intimacy:* know and serve customers; share and coordinate with suppliers (CRM / SCM)','*Improved decision making:* timely, accurate information (outage dashboard)','*Competitive advantage:* outperform rivals (dependable delivery)','*Survival:* meet a requirement to stay in business (compliance archive)','Support: IS activities = *input, processing, output, feedback*; dimensions = *organization, management, technology*; *complementary assets*; *sociotechnical* view','Cue: operate → create → connect → decide → compete → survive'])],
+['Enterprise applications',tb(['','Connects','Benefit'],[['*ERP*','Internal departments via common database','Less duplication and inconsistency'],['*SCM*','Suppliers, distributors, logistics partners','Fewer shortages, less excess stock'],['*CRM*','Sales, marketing, service; customer history','Better service, retention'],['*KMS*','People and reusable expertise','Less repeated problem solving']])+ul(['*Silo* = data stuck in one department','*E-commerce* models: *B2B, B2C, C2C, C2B* (seller → buyer); features: ubiquity, global reach, universal standards, richness, interactivity, information density, personalization, social technology','*E-business* ⊃ *e-commerce*; *business process* = coordinated activities producing a product/service','Cue: ERP = internal; SCM = supply; CRM = customers; KMS = knowledge'])],
+['Competition and strategy',tb(['Force','Pressure','IS response'],[['*Traditional competitors*','Price, service rivalry','Inventory/routing systems cut cost, improve delivery'],['*New entrants*','New rivals take customers','Customer data, dependable service, loyalty'],['*Substitutes*','Other way to meet same need','Convenience and value'],['*Customers*','Easy comparison/switching','CRM, personalization, raise *switching costs*'],['*Suppliers*','Few alternatives, dependence','Purchasing data, SCM']])+ul(['*Four strategies:* low-cost leadership (operating cost, not just low price); product differentiation; focus on a market niche; customer and supplier intimacy','Entrant (new delivery app) ≠ substitute (cooking at home)','Advantage is temporary: copyable systems; lasting = unique data, processes, expertise, relationships','Support: *value chain* (within/around firm) vs *value web* (network of independent firms); IS can *flatten* organizations'])],
+['Five moral dimensions',tb(['Dimension','Concern','Key terms'],[['*Information rights and obligations*','Privacy, fair data use','Fair Information Practices, secondary use, opt-in/opt-out, profiling, cookie'],['*Property rights and obligations*','Ownership, permitted use','Trade secrets, copyright, patents'],['*Accountability and control*','Who answers for harm','Responsibility, accountability, liability, due process'],['*System quality*','Accuracy, reliability, safety','Software errors, hardware failures, poor input data'],['*Quality of life*','Social effects','Work-life boundaries, RSI, CVS, technostress, access']])+ul(['Ethical analysis: facts → dilemma/values → stakeholders → options → consequences','Principles: Golden Rule, Kant, Descartes, Utilitarian, Risk Aversion, No Free Lunch','Cue: privacy → ownership → responsibility → reliability → social effects'])]
+];
+const Q=[
+[1,'Which system records routine daily transactions such as a supermarket sale?','Transaction Processing System (TPS)','Decision Support System','Management Information System','Executive Support System','TPS records detailed, current transactions and updates stock.'],
+[1,'A regional manager compares monthly store sales with targets. Which system type is this?','MIS','TPS','DSS','OAS','MIS gives middle managers summaries of actual results against targets.'],
+[1,'A manager estimates voyage profit if fuel costs rise 10%. This is best supported by:','DSS','TPS','MIS exception report','Office automation','DSS uses models and assumptions for what-if analysis of nonroutine decisions.'],
+[1,'Which users does a strategic information system mainly serve?','Senior managers','Frontline employees','Operational supervisors','Data-entry clerks','Strategic-level systems support senior managers’ long-term direction.'],
+[1,'What distinguishes information from data?','Data are organized into a meaningful form','Information is organized into a meaningful form','Information is raw recorded fact','Data are always summaries','Data are raw facts; information is data organized into a meaningful form.'],
+[1,'An exception report is characteristic of which system?','MIS','TPS','OAS','Strategic planning only','MIS reports can highlight deviations needing attention.'],
+[1,'Which describes a tactical decision?','A middle manager adjusts stock orders after comparing sales with targets','A cashier records a sale','Executives decide on entering a new country','A clerk confirms a payment','Tactical decisions plan and allocate resources over weeks or months using summaries.'],
+[1,'Shared calendars and email for coordinating appointments are examples of:','Office Automation Systems (OAS)','TPS','DSS','ESS','OAS helps staff create/share documents, schedule meetings and communicate.'],
+[2,'A hotel prepares a room using stored guest preferences. Which objective?','Customer intimacy','Survival','Operational excellence','Improved decision making','Using customer knowledge for personalized service and loyalty is customer intimacy.'],
+[2,'A bank installs a digital compliance archive required by regulation. Which objective?','Survival','Competitive advantage','New business model','Customer intimacy','Meeting a requirement to remain in business is survival.'],
+[2,'A live outage dashboard helps managers send staff to urgent problems. Which objective?','Improved decision making','Survival','Supplier intimacy','New business model','Timely, accurate information supports better decisions.'],
+[2,'Apple’s digital distribution of content mainly illustrates:','New products, services and business models','Survival','Supplier intimacy','Operational excellence','It changes how the offering reaches customers and how revenue is earned.'],
+[2,'What is the key difference between competitive advantage and survival?','Advantage means outperforming rivals; survival means meeting a requirement to stay in business','Survival requires innovation; advantage does not','Advantage is legal; survival is technical','They are synonyms','Advantage outperforms rivals; survival meets requirements such as legal obligations.'],
+[2,'Which are the four basic activities of an information system?','Input, processing, output, feedback','Plan, build, test, deploy','Data, people, process, strategy','Collect, store, sell, audit','Input collects, processing converts, output delivers, feedback checks and corrects.'],
+[2,'Why can two firms get different returns from similar IT investments?','Complementary organizational, managerial and social assets differ','Their hardware has different colors','Only price matters','Information is always inaccurate','Returns depend on complementary assets as well as IT.'],
+[2,'Automatic supermarket reordering supports operational excellence and:','Supplier intimacy','Survival only','Customer intimacy','New business model only','It reduces manual work and shortages while coordinating supply.'],
+[3,'Which system integrates internal processes around a common database?','ERP','SCM','CRM','KMS','ERP links sales, inventory, finance and other internal functions via shared data.'],
+[3,'Which application coordinates suppliers, distributors and logistics partners?','SCM','ERP','CRM','KMS','SCM coordinates flows among supply partners and is often interorganizational.'],
+[3,'A support agent sees a customer’s purchases and complaints before a call. Which application?','CRM','ERP','SCM','TPS','CRM provides a shared customer view across sales, marketing and service.'],
+[3,'A searchable library of past solutions reused by staff is part of:','KMS','SCM','ERP','OAS','KMS captures, organizes, shares and applies knowledge.'],
+[3,'What is an information silo?','Data held in one department that others struggle to use','A secure database backup','A supplier network','A type of cookie','Silos cause duplicate entry, inconsistent records and delays.'],
+[3,'A student sells a used textbook to another student via a marketplace. Which model?','C2C','B2C','B2B','C2B','Consumer to consumer.'],
+[3,'A café orders beans from a wholesale supplier’s online portal. Which model?','B2B','B2C','C2C','C2B','Business to business.'],
+[3,'How do e-business and e-commerce differ?','E-commerce is the online buying/selling part of e-business','They are identical','E-business is only online selling','E-commerce includes all internal processes','E-business includes major digital business processes; e-commerce is the buying/selling part.'],
+[3,'Which is a nontechnical drawback of e-commerce?','Buyers distrust unfamiliar sellers','Server outages','Security failures','Poor connectivity','Trust, product judgment, delivery/returns and access are nontechnical.'],
+[3,'Which e-commerce feature lets users search, ask questions or customize orders?','Interactivity','Ubiquity','Information density','Universal standards','Interactivity allows two-way engagement.'],
+[4,'A newly launched delivery platform is, for existing platforms, a:','New market entrant','Substitute','Supplier','Customer','A new competitor entering the industry is an entrant.'],
+[4,'Cooking at home instead of ordering delivery is a:','Substitute','New entrant','Traditional competitor','Supplier','It meets the same need in a different way.'],
+[4,'Customer bargaining power rises when:','Buyers can compare prices and switch easily','Buyers have no alternatives','The firm has high switching costs','Only one seller exists','Easy comparison and low switching costs increase buyer power.'],
+[4,'Which is NOT one of Porter’s five forces?','Government employees','Traditional competitors','Substitutes','Suppliers','The forces: competitors, entrants, substitutes, customers, suppliers.'],
+[4,'Low-cost leadership means:','Achieving the lowest operating costs in the industry','Simply charging a low price','Serving a narrow segment','Making the offer unique','It concerns operating cost, not just selling price.'],
+[4,'Serving business travelers using preference data is which strategy?','Focus on a market niche','Low-cost leadership','Product differentiation','Survival','A narrow customer segment defines a niche strategy.'],
+[4,'Why is IS-based advantage often temporary?','Competitors can copy systems and technology changes','Systems cannot be copied','Advantage is always permanent','Customers never switch','Lasting advantage needs unique data, processes, expertise, relationships.'],
+[4,'Value chain vs value web:','Value web coordinates activities across a network of independent firms','Value chain spans independent firms','They are identical','Value web only covers a single department','A value chain examines activities within/around a firm.'],
+[5,'Which dimension concerns privacy and fair data use?','Information rights and obligations','System quality','Quality of life','Property rights','Information rights cover personal information and its fair use.'],
+[5,'Copying a competitor’s photographs without permission mainly raises:','Property rights and obligations','System quality','Quality of life','Accountability','It concerns ownership and permitted use.'],
+[5,'Who traces who acted or decided when a system causes harm?','Accountability','Opt-in','Profiling','Copyright','Accountability means mechanisms exist to identify who acted.'],
+[5,'Wrong delivery addresses mainly raise concerns about:','System quality','Information rights','Property rights','Quality of life','Poor input data is a source of poor system performance.'],
+[5,'Which is NOT one of the three main intellectual property protections?','Opt-in consent','Trade secrets','Copyright','Patents','The three are trade secrets, copyright and patents.'],
+[5,'What is profiling?','Combining data from different sources into a detailed picture of a person','Storing an identifier in a browser','Copying software','A legal arrangement for recovering damage','Profiling builds detailed individual pictures from combined data.'],
+[5,'Opt-out means:','Collection continues unless the person refuses','Permission is required first','Data is deleted immediately','Cookies are banned','Opt-in = permission first; opt-out = continues unless refused.'],
+[5,'RSI, CVS and technostress are examples of which dimension’s concerns?','Quality of life (health)','System quality','Property rights','Accountability','They are health effects of technology use.'],
+[5,'What is liability?','Legal arrangements allowing recovery for damage','Accepting duties and consequences','Permission-first data collection','Protection by secrecy','Responsibility accepts duties; accountability traces actors; liability concerns legal recovery.']
+];
+const $=id=>document.getElementById(id);
+/* notes */
+$('notesBox').innerHTML=W.map(w=>`<section class="week" id="w${w.n}"><h3>Week ${w.n} — ${w.t}</h3><p class="focus">${w.f}</p>`+w.topics.map(t=>`<div class="card${t.sup?' sup':''}"><h4>${t.q}</h4>${kw(t.h)}</div>`).join('')+'</section>').join('');
+$('revBox').innerHTML=R.map((r,i)=>`<section class="week" id="r${i+1}"><h3>Week ${i+1} — ${r[0]}</h3><div class="card">${kw(r[1])}</div></section>`).join('');
+$('sub').innerHTML='<span class="ui" style="font-size:13px;color:var(--mu);align-self:center">Jump to:</span>'+W.map(w=>`<a class="chip" href="#w${w.n}">Wk ${w.n}</a>`).join('')+'<span style="width:8px"></span>'+W.map(w=>`<a class="chip" href="#r${w.n}">Rev ${w.n}</a>`).join('');
+/* theme */
+const root=document.documentElement;
+function setTheme(t){root.setAttribute('data-theme',t);$('theme').textContent=t==='dark'?'Light mode':'Dark mode'}
+setTheme(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+$('theme').onclick=()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+/* quiz */
+let mode='quiz',wk=0,qs=[],i=0,score=0,sel=-1,done=false,opts=[];
+const shuf=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.random()*(k+1)|0;[a[k],a[j]]=[a[j],a[k]]}return a};
+function wkBar(){$('wkSel').innerHTML=[0,1,2,3,4,5].map(n=>`<button class="chip${wk===n?' on':''}" data-w="${n}">${n?'Week '+n:'All weeks'}</button>`).join('');
+ $('wkSel').querySelectorAll('button').forEach(b=>b.onclick=()=>{wk=+b.dataset.w;wkBar();mode==='quiz'?start():renderQA()})}
+function start(){qs=shuf(Q.filter(q=>!wk||q[0]===wk));i=0;score=0;done=false;load()}
+function load(){sel=-1;done=false;opts=shuf([0,1,2,3].map(k=>({t:qs[i][2+k],c:k===0})));drawQ()}
+function drawQ(){const B=$('quizBox');
+ if(i>=qs.length){const pc=Math.round(score/qs.length*100);B.innerHTML=`<div class="card"><h4>Finished</h4><p>Score: <b>${score} / ${qs.length}</b> (${pc}%)</p><div class="act"><button class="pri" id="rs">Restart quiz</button></div></div>`;$('rs').onclick=start;return}
+ const q=qs[i];
+ B.innerHTML=`<div class="stat"><span>Question ${i+1} of ${qs.length} · Week ${q[0]}</span><span>Score: ${score}</span></div><div class="prog"><i style="width:${i/qs.length*100}%"></i></div><div class="card"><h4>${q[1]}</h4><div id="ops">`+opts.map((o,k)=>`<button class="opt" data-k="${k}">${String.fromCharCode(65+k)}. ${o.t}</button>`).join('')+`</div><div id="fb"></div><div class="act"><button class="pri" id="sb" disabled>Submit</button><button id="nx" hidden>${i+1===qs.length?'See score':'Next'}</button><button id="rs2">Restart</button></div></div>`;
+ B.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(done)return;sel=+b.dataset.k;B.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x===b));$('sb').disabled=false});
+ $('sb').onclick=()=>{done=true;const ok=opts[sel].c;if(ok)score++;B.querySelectorAll('.opt').forEach((x,k)=>{if(opts[k].c)x.classList.add('right');else if(k===sel)x.classList.add('wrong')});
+  $('fb').innerHTML=`<div class="fb${ok?'':' bad'}"><b>${ok?'Correct.':'Incorrect.'}</b> ${q[6]}</div>`;$('sb').hidden=true;$('nx').hidden=false;B.querySelector('.stat span:last-child').textContent='Score: '+score};
+ $('nx').onclick=()=>{i++;load()};$('rs2').onclick=start}
+function renderQA(){const ws=wk?[wk]:[1,2,3,4,5];
+ $('qaBox').innerHTML=ws.map(n=>{const w=W[n-1];return `<h3 class="ui" style="margin:22px 0 8px">Week ${n} — ${w.t}</h3>`+w.topics.map(t=>`<details class="qa"><summary>${t.q}</summary><div class="an">${kw(h(t.s))}</div></details>`).join('')}).join('')}
+function setMode(m){mode=m;$('mQuiz').classList.toggle('on',m==='quiz');$('mQA').classList.toggle('on',m==='qa');$('quizBox').hidden=m!=='quiz';$('qaBox').hidden=m!=='qa';m==='quiz'?start():renderQA()}
+$('mQuiz').onclick=()=>setMode('quiz');$('mQA').onclick=()=>setMode('qa');
+wkBar();setMode('quiz');
+
+// Drawer toggle controller
+(function() {
+  const sideNav = document.getElementById('side-nav');
+  const backdrop = document.getElementById('sn-backdrop');
+  const navToggle = document.getElementById('nav-toggle');
+  const snClose = document.getElementById('sn-close');
+  const snThemeToggle = document.getElementById('sn-theme-toggle');
+
+  function openNav() {
+    if (!sideNav) return;
+    sideNav.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-open');
+    sideNav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNav() {
+    if (!sideNav) return;
+    sideNav.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-open');
+    sideNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (navToggle) navToggle.addEventListener('click', openNav);
+  if (snClose) snClose.addEventListener('click', closeNav);
+  if (backdrop) backdrop.addEventListener('click', closeNav);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideNav && sideNav.classList.contains('is-open')) closeNav();
+  });
+  if (snThemeToggle) {
+    snThemeToggle.addEventListener('click', function() {
+      const themeBtn = document.getElementById('theme');
+      if (themeBtn) themeBtn.click();
+    });
+  }
+})();
+
+</script>
+
+<!-- Course Navigation Drawer -->
+<div class="sn-backdrop" id="sn-backdrop" aria-hidden="true"></div>
+<aside class="side-nav" id="side-nav" aria-label="Course Navigation" aria-hidden="true">
+  <div class="sn-header">
+    <div class="sn-brand">
+      <span class="sn-course">COM439 &middot; MIS</span>
+      <h2 class="sn-title">Course Portal</h2>
+      <span class="sn-term">Fall 2026 &middot; Asst. Prof. Kenan B&uuml;y&uuml;katak</span>
+    </div>
+    <button class="sn-close" id="sn-close" aria-label="Close navigation menu" title="Close (Esc)">&times;</button>
+  </div>
+
+  <div class="sn-body">
+    <a href="index.html" class="sn-portal-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Course Hub &amp; Overview</span>
+    </a>
+
+    <div class="sn-section-label">MIDTERM PREPARATION</div>
+    <a href="Midterm Study Guide.html" class="sn-portal-link active">
+      <span style="font-size:1.05rem;">🎯</span>
+      <span>Midterm Study Guide &amp; Quiz</span>
+    </a>
+
+    <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
+    <nav class="sn-weeks">
+        <a href="Week 1 Introduction Log.html" class="sn-week-item" data-week="1">
+          <div class="sn-week-badge">W1</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Introduction &amp; Orientation</span>
+            <span class="sn-week-sub">L1 &amp; L2 &middot; 16 Slides</span>
+          </div>
+        </a>
+        <a href="Week 2 Digital Enterprise Log.html" class="sn-week-item" data-week="2">
+          <div class="sn-week-badge">W2</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">MIS &amp; The Digital Enterprise</span>
+            <span class="sn-week-sub">L3 &middot; Topic 1 &middot; 01:31:22</span>
+          </div>
+        </a>
+        <a href="Week 3 Global Business Log.html" class="sn-week-item" data-week="3">
+          <div class="sn-week-badge">W3</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Global Business Today</span>
+            <span class="sn-week-sub">L4 &middot; Topic 2 &middot; Ch. 1</span>
+          </div>
+        </a>
+        <a href="Week 4 Collaboration Log.html" class="sn-week-item" data-week="4">
+          <div class="sn-week-badge">W4</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">E-Business &amp; Collaboration</span>
+            <span class="sn-week-sub">L5 &middot; Topic 3 &middot; Ch. 2</span>
+          </div>
+        </a>
+        <a href="Week 5 Strategy Log.html" class="sn-week-item" data-week="5">
+          <div class="sn-week-badge">W5</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Strategy &amp; Advantage</span>
+            <span class="sn-week-sub">L6 &middot; Topic 4 &middot; Ch. 3</span>
+          </div>
+        </a>
+        <a href="Week 6 Ethics Log.html" class="sn-week-item" data-week="6">
+          <div class="sn-week-badge">W6</div>
+          <div class="sn-week-meta">
+            <span class="sn-week-title">Ethical &amp; Social Issues</span>
+            <span class="sn-week-sub">L7 &middot; Topic 5 &middot; Ch. 4</span>
+          </div>
+        </a>
+    </nav>
+  </div>
+
+  <div class="sn-footer">
+    <button class="sn-theme-toggle" id="sn-theme-toggle" type="button" title="Toggle Theme">
+      <span>&#9681;</span>
+      <span>Toggle Theme</span>
+    </button>
+  </div>
+</aside>
+
+</body>
+</html>
