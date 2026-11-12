@@ -431,7 +431,7 @@ body {
     min-width: 0;
   }
   .legend {
-    grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+    grid-template-columns: 1fr !important;
     gap: .75rem 1.2rem;
     margin-top: 1rem;
   }
@@ -547,18 +547,173 @@ body {
     height: 6px;
   }
 
-  /* Micro-Components */
+  /* Comparison Columns (.cmp .col) Mobile Enhancement (Section C / Section F) */
   .cmp {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: .85rem;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .9rem !important;
+    margin-block: .9rem .7rem !important;
   }
   .cmp .col {
-    padding-top: .4rem;
+    background: var(--paper-2) !important;
+    border: 1px solid var(--rule) !important;
+    border-left: 4px solid var(--cobalt) !important;
+    border-top: none !important;
+    border-radius: 0 4px 4px 0 !important;
+    padding: .85rem .95rem .75rem !important;
+  }
+  .cmp .col:first-child {
+    border-left-color: var(--ink) !important;
+  }
+  .cmp .col:last-child {
+    border-left-color: var(--cobalt) !important;
   }
   .cmp h4 {
-    font-size: 1.05rem;
-    margin-bottom: .35rem;
+    font-size: 1.08rem !important;
+    line-height: 1.2 !important;
+    margin: 0 0 .45rem 0 !important;
+    color: var(--ink) !important;
+    letter-spacing: .02em !important;
+    text-transform: uppercase !important;
   }
+  .cmp .pts {
+    margin: 0 !important;
+    gap: .4rem !important;
+    padding: 0 !important;
+  }
+  .cmp .pts li {
+    font-size: .92rem !important;
+    line-height: 1.45 !important;
+    padding-left: 1rem !important;
+  }
+  .cmp .pts li::before {
+    top: .55em !important;
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  /* Dimension Cards (.dims .dim) Mobile Enhancement (Section C / Section D / Section E) */
+  .dims {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .65rem !important;
+  }
+  .dim {
+    padding: .8rem .95rem !important;
+    background: var(--paper-2) !important;
+    border: 1px solid var(--rule) !important;
+    border-left: 4px solid var(--cobalt) !important;
+    border-radius: 0 4px 4px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .3rem !important;
+  }
+  .dim .tm {
+    font-size: .75rem !important;
+    color: var(--cobalt) !important;
+    font-weight: 600 !important;
+    margin-bottom: -.05rem !important;
+  }
+  .dim b {
+    font-size: 1.12rem !important;
+    line-height: 1.2 !important;
+    color: var(--ink) !important;
+    text-transform: uppercase !important;
+  }
+  .dim span:last-child {
+    font-size: .92rem !important;
+    line-height: 1.45 !important;
+    color: var(--ink-2) !important;
+  }
+
+  /* Six Cards (.six .pc) */
+  .six {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: .65rem !important;
+  }
+  .pc {
+    padding: .8rem .95rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .35rem !important;
+    border: 1px solid var(--rule) !important;
+    border-left: 4px solid var(--cobalt) !important;
+    border-top: none !important;
+    border-radius: 0 4px 4px 0 !important;
+  }
+  .pc b {
+    font-size: 1.15rem !important;
+    line-height: 1.15 !important;
+  }
+  .pc i {
+    font-size: .95rem !important;
+    line-height: 1.35 !important;
+    font-style: italic !important;
+    color: var(--ink) !important;
+  }
+  .pc small {
+    font-size: .88rem !important;
+    line-height: 1.45 !important;
+    color: var(--ink-2) !important;
+  }
+
+  /* Process Flow Steps (.flow .st) */
+  .flow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: .55rem !important;
+  }
+  .st {
+    padding: .75rem .9rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .3rem !important;
+    border: 1px solid var(--rule) !important;
+    border-left: 4px solid var(--cobalt) !important;
+    border-radius: 0 4px 4px 0 !important;
+  }
+  .st em {
+    font-size: .78rem !important;
+    color: var(--cobalt) !important;
+  }
+  .st span:last-child {
+    font-size: .92rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Staircase / Stepped Lists (.stair li) Mobile Enhancement (Section C / Section F) */
+  .stair {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .55rem !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+  .stair li {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .25rem !important;
+    margin-left: calc(var(--i) * 0.35rem) !important;
+    padding: .7rem .85rem !important;
+    border: 1px solid var(--rule) !important;
+    border-left: 4px solid var(--cobalt) !important;
+    background: var(--paper-2) !important;
+    border-radius: 0 4px 4px 0 !important;
+  }
+  .stair b {
+    font-size: 1.02rem !important;
+    line-height: 1.25 !important;
+    display: block !important;
+    color: var(--ink) !important;
+  }
+  .stair span:last-child {
+    grid-column: auto !important;
+    font-size: .9rem !important;
+    line-height: 1.45 !important;
+    color: var(--ink-2) !important;
+  }
+
   .defs > div {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: .2rem !important;
@@ -719,42 +874,14 @@ body {
   }
 }
 
-/* 2. Compact Phone Viewports (<= 600px) */
+/* 2. Compact Viewports (<= 600px) */
 @media (max-width: 600px) {
   .legend {
     grid-template-columns: 1fr !important;
     gap: .65rem;
   }
-  .dims {
-    grid-template-columns: 1fr !important;
-    gap: .5rem;
-  }
-  .dim {
-    padding: .65rem .75rem;
-  }
-  .six {
-    grid-template-columns: 1fr !important;
-    gap: .5rem;
-  }
-  .pc {
-    padding: .65rem .75rem;
-  }
-  .flow {
-    grid-template-columns: 1fr !important;
-    gap: .5rem;
-  }
-  .st {
-    padding: .6rem .75rem;
-  }
   .stair li {
-    margin-left: calc(var(--i) * .4rem) !important;
-    padding: .45rem .65rem;
-  }
-  .stair b {
-    font-size: 1rem;
-  }
-  .stair span:last-child {
-    font-size: .9rem;
+    margin-left: calc(var(--i) * 0.28rem) !important;
   }
 }
 
@@ -842,11 +969,14 @@ body {
     line-height: 1.48 !important;
   }
   .stair li {
-    margin-left: calc(var(--i) * .28rem) !important;
-    padding: .4rem .55rem;
+    margin-left: calc(var(--i) * 0.2rem) !important;
+    padding: .55rem .75rem !important;
   }
   .stair b {
-    font-size: .92rem;
+    font-size: .96rem !important;
+  }
+  .stair span:last-child {
+    font-size: .86rem !important;
   }
 }
 
@@ -879,6 +1009,10 @@ body {
   }
   .b h3 {
     font-size: 1.12rem !important;
+  }
+  .stair li {
+    margin-left: 0 !important;
+    padding: .5rem .65rem !important;
   }
 }
 
