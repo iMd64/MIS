@@ -201,12 +201,14 @@ footer.portal-end {
   .deck-links { display: none; }
 }
 
+/* === RESPONSIVE_NAVIGATION_AND_MOBILE_LAYOUT_START === */
+
 /* Collapsible Navigation & Drawer Styles */
 .nav-toggle {
-  display: inline-flex; align-items: center; gap: .45rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
   background: var(--paper-2); color: var(--ink);
   border: 1.5px solid var(--ink); border-radius: 3px;
-  padding: .26rem .55rem; cursor: pointer;
+  padding: .3rem .55rem; min-height: 36px; min-width: 36px; cursor: pointer;
   font: 600 .72rem/1 var(--f-mono); text-transform: uppercase;
   transition: all .15s ease; flex-shrink: 0;
 }
@@ -217,7 +219,7 @@ footer.portal-end {
 
 .side-nav {
   position: fixed; top: 0; bottom: 0; left: 0;
-  width: 320px; max-width: 88vw; z-index: 100;
+  width: 300px; max-width: 86vw; height: 100vh; height: 100dvh; z-index: 100;
   background: var(--paper); color: var(--ink);
   border-right: 2px solid var(--ink);
   display: flex; flex-direction: column;
@@ -227,7 +229,7 @@ footer.portal-end {
 }
 .side-nav.is-open {
   transform: translateX(0);
-  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.22);
+  box-shadow: 14px 0 35px rgba(0, 0, 0, 0.25);
 }
 .sn-backdrop {
   position: fixed; inset: 0; background: rgba(18, 20, 28, 0.55);
@@ -238,7 +240,7 @@ footer.portal-end {
 .sn-backdrop.is-open { opacity: 1; pointer-events: auto; }
 
 .sn-header {
-  padding: 1.1rem 1.1rem .9rem; background: var(--ink); color: var(--paper);
+  padding: .95rem 1rem .85rem; background: var(--ink); color: var(--paper);
   display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
   border-bottom: 2px solid var(--paper-2);
 }
@@ -254,22 +256,25 @@ footer.portal-end {
 .sn-term { font: 400 .68rem/1.3 var(--f-mono); opacity: .8; }
 .sn-close {
   background: transparent; border: none; color: var(--paper);
-  font: 300 1.6rem/1 sans-serif; cursor: pointer; padding: 0 .2rem;
-  line-height: .9; opacity: .8; transition: opacity .15s ease;
+  font: 300 1.8rem/1 sans-serif; cursor: pointer; padding: 0;
+  min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+  opacity: .8; transition: opacity .15s ease; border-radius: 3px;
 }
 .sn-close:hover { opacity: 1; color: var(--hl); }
 
 .sn-body {
-  flex: 1; overflow-y: auto; padding: 1rem .9rem 1.5rem;
+  flex: 1; overflow-y: auto; padding: .9rem .85rem 1.4rem;
   display: flex; flex-direction: column; gap: .85rem;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 .sn-portal-link {
   display: flex; align-items: center; gap: .6rem;
-  padding: .6rem .75rem; border: 1.5px solid var(--ink);
+  padding: .65rem .75rem; border: 1.5px solid var(--ink);
   background: var(--paper-2); color: var(--ink); text-decoration: none;
   font: 700 .84rem/1 var(--f-display); font-stretch: 80%;
   text-transform: uppercase; border-radius: 3px; transition: all .15s ease;
+  min-height: 44px;
 }
 .sn-portal-link:hover, .sn-portal-link.active {
   background: var(--cobalt); color: #fff; border-color: var(--cobalt);
@@ -282,7 +287,7 @@ footer.portal-end {
 .sn-weeks { display: flex; flex-direction: column; gap: .35rem; }
 .sn-week-item {
   display: flex; align-items: center; gap: .7rem;
-  padding: .5rem .65rem; border: 1px solid var(--rule);
+  padding: .5rem .65rem; min-height: 44px; border: 1px solid var(--rule);
   background: var(--paper); color: var(--ink); text-decoration: none;
   border-radius: 3px; transition: all .15s ease;
 }
@@ -313,19 +318,21 @@ footer.portal-end {
 .sn-week-item.active .sn-week-sub { color: var(--band-mute); }
 
 .sn-parts {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .35rem;
 }
 .sn-part-btn {
-  display: block; text-align: center; text-decoration: none;
-  font: 700 .75rem/1.6 var(--f-mono); background: var(--paper-2);
+  display: flex; align-items: center; justify-content: center; text-align: center; text-decoration: none;
+  font: 700 .78rem/1 var(--f-mono); background: var(--paper-2);
   border: 1px solid var(--rule); color: var(--ink); border-radius: 2px;
+  min-height: 38px;
   transition: all .12s ease;
 }
 .sn-part-btn:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
 
 .sn-res-links { display: flex; gap: .5rem; }
 .sn-res-item {
-  flex: 1; text-align: center; font: 500 .7rem/1 var(--f-mono);
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font: 500 .72rem/1 var(--f-mono); min-height: 36px;
   padding: .45rem .4rem; background: var(--paper-2); border: 1px solid var(--rule);
   text-decoration: none; color: var(--ink); border-radius: 2px;
 }
@@ -338,16 +345,544 @@ footer.portal-end {
 .sn-theme-toggle {
   display: inline-flex; align-items: center; gap: .5rem;
   background: transparent; border: 1px solid var(--rule);
-  padding: .35rem .65rem; border-radius: 3px; font: 500 .72rem/1 var(--f-mono);
+  padding: .45rem .65rem; min-height: 40px; border-radius: 3px; font: 500 .74rem/1 var(--f-mono);
   color: var(--ink); cursor: pointer; transition: all .15s ease; width: 100%; justify-content: center;
 }
 .sn-theme-toggle:hover { border-color: var(--ink); background: var(--paper); }
 
-@media (max-width: 480px) {
-  .nav-toggle .nt-label { display: none; }
-  .nav-toggle { padding: .28rem .45rem; }
+
+/* ==========================================================================
+   Comprehensive Mobile & Tablet Responsive Layout Upgrade
+   Covers viewports from 320px up to 768px (iPhone SE, Galaxy, Pixel, iPad)
+   ========================================================================== */
+
+/* 1. Global Viewport & Container Refinements */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  overflow-x: hidden;
 }
 
+@media (max-width: 768px) {
+  .wrap {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+  
+  /* Sticky Header & Deck */
+  .deck .wrap {
+    gap: .55rem;
+    padding-block: .45rem;
+  }
+  .portal-brand {
+    font-size: .82rem;
+  }
+  .deck-links {
+    display: none !important;
+  }
+  .deck .tape {
+    height: 18px;
+    border-radius: 2px;
+  }
+  .deck .seg {
+    height: 18px;
+    font-size: 0;
+    min-width: 10px;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding-block: 1.8rem 1rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 8.5vw, 3.6rem) !important;
+    line-height: .92 !important;
+    letter-spacing: -.01em !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  .lead {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .lead p {
+    font-size: 1.1rem !important;
+    line-height: 1.44 !important;
+    max-width: none !important;
+  }
+  .lead p small {
+    font-size: .88rem;
+    margin-top: .5rem;
+  }
+
+  /* Hero Chapter Tape & Legend */
+  .tapewrap {
+    margin-top: 1.5rem;
+  }
+  .tapewrap .tape {
+    height: 38px;
+  }
+  .tapewrap .seg {
+    font-size: clamp(0.75rem, 3.2vw, 1.05rem);
+    line-height: 38px;
+    min-width: 0;
+  }
+  .legend {
+    grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+    gap: .75rem 1.2rem;
+    margin-top: 1rem;
+  }
+  .legend .l {
+    font-size: 1.45rem;
+  }
+  .legend b {
+    font-size: .92rem;
+  }
+
+  /* Chapter Bands */
+  .band {
+    margin-top: 2.5rem;
+  }
+  .band-in {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: .3rem;
+    padding-block: 1.2rem 1.1rem;
+  }
+  .pl {
+    font-size: clamp(3rem, 13vw, 4.5rem) !important;
+    line-height: .8;
+  }
+  .band h2 {
+    font-size: clamp(1.45rem, 6.5vw, 2.3rem) !important;
+    line-height: 1.04 !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .band p {
+    font-size: .96rem !important;
+    line-height: 1.42;
+    opacity: .92;
+  }
+
+  /* Entries on the Ruler Rail */
+  .entries {
+    --pt: 1.3rem;
+  }
+  .e {
+    grid-template-columns: 12px minmax(0, 1fr) !important;
+    grid-template-areas: "rail ts" "rail b" !important;
+    column-gap: .75rem !important;
+  }
+  .rail {
+    grid-area: rail !important;
+  }
+  .rail::before {
+    top: calc(var(--pt) + .06rem) !important;
+    right: -4px !important;
+    width: 9px !important;
+    height: 9px !important;
+    outline-width: 2px !important;
+  }
+  .ts {
+    grid-area: ts !important;
+    text-align: left !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: .25rem .6rem !important;
+    align-items: center !important;
+    padding-top: var(--pt) !important;
+    font-size: .88rem;
+  }
+  .ts span {
+    display: inline !important;
+    margin: 0 !important;
+    font-size: .75rem;
+    color: var(--ink-2);
+  }
+  .ref-pill, .ref-sub {
+    display: inline-flex !important;
+    align-items: center;
+    margin-top: 0 !important;
+  }
+  .ref-pill {
+    padding: .12rem .38rem;
+    font-size: .65rem;
+  }
+  .ref-sub {
+    font-size: .65rem;
+  }
+  .b {
+    grid-area: b !important;
+    padding-top: .3rem !important;
+    min-width: 0 !important;
+  }
+  .b h3 {
+    font-size: clamp(1.22rem, 5vw, 1.48rem) !important;
+    line-height: 1.18 !important;
+    margin-bottom: .45rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .b p {
+    font-size: 1rem !important;
+    line-height: 1.52 !important;
+    margin-bottom: .6rem;
+    max-width: none !important;
+  }
+  .pts {
+    max-width: none !important;
+    gap: .35rem;
+  }
+  .pts li {
+    font-size: .95rem;
+    line-height: 1.45;
+    padding-left: 1rem;
+  }
+  .pts li::before {
+    top: .55em;
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Micro-Components */
+  .cmp {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: .85rem;
+  }
+  .cmp .col {
+    padding-top: .4rem;
+  }
+  .cmp h4 {
+    font-size: 1.05rem;
+    margin-bottom: .35rem;
+  }
+  .defs > div {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: .2rem !important;
+    padding-top: .45rem;
+  }
+  .defs b {
+    font-size: 1.2rem;
+  }
+  .defs p {
+    font-size: .95rem;
+  }
+  .tl li {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: .15rem !important;
+    padding: .5rem 0;
+  }
+  .terms {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  .term {
+    padding: .55rem 0;
+  }
+  .term b {
+    font-size: .98rem;
+  }
+  .term span:last-child {
+    font-size: .88rem;
+  }
+
+  /* Touch-friendly Horizontal Table Containers */
+  .tw {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-block: .8rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper-2);
+    box-shadow: inset -8px 0 8px -6px rgba(0,0,0,0.12);
+  }
+  .tw table {
+    min-width: 480px;
+    font-size: .88rem;
+  }
+  .tw th, .tw td {
+    padding: .48rem .65rem;
+  }
+
+  /* Reference & Footer */
+  .plain {
+    font-size: clamp(1.4rem, 6vw, 2.2rem) !important;
+    margin-bottom: .9rem;
+  }
+  .ref {
+    margin-top: 2.8rem;
+  }
+  .lede {
+    font-size: .95rem;
+    margin-bottom: .9rem;
+  }
+  ul.errata li, .ref ul li {
+    font-size: .92rem;
+    line-height: 1.45;
+  }
+  .end {
+    margin-top: 2.4rem;
+    padding-block: 1rem 2rem;
+    font-size: .74rem;
+  }
+
+  /* Portal / Index Specifics */
+  .weeks-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    margin-top: 1.2rem;
+  }
+  .week-card {
+    padding: 1.15rem;
+  }
+  .wc-title {
+    font-size: 1.35rem;
+  }
+  .wc-summary {
+    font-size: .92rem;
+    margin-bottom: 1rem;
+  }
+  .wc-link {
+    font-size: .82rem;
+    padding-block: .25rem;
+    display: inline-block;
+  }
+  .rubric-box {
+    padding: 1rem 1.15rem;
+    margin-top: 1.2rem;
+  }
+  .rubric-title {
+    font-size: .98rem;
+  }
+  .rubric-grid {
+    grid-template-columns: 1fr !important;
+    gap: .6rem;
+  }
+  .rg-item {
+    padding: .6rem .75rem;
+  }
+  #matrix table, #recordings table {
+    min-width: 580px;
+  }
+  footer.portal-end {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .4rem;
+    padding-block: 1.5rem 2.5rem;
+    font-size: .74rem;
+  }
+
+  /* Collapsible Navigation Drawer Mobile Tuning */
+  .side-nav {
+    width: 295px;
+    max-width: 86vw;
+    height: 100vh;
+    height: 100dvh;
+  }
+  .sn-header {
+    padding: .9rem 1rem .8rem;
+  }
+  .sn-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+  }
+  .sn-body {
+    padding: .85rem .8rem 1.2rem;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sn-week-item {
+    min-height: 44px;
+    padding: .45rem .6rem;
+  }
+  .sn-parts {
+    grid-template-columns: repeat(4, 1fr);
+    gap: .35rem;
+  }
+  .sn-part-btn {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .78rem;
+  }
+  .sn-theme-toggle {
+    min-height: 40px;
+    font-size: .74rem;
+  }
+}
+
+/* 2. Compact Phone Viewports (<= 600px) */
+@media (max-width: 600px) {
+  .legend {
+    grid-template-columns: 1fr !important;
+    gap: .65rem;
+  }
+  .dims {
+    grid-template-columns: 1fr !important;
+    gap: .5rem;
+  }
+  .dim {
+    padding: .65rem .75rem;
+  }
+  .six {
+    grid-template-columns: 1fr !important;
+    gap: .5rem;
+  }
+  .pc {
+    padding: .65rem .75rem;
+  }
+  .flow {
+    grid-template-columns: 1fr !important;
+    gap: .5rem;
+  }
+  .st {
+    padding: .6rem .75rem;
+  }
+  .stair li {
+    margin-left: calc(var(--i) * .4rem) !important;
+    padding: .45rem .65rem;
+  }
+  .stair b {
+    font-size: 1rem;
+  }
+  .stair span:last-child {
+    font-size: .9rem;
+  }
+}
+
+/* 3. Small Phone Viewports (<= 480px) */
+@media (max-width: 480px) {
+  .wrap {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .deck .wrap {
+    gap: .4rem;
+    padding-block: .4rem;
+  }
+  .clock {
+    font-size: .88rem !important;
+    min-width: 4.4rem !important;
+  }
+  .total {
+    display: none !important;
+  }
+  .nav-toggle {
+    padding: .28rem .45rem;
+    min-height: 36px;
+    min-width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-toggle .nt-label {
+    display: none !important;
+  }
+
+  /* Glance Box Stacking for Small Phones */
+  dl.glance {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: .15rem !important;
+    font-size: .78rem;
+  }
+  dl.glance dt {
+    margin-top: .45rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  dl.glance dt:first-child {
+    margin-top: 0;
+  }
+  dl.glance dd {
+    margin-bottom: .2rem;
+    color: var(--ink-2);
+  }
+
+  /* Ruler Rail on Small Phones */
+  .entries {
+    --pt: 1.15rem;
+  }
+  .e {
+    grid-template-columns: 10px minmax(0, 1fr) !important;
+    column-gap: .55rem !important;
+  }
+  .rail::before {
+    width: 8px !important;
+    height: 8px !important;
+    right: -3px !important;
+    top: calc(var(--pt) + .05rem) !important;
+  }
+  .ts {
+    font-size: .82rem;
+    gap: .2rem .45rem !important;
+  }
+  .ts span {
+    font-size: .7rem;
+  }
+  .ref-pill {
+    font-size: .62rem;
+    padding: .1rem .3rem;
+  }
+  .ref-sub {
+    font-size: .62rem;
+  }
+  .b h3 {
+    font-size: 1.18rem !important;
+  }
+  .b p {
+    font-size: .95rem !important;
+    line-height: 1.48 !important;
+  }
+  .stair li {
+    margin-left: calc(var(--i) * .28rem) !important;
+    padding: .4rem .55rem;
+  }
+  .stair b {
+    font-size: .92rem;
+  }
+}
+
+/* 4. Ultra-Compact Screens (<= 360px - iPhone SE 1st, Galaxy Fold) */
+@media (max-width: 360px) {
+  .wrap {
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+  }
+  .clock {
+    font-size: .82rem !important;
+    min-width: 4.1rem !important;
+  }
+  .deck .wrap {
+    gap: .3rem;
+  }
+  .nav-toggle {
+    padding: .22rem .35rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  h1 {
+    font-size: 1.85rem !important;
+  }
+  .band h2 {
+    font-size: 1.35rem !important;
+  }
+  .pl {
+    font-size: 2.8rem !important;
+  }
+  .b h3 {
+    font-size: 1.12rem !important;
+  }
+}
+
+/* === RESPONSIVE_NAVIGATION_AND_MOBILE_LAYOUT_END === */
 </style>
 </head>
 <body>
