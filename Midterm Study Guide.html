@@ -283,7 +283,7 @@ const KW = [
   'software errors', 'quality of life', 'technostress', 'rsi', 'cvs',
   'digital divide', 'ethical analysis', 'stakeholders'
 ].sort((a,b)=>b.length-a.length);
-const KR=new RegExp('\b('+KW.map(k=>k.replace(/[.*+?^${}()|[\]\]/g,'\$&')).join('|')+')\b','gi');
+const KR=new RegExp('\\b('+KW.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\b','gi');
 /* highlight only key phrases inside definition text (first use per card); never names, labels, headings or table headers */
 function kw(html){const seen=new Set();let skip=0;return html.split(/(<[^>]+>)/).map(t=>{if(t[0]==='<'){if(/^<(b|th|h4|h3)\b/.test(t))skip++;else if(/^<\/(b|th|h4|h3)>/.test(t))skip--;return t}
  if(skip>0)return t;return t.replace(KR,m=>{const k=m.toLowerCase();if(seen.has(k))return m;seen.add(k);return '<mark>'+m+'</mark>'})}).join('')}
