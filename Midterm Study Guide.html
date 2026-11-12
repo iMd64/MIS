@@ -64,6 +64,38 @@ footer{text-align:center;color:var(--mu);font:13px system-ui,sans-serif;padding:
 @media (max-width:600px){body{font-size:15.5px}.part>h2{font-size:22px}.brand{width:100%}}
 @media print{header{display:none}}
 
+/* === CONCEPT_AND_ABBREVIATION_COLORS_START === */
+:root {
+  --concept: #1d4ed8; /* Vibrant Royal Blue for concept names in Light Mode */
+  --abbr: #b91c1c;    /* Crisp Crimson Red for abbreviations in Light Mode */
+}
+:root[data-theme="dark"] {
+  --concept: #60a5fa; /* Soft Bright Blue for concept names in Dark Mode */
+  --abbr: #f87171;    /* Soft Coral Red for abbreviations in Dark Mode */
+}
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) {
+    --concept: #60a5fa;
+    --abbr: #f87171;
+  }
+}
+.concept {
+  color: var(--concept) !important;
+  font-weight: 700;
+}
+.abbr {
+  color: var(--abbr) !important;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+b.concept {
+  color: var(--concept) !important;
+}
+b.abbr {
+  color: var(--abbr) !important;
+}
+/* === CONCEPT_AND_ABBREVIATION_COLORS_END === */
+
 /* === COURSE_DRAWER_CSS_START === */
 .sn-backdrop {
   position: fixed;
@@ -251,9 +283,44 @@ footer{text-align:center;color:var(--mu);font:13px system-ui,sans-serif;padding:
 </main>
 <footer>MIS 301 · Asst. Prof. Kenan BÜYÜKATAK · Fall 2026–2027</footer>
 <script>
-const h=s=>s.replace(/\*([^*]+)\*/g,(m,x,o,str)=>{const b=str.slice(0,o),a=str.slice(o+m.length);
- const label=o===0||/:$/.test(x)||/^(A|An|The) $/.test(b)||/\(\d\) $/.test(b)||/^\s*[:=—·;(,]/.test(a)||/^ (is|are|means|=)\b/.test(a);
- return label?'<b>'+x+'</b>':x});
+
+const ABBR_SET = new Set(['IS', 'MIS', 'TPS', 'DSS', 'ESS', 'OAS', 'ERP', 'SCM', 'CRM', 'KMS', 'B2B', 'B2C', 'C2C', 'C2B', 'RSI', 'CVS', 'NORA', 'FIP', 'IT']);
+const ABBR_REGEX = new RegExp('\\b(IS|MIS|TPS|DSS|ESS|OAS|ERP|SCM|CRM|KMS|B2B|B2C|C2C|C2B|RSI|CVS|NORA|FIP)\\b', 'g');
+
+function fmtLabel(x) {
+  const clean = x.trim();
+  if (ABBR_SET.has(clean)) {
+    return '<b class="abbr">' + x + '</b>';
+  }
+  const m = clean.match(/^(.*?)\s*\(([A-Z0-9]+)\)$/);
+  if (m && ABBR_SET.has(m[2].trim())) {
+    return '<b class="concept">' + m[1].trim() + ' <span class="abbr">(' + m[2].trim() + ')</span></b>';
+  }
+  if (clean.endsWith(':') && /^(users|example|information|asks|benefits|strategic link|organizations|consumers|society|technical drawbacks|nontechnical drawbacks|answer pattern|avoid confusion|connection|connects|employment|equity and access|choosing one issue|different returns from similar it):$/i.test(clean)) {
+    return '<b>' + x + '</b>';
+  }
+  return '<b class="concept">' + x + '</b>';
+}
+
+function fmtAbbr(html) {
+  let skip = 0;
+  return html.split(/(<[^>]+>)/).map(t => {
+    if (t[0] === '<') {
+      if (/^<(span|b)\b[^>]*class=["'][^"']*\babbr\b/i.test(t)) skip++;
+      else if (/^<\/(span|b)>/i.test(t) && skip > 0) skip--;
+      return t;
+    }
+    if (skip > 0) return t;
+    return t.replace(ABBR_REGEX, '<span class="abbr">$1</span>');
+  }).join('');
+}
+
+const h = s => s.replace(/\*([^*]+)\*/g, (m, x, o, str) => {
+  const b = str.slice(0, o), a = str.slice(o + m.length);
+  const label = o === 0 || /:$/.test(x) || /^(A|An|The) $/.test(b) || /\(\d\) $/.test(b) || /^\s*[:=—·;(,]/.test(a) || /^ (is|are|means|=)\b/.test(a);
+  return label ? fmtLabel(x) : x;
+});
+
 const KW = [
   'recorded facts', 'raw facts', 'meaningful form', 'meaningful context',
   'summarized performance reports', 'summarized reports', 'routine transactions',
@@ -283,14 +350,33 @@ const KW = [
   'software errors', 'quality of life', 'technostress', 'rsi', 'cvs',
   'digital divide', 'ethical analysis', 'stakeholders'
 ].sort((a,b)=>b.length-a.length);
-const KR=new RegExp('\\b('+KW.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\b','gi');
-/* highlight only key phrases inside definition text (first use per card); never names, labels, headings or table headers */
-function kw(html){const seen=new Set();let skip=0;return html.split(/(<[^>]+>)/).map(t=>{if(t[0]==='<'){if(/^<(b|th|h4|h3)\b/.test(t))skip++;else if(/^<\/(b|th|h4|h3)>/.test(t))skip--;return t}
- if(skip>0)return t;return t.replace(KR,m=>{const k=m.toLowerCase();if(seen.has(k))return m;seen.add(k);return '<mark>'+m+'</mark>'})}).join('')}
-const tb=(hd,rows)=>'<div class="tw"><table><tr>'+hd.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map((c,k)=>'<td>'+(k===0&&c.indexOf('*')<0?'<b>'+c+'</b>':h(c))+'</td>').join('')+'</tr>').join('')+'</table></div>';
-const ul=a=>'<ul>'+a.map(x=>'<li>'+h(x)+'</li>').join('')+'</ul>';
-const p=s=>'<p>'+h(s)+'</p>';
-const rem=s=>'<div class="rem"><b>Remember:</b> '+h(s)+'</div>';
+
+const KR = new RegExp('\\b(' + KW.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
+
+function kw(html) {
+  const seen = new Set();
+  let skip = 0;
+  return html.split(/(<[^>]+>)/).map(t => {
+    if (t[0] === '<') {
+      if (/^<(b|th|h4|h3|span)\b/i.test(t)) skip++;
+      else if (/^<\/(b|th|h4|h3|span)>/i.test(t) && skip > 0) skip--;
+      return t;
+    }
+    if (skip > 0) return t;
+    return t.replace(KR, m => {
+      const k = m.toLowerCase();
+      if (seen.has(k)) return m;
+      seen.add(k);
+      return '<mark>' + m + '</mark>';
+    });
+  }).join('');
+}
+
+const tb = (hd, rows) => '<div class="tw"><table><tr>' + hd.map(x => '<th>' + x + '</th>').join('') + '</tr>' + rows.map(r => '<tr>' + r.map((c, k) => '<td>' + (k === 0 && c.indexOf('*') < 0 ? fmtLabel(c) : fmtAbbr(h(c))) + '</td>').join('') + '</tr>').join('') + '</table></div>';
+const ul = a => '<ul>' + a.map(x => '<li>' + fmtAbbr(h(x)) + '</li>').join('') + '</ul>';
+const p = s => '<p>' + fmtAbbr(h(s)) + '</p>';
+const rem = s => '<div class="rem"><b>Remember:</b> ' + fmtAbbr(h(s)) + '</div>';
+
 const W=[
 {n:1,t:'MIS and the Digital Enterprise',f:'Types of information systems and the decisions they support (slides 14–18). For each: purpose, users/level, information needs, example.',
 topics:[
