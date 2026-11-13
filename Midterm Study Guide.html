@@ -94,6 +94,13 @@ b.concept {
 b.abbr {
   color: var(--abbr) !important;
 }
+/* Ensure mark tag has zero highlight */
+mark {
+  background: none !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
 /* === CONCEPT_AND_ABBREVIATION_COLORS_END === */
 
 /* === COURSE_DRAWER_CSS_START === */
@@ -321,56 +328,8 @@ const h = s => s.replace(/\*([^*]+)\*/g, (m, x, o, str) => {
   return label ? fmtLabel(x) : x;
 });
 
-const KW = [
-  'recorded facts', 'raw facts', 'meaningful form', 'meaningful context',
-  'summarized performance reports', 'summarized reports', 'routine transactions',
-  'operational managers', 'middle managers', 'senior managers',
-  'exception reports', 'exception report', 'periodic reports', 'periodic report',
-  'what-if analysis', 'analytical models', 'models and assumptions',
-  'long-term direction', 'unstructured decisions', 'semi-structured',
-  'structured decisions', 'office automation', 'operational excellence',
-  'business models', 'business model', 'customer intimacy', 'supplier intimacy',
-  'improved decision making', 'competitive advantage', 'survival',
-  'complementary assets', 'sociotechnical', 'enterprise applications',
-  'common database', 'information silos', 'information silo', 'interorganizational',
-  'replenishment', 'customer-facing activities', 'customer records',
-  'retain profitable customers', 'capture, organize, share and apply',
-  'knowledge base', 'reusable expertise', 'reusable knowledge',
-  'business processes', 'business process', 'ubiquity', 'global reach',
-  'universal standards', 'information density', 'interactivity', 'social technology',
-  'b2b', 'b2c', 'c2c', 'c2b', 'security failures', 'unequal digital access',
-  'traditional competitors', 'new entrants', 'substitute products', 'substitutes',
-  'switching costs', 'buyer power', 'supplier power', 'low-cost leadership',
-  'product differentiation', 'market niche', 'unique data', 'effective processes',
-  'value chain', 'value web', 'flattening', 'flatten', 'moral dimensions',
-  'information rights', 'privacy', 'fair information practices', 'profiling',
-  'nora', 'opt-in', 'opt-out', 'property rights', 'intellectual property',
-  'trade secrets', 'trade secret', 'copyright', 'patents', 'patent',
-  'accountability', 'liability', 'due process', 'system quality',
-  'software errors', 'quality of life', 'technostress', 'rsi', 'cvs',
-  'digital divide', 'ethical analysis', 'stakeholders'
-].sort((a,b)=>b.length-a.length);
-
-const KR = new RegExp('\\b(' + KW.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
-
-function kw(html) {
-  const seen = new Set();
-  let skip = 0;
-  return html.split(/(<[^>]+>)/).map(t => {
-    if (t[0] === '<') {
-      if (/^<(b|th|h4|h3|span)\b/i.test(t)) skip++;
-      else if (/^<\/(b|th|h4|h3|span)>/i.test(t) && skip > 0) skip--;
-      return t;
-    }
-    if (skip > 0) return t;
-    return t.replace(KR, m => {
-      const k = m.toLowerCase();
-      if (seen.has(k)) return m;
-      seen.add(k);
-      return '<mark>' + m + '</mark>';
-    });
-  }).join('');
-}
+/* No highlighted text - returns content directly */
+const kw = html => html;
 
 const tb = (hd, rows) => '<div class="tw"><table><tr>' + hd.map(x => '<th>' + x + '</th>').join('') + '</tr>' + rows.map(r => '<tr>' + r.map((c, k) => '<td>' + (k === 0 && c.indexOf('*') < 0 ? fmtLabel(c) : fmtAbbr(h(c))) + '</td>').join('') + '</tr>').join('') + '</table></div>';
 const ul = a => '<ul>' + a.map(x => '<li>' + fmtAbbr(h(x)) + '</li>').join('') + '</ul>';
