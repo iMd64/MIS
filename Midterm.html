@@ -66,12 +66,12 @@ footer{text-align:center;color:var(--mu);font:13px system-ui,sans-serif;padding:
 
 /* === CONCEPT_AND_ABBREVIATION_COLORS_START === */
 :root {
-  --concept: #1d4ed8; /* Vibrant Royal Blue for concept names in Light Mode */
-  --abbr: #b91c1c;    /* Crisp Crimson Red for abbreviations in Light Mode */
+  --concept: #1d4ed8;
+  --abbr: #b91c1c;
 }
 :root[data-theme="dark"] {
-  --concept: #60a5fa; /* Soft Bright Blue for concept names in Dark Mode */
-  --abbr: #f87171;    /* Soft Coral Red for abbreviations in Dark Mode */
+  --concept: #60a5fa;
+  --abbr: #f87171;
 }
 @media (prefers-color-scheme:dark) {
   :root:not([data-theme="light"]) {
@@ -88,19 +88,9 @@ footer{text-align:center;color:var(--mu);font:13px system-ui,sans-serif;padding:
   font-weight: 700;
   letter-spacing: 0.02em;
 }
-b.concept {
-  color: var(--concept) !important;
-}
-b.abbr {
-  color: var(--abbr) !important;
-}
-/* Ensure mark tag has zero highlight */
-mark {
-  background: none !important;
-  color: inherit !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-}
+b.concept { color: var(--concept) !important; }
+b.abbr { color: var(--abbr) !important; }
+mark { background: none !important; color: inherit !important; padding: 0 !important; border-radius: 0 !important; }
 /* === CONCEPT_AND_ABBREVIATION_COLORS_END === */
 
 /* === COURSE_DRAWER_CSS_START === */
@@ -115,10 +105,7 @@ mark {
   transition: opacity .25s ease, visibility .25s ease;
   z-index: 9998;
 }
-.sn-backdrop.is-open {
-  opacity: 1;
-  visibility: visible;
-}
+.sn-backdrop.is-open { opacity: 1; visibility: visible; }
 .side-nav {
   position: fixed;
   top: 0;
@@ -138,9 +125,7 @@ mark {
   overflow: hidden;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-.side-nav.is-open {
-  transform: translateX(0);
-}
+.side-nav.is-open { transform: translateX(0); }
 .sn-header {
   padding: 1.1rem 1.1rem 0.9rem;
   border-bottom: 1px solid var(--bd, #deded9);
@@ -328,7 +313,7 @@ const h = s => s.replace(/\*([^*]+)\*/g, (m, x, o, str) => {
   return label ? fmtLabel(x) : x;
 });
 
-/* No highlighted text - returns content directly */
+/* No highlighted text */
 const kw = html => html;
 
 const tb = (hd, rows) => '<div class="tw"><table><tr>' + hd.map(x => '<th>' + x + '</th>').join('') + '</tr>' + rows.map(r => '<tr>' + r.map((c, k) => '<td>' + (k === 0 && c.indexOf('*') < 0 ? fmtLabel(c) : fmtAbbr(h(c))) + '</td>').join('') + '</tr>').join('') + '</table></div>';
@@ -575,12 +560,6 @@ wkBar();setMode('quiz');
     <a href="index.html" class="sn-portal-link">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span>Course Hub &amp; Overview</span>
-    </a>
-
-    <div class="sn-section-label">MIDTERM PREPARATION</div>
-    <a href="Midterm Study Guide.html" class="sn-portal-link active">
-      <span style="font-size:1.05rem;">🎯</span>
-      <span>Midterm Study Guide &amp; Quiz</span>
     </a>
 
     <div class="sn-section-label">WEEKLY LECTURE TAPES</div>
